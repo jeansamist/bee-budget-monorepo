@@ -1,4 +1,5 @@
 import { AuthService } from '#services/auth_service'
+import UserTransformer from '#transformers/user_transformer'
 import { ApiResponse } from '#utils/api_response'
 import {
   forgotPasswordValidator,
@@ -80,17 +81,19 @@ export default class AuthController {
     return response.ok(ApiResponse.success(null, 'Account deleted successfully'))
   }
 
-  public async profile({ response, auth }: HttpContext) {
+  public async profile({ response, auth, serialize }: HttpContext) {
     if (!auth.user) return response.unauthorized(ApiResponse.failure(null, 'You are not logged in'))
-    return await response.ok(ApiResponse.success(auth.user, 'User profile'))
+    const serialized = await serialize(UserTransformer.transform(auth.user))
+    return await response.ok(ApiResponse.success(serialized.data, 'User profile'))
   }
-  public async updateProfile({ request, response, auth }: HttpContext) {
+  public async updateProfile({ request, response, serialize, auth }: HttpContext) {
     if (!auth.user) return response.unauthorized(ApiResponse.failure(null, 'You are not logged in'))
 
     try {
       const payload = await request.validateUsing(updateUserValidator)
       const updatedUser = await this.authService.updateProfile(auth.user, payload)
-      return response.ok(ApiResponse.success(updatedUser, 'Profile updated successfully'))
+      const serialized = await serialize(UserTransformer.transform(updatedUser))
+      return response.ok(ApiResponse.success(serialized.data, 'Profile updated successfully'))
     } catch (error_) {
       const error = error_ instanceof Error ? error_ : new Error('Unknown error')
       return response.badRequest(
