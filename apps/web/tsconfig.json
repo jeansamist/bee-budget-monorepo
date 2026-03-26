@@ -5,6 +5,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "experimentalDecorators": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -23,7 +24,8 @@
       "@bee-budget/ui/*": ["../../packages/ui/src/*"],
       "@bee-budget/hooks": ["../../packages/hooks/src/index.ts"],
       "@bee-budget/hooks/*": ["../../packages/hooks/src/*"],
-      "@bee-budget/functions": ["../../packages/functions/src/index.ts"]
+      "@bee-budget/functions": ["../../packages/functions/src/index.ts"],
+      "api/registry": ["../../apps/api/.adonisjs/client/registry/index.ts"]
     }
   },
   "include": [

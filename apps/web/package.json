@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -17,6 +17,8 @@
     "@bee-budget/hooks": "workspace:*",
     "@bee-budget/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@tuyau/client": "^0.2.10",
+    "api": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
