@@ -1,8 +1,8 @@
 "use client"
 
 import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
-import { signUpSchema, SignUpSchema } from "@/schemas/auth.schemas"
-import { signUp } from "@/services/auth.services"
+import { verifyEmailSchema, VerifyEmailSchema } from "@/schemas/auth.schemas"
+import { verifyEmail } from "@/services/auth.services"
 import { Alert, AlertDescription } from "@bee-budget/ui/alert"
 import { Button } from "@bee-budget/ui/button"
 import { Field, FieldGroup } from "@bee-budget/ui/field"
@@ -13,19 +13,20 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FunctionComponent, useState } from "react"
 import { useForm } from "react-hook-form"
-export type SignUpFormProps = {
-  [key: string]: unknown
+
+export type VerifyEmailFormProps = {
+  email: string
 }
 
-export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
-  const form = useForm<SignUpSchema>({
-    resolver: zodResolver(signUpSchema),
+export const VerifyEmailForm: FunctionComponent<VerifyEmailFormProps> = ({
+  email,
+}) => {
+  const form = useForm<VerifyEmailSchema>({
+    resolver: zodResolver(verifyEmailSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
+      email,
+      emailVerificationCode: "",
     },
   })
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -33,21 +34,18 @@ export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
   const { currentLocaleUrl } = useCurrentLocaleUrl()
   const router = useRouter()
 
-  async function onSubmit(data: SignUpSchema) {
-    const result = await signUp(data)
+  async function onSubmit(data: VerifyEmailSchema) {
+    const result = await verifyEmail(data)
     if (!result.success) {
       setErrorMessage(result.message ?? t("unknownError"))
       return
     }
     setErrorMessage(undefined)
-    router.push(
-      currentLocaleUrl(
-        `/auth/verify-email?email=${encodeURIComponent(data.email)}`
-      )
-    )
+    router.push(currentLocaleUrl("/"))
   }
+
   return (
-    <form id="sign-up-form" onSubmit={form.handleSubmit(onSubmit)}>
+    <form id="verify-email-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup className="gap-3">
         {errorMessage && (
           <Alert variant="destructive">
@@ -56,44 +54,24 @@ export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
         )}
         <InputField
           formReturn={form}
-          label={t("auth.signUp.firstName.label")}
-          name="firstName"
-          placeholder={t("auth.signUp.firstName.placeholder")}
-        />
-        <InputField
-          formReturn={form}
-          label={t("auth.signUp.lastName.label")}
-          name="lastName"
-          placeholder={t("auth.signUp.lastName.placeholder")}
-        />
-        <InputField
-          formReturn={form}
-          label={t("auth.signUp.email.label")}
-          name="email"
-          type="email"
-          placeholder={t("auth.signUp.email.placeholder")}
-        />
-        <InputField
-          formReturn={form}
-          label={t("auth.signUp.password.label")}
-          name="password"
-          type="password"
-          placeholder={t("auth.signUp.password.placeholder")}
+          name="emailVerificationCode"
+          label={t("auth.verifyEmail.code.label")}
+          placeholder={t("auth.verifyEmail.code.description")}
         />
         <Field orientation="horizontal">
           <Button
             type="submit"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
-            form="sign-up-form"
+            form="verify-email-form"
           >
-            {t("auth.signUp.submit")}
+            {t("auth.verifyEmail.submit")}
             {form.formState.isSubmitting && (
               <LoaderCircle className="animate-spin" />
             )}
           </Button>
           <Button type="button" asChild variant="link">
             <Link href={currentLocaleUrl("/auth/sign-in")}>
-              {t("auth.signUp.signIn.link")}
+              {t("auth.verifyEmail.signIn.link")}
             </Link>
           </Button>
         </Field>

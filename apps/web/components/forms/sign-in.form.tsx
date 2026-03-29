@@ -1,8 +1,8 @@
 "use client"
 
 import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
-import { signUpSchema, SignUpSchema } from "@/schemas/auth.schemas"
-import { signUp } from "@/services/auth.services"
+import { signInSchema, SignInSchema } from "@/schemas/auth.schemas"
+import { signIn } from "@/services/auth.services"
 import { Alert, AlertDescription } from "@bee-budget/ui/alert"
 import { Button } from "@bee-budget/ui/button"
 import { Field, FieldGroup } from "@bee-budget/ui/field"
@@ -13,17 +13,16 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FunctionComponent, useState } from "react"
 import { useForm } from "react-hook-form"
-export type SignUpFormProps = {
+
+export type SignInFormProps = {
   [key: string]: unknown
 }
 
-export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
-  const form = useForm<SignUpSchema>({
-    resolver: zodResolver(signUpSchema),
+export const SignInForm: FunctionComponent<SignInFormProps> = () => {
+  const form = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: "",
-      lastName: "",
       email: "",
       password: "",
     },
@@ -33,21 +32,18 @@ export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
   const { currentLocaleUrl } = useCurrentLocaleUrl()
   const router = useRouter()
 
-  async function onSubmit(data: SignUpSchema) {
-    const result = await signUp(data)
+  async function onSubmit(data: SignInSchema) {
+    const result = await signIn(data)
     if (!result.success) {
       setErrorMessage(result.message ?? t("unknownError"))
       return
     }
     setErrorMessage(undefined)
-    router.push(
-      currentLocaleUrl(
-        `/auth/verify-email?email=${encodeURIComponent(data.email)}`
-      )
-    )
+    router.push(currentLocaleUrl("/"))
   }
+
   return (
-    <form id="sign-up-form" onSubmit={form.handleSubmit(onSubmit)}>
+    <form id="sign-in-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup className="gap-3">
         {errorMessage && (
           <Alert variant="destructive">
@@ -56,44 +52,39 @@ export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
         )}
         <InputField
           formReturn={form}
-          label={t("auth.signUp.firstName.label")}
-          name="firstName"
-          placeholder={t("auth.signUp.firstName.placeholder")}
-        />
-        <InputField
-          formReturn={form}
-          label={t("auth.signUp.lastName.label")}
-          name="lastName"
-          placeholder={t("auth.signUp.lastName.placeholder")}
-        />
-        <InputField
-          formReturn={form}
-          label={t("auth.signUp.email.label")}
+          label={t("auth.signIn.email.label")}
           name="email"
           type="email"
-          placeholder={t("auth.signUp.email.placeholder")}
+          placeholder={t("auth.signIn.email.placeholder")}
         />
         <InputField
           formReturn={form}
-          label={t("auth.signUp.password.label")}
+          label={t("auth.signIn.password.label")}
           name="password"
           type="password"
-          placeholder={t("auth.signUp.password.placeholder")}
+          placeholder={t("auth.signIn.password.placeholder")}
         />
+        <div className="flex justify-end">
+          <Button type="button" asChild variant="link" className="w-fit px-0">
+            <Link href={currentLocaleUrl("/auth/forgot-password")}>
+              {t("auth.signIn.forgotPassword.link")}
+            </Link>
+          </Button>
+        </div>
         <Field orientation="horizontal">
           <Button
             type="submit"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
-            form="sign-up-form"
+            form="sign-in-form"
           >
-            {t("auth.signUp.submit")}
+            {t("auth.signIn.submit")}
             {form.formState.isSubmitting && (
               <LoaderCircle className="animate-spin" />
             )}
           </Button>
           <Button type="button" asChild variant="link">
-            <Link href={currentLocaleUrl("/auth/sign-in")}>
-              {t("auth.signUp.signIn.link")}
+            <Link href={currentLocaleUrl("/auth/sign-up")}>
+              {t("auth.signIn.signUp.link")}
             </Link>
           </Button>
         </Field>

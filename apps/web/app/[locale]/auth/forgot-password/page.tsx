@@ -1,4 +1,4 @@
-import { SignUpForm } from "@/components/forms/sign-up.form"
+import { ForgotPasswordForm } from "@/components/forms/forgot-password.form"
 import { getI18n } from "@/lib/i18n/server"
 import {
   CardContent,
@@ -12,8 +12,8 @@ import React from "react"
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getI18n()
   return {
-    title: t("auth.signUp.meta.title"),
-    description: t("auth.signUp.meta.description"),
+    title: t("auth.forgotPassword.meta.title"),
+    description: t("auth.forgotPassword.meta.description"),
   }
 }
 
@@ -22,11 +22,13 @@ export default async function Page() {
   return (
     <React.Fragment>
       <CardHeader>
-        <CardTitle>{t("auth.signUp.page.title")}</CardTitle>
-        <CardDescription>{t("auth.signUp.page.description")}</CardDescription>
+        <CardTitle>{t("auth.forgotPassword.page.title")}</CardTitle>
+        <CardDescription>
+          {t("auth.forgotPassword.page.description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <SignUpForm />
+        <ForgotPasswordForm />
       </CardContent>
     </React.Fragment>
   )

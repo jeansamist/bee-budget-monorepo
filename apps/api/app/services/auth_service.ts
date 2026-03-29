@@ -122,8 +122,7 @@ export class AuthService {
   sendPasswordResetEmail(user: User) {
     const resetPasswordLink =
       env.get('FRONTEND_APP_URL') +
-      '/auth/reset-password?resetPasswordToken=' +
-      user.resetPasswordToken
+      `/auth/reset-password?email=${encodeURIComponent(user.email)}&resetPasswordToken=${user.resetPasswordToken}`
     const notification = new PasswordResetNotification(user, resetPasswordLink)
 
     this.cronManager.addQueueJob(
