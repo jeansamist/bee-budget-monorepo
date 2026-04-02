@@ -1,4 +1,5 @@
 "use client"
+import { useI18n } from "@/lib/i18n/client"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -28,6 +29,8 @@ export const AppHeader: FunctionComponent<AppHeaderProps> = ({
   path,
   userFirstName,
 }) => {
+  const t = useI18n()
+
   return (
     <header className="flex shrink-0 items-center justify-between gap-2 border-b p-4">
       <div className="flex items-center gap-4">
@@ -53,13 +56,13 @@ export const AppHeader: FunctionComponent<AppHeaderProps> = ({
             </BreadcrumbList>
           </Breadcrumb>
           <h2 className="font-semibold md:text-lg">
-            Welcome back, {userFirstName}.
+            {t("app.header.welcomeBack")}, {userFirstName}.
           </h2>
         </div>
       </div>
       <div className="hidden items-center gap-2 md:flex">
         <InputGroup>
-          <InputGroupInput placeholder="Search for anything" />
+          <InputGroupInput placeholder={t("app.header.search.placeholder")} />
           <InputGroupAddon>
             <Search />
           </InputGroupAddon>
@@ -77,7 +80,7 @@ export const AppHeader: FunctionComponent<AppHeaderProps> = ({
             target="_blank"
             href="https://github.com/jeansamist/templates/tree/main/nextjs/hr-saas-1"
           >
-            Open on GitHub
+            {t("app.header.openGithub")}
           </Link>
         </Button>
       </div>

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
+import { useAuth } from "@/contexts/auth.context"
 import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
 import { Badge } from "@bee-budget/ui/badge"
 import { Button } from "@bee-budget/ui/button"
@@ -21,6 +22,7 @@ import {
   ArrowUpDown,
   BarChart2,
   Box,
+  DollarSign,
   FileText,
   HelpCircle,
   Home,
@@ -31,13 +33,7 @@ import {
 } from "lucide-react"
 import { FunctionComponent, useMemo } from "react"
 
-export type AppSidebarProps = {
-  user: {
-    avatarUrl: string
-    name: string
-    jobTitle: string
-  }
-}
+export type AppSidebarProps = {}
 
 type AppSidebarLink = {
   label: string
@@ -54,44 +50,45 @@ type AppSidebarSection = {
   links: AppSidebarLink[]
 }
 
-export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
+export const AppSidebar: FunctionComponent<AppSidebarProps> = ({}) => {
   const t = useI18n()
   const { currentLocaleUrl } = useCurrentLocaleUrl()
+  const { user } = useAuth()
   const sections = useMemo<AppSidebarSection[]>(
     () => [
       {
-        title: t("generalMenu"),
+        title: t("app.sidebar.generalMenu.title"),
         links: [
           {
-            label: "Dashboard",
-            href: "/#dashboard",
+            label: t("app.sidebar.links.dashboard"),
+            href: currentLocaleUrl("/app/dashboard"),
             icon: Home,
             isActive: true,
           },
 
           {
-            label: "Transactions",
+            label: t("app.sidebar.links.transactions"),
             href: "/#transactions",
             icon: ArrowUpDown,
           },
           {
-            label: "Wallets",
+            label: t("app.sidebar.links.wallets"),
             href: "/#wallets",
             icon: Wallet,
           },
         ],
       },
       {
-        title: "ANALYTICS",
+        title: t("app.sidebar.analytics.title"),
         links: [
           {
-            label: "Analytics",
+            label: t("app.sidebar.links.analytics"),
             href: "/#analytics",
             icon: BarChart2,
             isBeta: true,
           },
           {
-            label: "Reports",
+            label: t("app.sidebar.links.reports"),
             href: "/#reports",
             icon: FileText,
             isInDev: true,
@@ -99,21 +96,37 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
         ],
       },
       {
-        title: "CATEGORIES & TYPES",
+        title: t("app.sidebar.categoriesTypes.title"),
         links: [
-          { label: "Wallets types", href: "/#wallet-types", icon: Wallet },
-          { label: "Transactions categories", href: "/#categories", icon: Box },
+          {
+            label: t("app.sidebar.links.walletTypes"),
+            href: "/#wallet-types",
+            icon: Wallet,
+          },
+          {
+            label: t("app.sidebar.links.transactionCategories"),
+            href: "/#categories",
+            icon: Box,
+          },
         ],
       },
       {
-        title: "SUPPORT",
+        title: t("app.sidebar.support.title"),
         links: [
-          { label: "Settings", href: "/#settings", icon: Settings },
-          { label: "Integration", href: "/#integration", icon: Plug },
+          {
+            label: t("app.sidebar.links.settings"),
+            href: "/#settings",
+            icon: Settings,
+          },
+          {
+            label: t("app.sidebar.links.integration"),
+            href: "/#integration",
+            icon: Plug,
+          },
         ],
       },
     ],
-    []
+    [t, currentLocaleUrl]
   )
 
   return (
@@ -121,19 +134,24 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
       <SidebarHeader className="space-y-2">
         <div className="flex items-center gap-2">
           <div className="flex aspect-square w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Box className="mx-auto" size={20} />
+            <DollarSign className="mx-auto" size={20} />
           </div>
-          <h3 className="font-semibold">Jeansamist</h3>
+          <h3 className="font-semibold">BeeBudget</h3>
         </div>
         <div className="flex cursor-pointer items-center gap-2 rounded-2xl border bg-background p-1 transition-colors hover:border-primary">
           <img
-            src={user.avatarUrl}
-            alt={`${user.name} avatar`}
-            className="flex aspect-square w-10 items-center justify-center rounded-xl bg-muted text-primary-foreground"
+            src={
+              user!.avatar ??
+              "https://tapback.co/api/avatar/" + user!.firstName.toLowerCase()
+            }
+            alt={`${user!.initials} avatar`}
+            className="flex aspect-square w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-primary-foreground"
           />
           <div>
-            <h3 className="text-sm font-semibold">{user.name}</h3>
-            <p className="text-xs text-muted-foreground">{user.jobTitle}</p>
+            <h3 className="text-sm font-semibold">
+              {user!.firstName} {user!.lastName}
+            </h3>
+            <p className="text-xs text-muted-foreground">{user!.email}</p>
           </div>
         </div>
       </SidebarHeader>
@@ -158,7 +176,9 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
                         className="mr-1 bg-primary/15 text-primary!"
                         asChild
                       >
-                        <SidebarMenuBadge>BETA</SidebarMenuBadge>
+                        <SidebarMenuBadge>
+                          {t("app.sidebar.badges.beta")}
+                        </SidebarMenuBadge>
                       </Badge>
                     )}
                     {link.isInDev && (
@@ -166,7 +186,9 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
                         className="mr-1 bg-muted text-muted-foreground"
                         asChild
                       >
-                        <SidebarMenuBadge>SOON</SidebarMenuBadge>
+                        <SidebarMenuBadge>
+                          {t("app.sidebar.badges.soon")}
+                        </SidebarMenuBadge>
                       </Badge>
                     )}
                     {link.notifications && (
@@ -194,9 +216,9 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
               <HelpCircle />
             </Button>
             <div>
-              <h3 className="font-semibold">Help & Support</h3>
+              <h3 className="font-semibold">{t("app.sidebar.help.title")}</h3>
               <p className="text-sm text-muted-foreground">
-                Typical reply: 4mins
+                {t("app.sidebar.help.description")}
               </p>
             </div>
             <Button
@@ -204,7 +226,7 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({ user }) => {
               className="w-full text-primary"
               size={"lg"}
             >
-              Go to help center
+              {t("app.sidebar.help.button")}
             </Button>
           </CardContent>
         </Card>
