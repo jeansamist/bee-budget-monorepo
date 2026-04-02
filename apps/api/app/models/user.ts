@@ -7,6 +7,8 @@ import { hasMany } from '@adonisjs/lucid/orm'
 import { type HasMany } from '@adonisjs/lucid/types/relations'
 import Income from './income.ts'
 import IncomeCategory from './income_category.ts'
+import Wallet from './wallet.ts'
+import WalletType from './wallet_type.ts'
 
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
@@ -17,6 +19,12 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
 
   @hasMany(() => Income)
   declare incomes: HasMany<typeof Income>
+
+  @hasMany(() => Wallet)
+  declare wallets: HasMany<typeof Wallet>
+
+  @hasMany(() => WalletType)
+  declare walletTypes: HasMany<typeof WalletType>
 
   get initials() {
     return `${this.firstName.charAt(0)}${this.lastName.charAt(0)}`.toUpperCase()

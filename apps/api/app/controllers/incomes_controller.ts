@@ -1,7 +1,7 @@
 import { IncomeService } from '#services/income_service'
 import IncomeTransformer from '#transformers/income_transformer'
 import { ApiResponse } from '#utils/api_response'
-import { createIncomeValidator } from '#validators/income'
+import { createIncomeValidator, updateIncomeValidator } from '#validators/income'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 @inject()
@@ -39,7 +39,7 @@ export default class IncomesController {
    * Handle form submission for the edit action
    */
   async update({ params, request, serialize, response }: HttpContext) {
-    const payload = await request.validateUsing(createIncomeValidator)
+    const payload = await request.validateUsing(updateIncomeValidator)
     const income = await this.incomeService.updateIncome(params.id, payload)
     const serialized = await serialize(IncomeTransformer.transform(income))
     return response.ok(ApiResponse.success(serialized.data, 'Income updated successfully'))

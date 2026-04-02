@@ -120,6 +120,66 @@ const routes = {
     tokens: [{"old":"/api/incomes/:id","type":0,"val":"api","end":""},{"old":"/api/incomes/:id","type":0,"val":"incomes","end":""},{"old":"/api/incomes/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['incomes.destroy']['types'],
   },
+  'wallet_types.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/wallet-types',
+    tokens: [{"old":"/api/wallet-types","type":0,"val":"api","end":""},{"old":"/api/wallet-types","type":0,"val":"wallet-types","end":""}],
+    types: placeholder as Registry['wallet_types.index']['types'],
+  },
+  'wallet_types.store': {
+    methods: ["POST"],
+    pattern: '/api/wallet-types',
+    tokens: [{"old":"/api/wallet-types","type":0,"val":"api","end":""},{"old":"/api/wallet-types","type":0,"val":"wallet-types","end":""}],
+    types: placeholder as Registry['wallet_types.store']['types'],
+  },
+  'wallet_types.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/wallet-types/:id',
+    tokens: [{"old":"/api/wallet-types/:id","type":0,"val":"api","end":""},{"old":"/api/wallet-types/:id","type":0,"val":"wallet-types","end":""},{"old":"/api/wallet-types/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['wallet_types.show']['types'],
+  },
+  'wallet_types.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/wallet-types/:id',
+    tokens: [{"old":"/api/wallet-types/:id","type":0,"val":"api","end":""},{"old":"/api/wallet-types/:id","type":0,"val":"wallet-types","end":""},{"old":"/api/wallet-types/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['wallet_types.update']['types'],
+  },
+  'wallet_types.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/wallet-types/:id',
+    tokens: [{"old":"/api/wallet-types/:id","type":0,"val":"api","end":""},{"old":"/api/wallet-types/:id","type":0,"val":"wallet-types","end":""},{"old":"/api/wallet-types/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['wallet_types.destroy']['types'],
+  },
+  'wallets.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/wallets',
+    tokens: [{"old":"/api/wallets","type":0,"val":"api","end":""},{"old":"/api/wallets","type":0,"val":"wallets","end":""}],
+    types: placeholder as Registry['wallets.index']['types'],
+  },
+  'wallets.store': {
+    methods: ["POST"],
+    pattern: '/api/wallets',
+    tokens: [{"old":"/api/wallets","type":0,"val":"api","end":""},{"old":"/api/wallets","type":0,"val":"wallets","end":""}],
+    types: placeholder as Registry['wallets.store']['types'],
+  },
+  'wallets.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/wallets/:id',
+    tokens: [{"old":"/api/wallets/:id","type":0,"val":"api","end":""},{"old":"/api/wallets/:id","type":0,"val":"wallets","end":""},{"old":"/api/wallets/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['wallets.show']['types'],
+  },
+  'wallets.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/wallets/:id',
+    tokens: [{"old":"/api/wallets/:id","type":0,"val":"api","end":""},{"old":"/api/wallets/:id","type":0,"val":"wallets","end":""},{"old":"/api/wallets/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['wallets.update']['types'],
+  },
+  'wallets.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/wallets/:id',
+    tokens: [{"old":"/api/wallets/:id","type":0,"val":"api","end":""},{"old":"/api/wallets/:id","type":0,"val":"wallets","end":""},{"old":"/api/wallets/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['wallets.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

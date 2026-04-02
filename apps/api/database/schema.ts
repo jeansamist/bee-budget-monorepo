@@ -33,12 +33,14 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class IncomeCategorySchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
+  static $columns = ['color', 'createdAt', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
   $columns = IncomeCategorySchema.$columns
   @column()
   declare color: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare defaultWalletTypeId: number | null
   @column()
   declare icon: string | null
   @column({ isPrimary: true })
@@ -52,7 +54,7 @@ export class IncomeCategorySchema extends BaseModel {
 }
 
 export class IncomeSchema extends BaseModel {
-  static $columns = ['amount', 'createdAt', 'date', 'description', 'id', 'incomeCategoryId', 'name', 'updatedAt', 'userId'] as const
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'id', 'incomeCategoryId', 'name', 'updatedAt', 'userId', 'walletId'] as const
   $columns = IncomeSchema.$columns
   @column()
   declare amount: number
@@ -72,6 +74,8 @@ export class IncomeSchema extends BaseModel {
   declare updatedAt: DateTime | null
   @column()
   declare userId: number
+  @column()
+  declare walletId: number | null
 }
 
 export class UserSchema extends BaseModel {
@@ -105,4 +109,46 @@ export class UserSchema extends BaseModel {
   declare resetPasswordTokenExpiresAt: DateTime | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+}
+
+export class WalletTypeSchema extends BaseModel {
+  static $columns = ['color', 'createdAt', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
+  $columns = WalletTypeSchema.$columns
+  @column()
+  declare color: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare icon: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class WalletSchema extends BaseModel {
+  static $columns = ['amount', 'createdAt', 'description', 'id', 'image', 'name', 'updatedAt', 'userId', 'walletTypeId'] as const
+  $columns = WalletSchema.$columns
+  @column()
+  declare amount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare description: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare image: string | null
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+  @column()
+  declare walletTypeId: number
 }

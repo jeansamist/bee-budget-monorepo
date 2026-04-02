@@ -215,10 +215,10 @@ export interface Registry {
     methods: ["PUT","PATCH"]
     pattern: '/api/incomes/:id'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/income').createIncomeValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/income').updateIncomeValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/income').createIncomeValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/income').updateIncomeValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -233,6 +233,126 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['destroy']>>>
+    }
+  }
+  'wallet_types.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/wallet-types'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['index']>>>
+    }
+  }
+  'wallet_types.store': {
+    methods: ["POST"]
+    pattern: '/api/wallet-types'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet_type').createWalletTypeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet_type').createWalletTypeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallet_types.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/wallet-types/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['show']>>>
+    }
+  }
+  'wallet_types.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/wallet-types/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet_type').updateWalletTypeValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet_type').updateWalletTypeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallet_types.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/wallet-types/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['destroy']>>>
+    }
+  }
+  'wallets.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/wallets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['index']>>>
+    }
+  }
+  'wallets.store': {
+    methods: ["POST"]
+    pattern: '/api/wallets'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet').createWalletValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet').createWalletValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallets.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/wallets/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['show']>>>
+    }
+  }
+  'wallets.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/wallets/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet').updateWalletValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet').updateWalletValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallets.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/wallets/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['destroy']>>>
     }
   }
 }

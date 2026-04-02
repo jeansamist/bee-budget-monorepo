@@ -5,15 +5,13 @@
 
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
-import type UserTransformer from '#transformers/user_transformer'
 import type IncomeCategoryTransformer from '#transformers/income_category_transformer'
 import type IncomeTransformer from '#transformers/income_transformer'
+import type UserTransformer from '#transformers/user_transformer'
+import type WalletTransformer from '#transformers/wallet_transformer'
+import type WalletTypeTransformer from '#transformers/wallet_type_transformer'
 
 export namespace Data {
-  export type User = InferData<UserTransformer>
-  export namespace User {
-    export type Variants = InferVariants<UserTransformer>
-  }
   export type IncomeCategory = InferData<IncomeCategoryTransformer>
   export namespace IncomeCategory {
     export type Variants = InferVariants<IncomeCategoryTransformer>
@@ -21,5 +19,17 @@ export namespace Data {
   export type Income = InferData<IncomeTransformer>
   export namespace Income {
     export type Variants = InferVariants<IncomeTransformer>
+  }
+  export type User = InferData<UserTransformer>
+  export namespace User {
+    export type Variants = InferVariants<UserTransformer>
+  }
+  export type Wallet = InferData<WalletTransformer>
+  export namespace Wallet {
+    export type Variants = InferVariants<WalletTransformer>
+  }
+  export type WalletType = InferData<WalletTypeTransformer>
+  export namespace WalletType {
+    export type Variants = InferVariants<WalletTypeTransformer>
   }
 }

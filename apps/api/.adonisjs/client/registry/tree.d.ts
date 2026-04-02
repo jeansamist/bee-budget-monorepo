@@ -27,4 +27,18 @@ export interface ApiDefinition {
     update: typeof routes['incomes.update']
     destroy: typeof routes['incomes.destroy']
   }
+  walletTypes: {
+    index: typeof routes['wallet_types.index']
+    store: typeof routes['wallet_types.store']
+    show: typeof routes['wallet_types.show']
+    update: typeof routes['wallet_types.update']
+    destroy: typeof routes['wallet_types.destroy']
+  }
+  wallets: {
+    index: typeof routes['wallets.index']
+    store: typeof routes['wallets.store']
+    show: typeof routes['wallets.show']
+    update: typeof routes['wallets.update']
+    destroy: typeof routes['wallets.destroy']
+  }
 }

@@ -39,5 +39,10 @@ router
       .apiOnly()
       .use('*', [middleware.auth()])
     router.resource('/incomes', controllers.Incomes).apiOnly().use('*', [middleware.auth()])
+    router
+      .resource('/wallet-types', controllers.WalletTypes)
+      .apiOnly()
+      .use('*', [middleware.auth()])
+    router.resource('/wallets', controllers.Wallets).apiOnly().use('*', [middleware.auth()])
   })
   .prefix('/api')

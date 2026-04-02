@@ -3,6 +3,7 @@ import { belongsTo } from '@adonisjs/lucid/orm'
 import { type BelongsTo } from '@adonisjs/lucid/types/relations'
 import IncomeCategory from './income_category.ts'
 import User from './user.ts'
+import Wallet from './wallet.ts'
 
 export default class Income extends IncomeSchema {
   @belongsTo(() => User)
@@ -10,4 +11,7 @@ export default class Income extends IncomeSchema {
 
   @belongsTo(() => IncomeCategory)
   declare incomeCategory: BelongsTo<typeof IncomeCategory>
+
+  @belongsTo(() => Wallet)
+  declare wallet: BelongsTo<typeof Wallet>
 }
