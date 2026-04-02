@@ -247,7 +247,8 @@ export class AuthService {
    * Generate access token for a user
    */
   async generateAccessToken(user: User, auth: Authenticator<Authenticators>) {
-    return await auth.use('api').createToken(user, ['*'], { expiresIn: '30d' })
+    const token = await auth.use('api').createToken(user, ['*'], { expiresIn: '30d' })
+    return token.toJSON()
   }
 
   /**
