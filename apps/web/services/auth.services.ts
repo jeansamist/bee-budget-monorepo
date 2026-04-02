@@ -8,33 +8,35 @@ import {
   SignUpSchema,
   VerifyEmailSchema,
 } from "@/schemas/auth.schemas"
+import type { User } from "@/types"
 
 export const signUp = async (payload: SignUpSchema) => {
-  return tuyau.api.auth.signUp({
-    body: payload,
-  })
+  const [data, error] = await tuyau.api.auth.signUp({ body: payload }).safe()
+  return error ? error.response : data
 }
 
 export const signIn = async (payload: SignInSchema) => {
-  return tuyau.api.auth.signIn({
-    body: payload,
-  })
+  const [data, error] = await tuyau.api.auth.signIn({ body: payload }).safe()
+  return error ? error.response : data
 }
 
 export const verifyEmail = async (payload: VerifyEmailSchema) => {
-  return tuyau.api.auth.verifyEmail({
-    body: payload,
-  })
+  const [data, error] = await tuyau.api.auth.verifyEmail({ body: payload }).safe()
+  return error ? error.response : data
 }
 
 export const forgotPassword = async (payload: ForgotPasswordSchema) => {
-  return tuyau.api.auth.forgotPassword({
-    body: payload,
-  })
+  const [data, error] = await tuyau.api.auth.forgotPassword({ body: payload }).safe()
+  return error ? error.response : data
 }
 
 export const resetPassword = async (payload: ResetPasswordSchema) => {
-  return tuyau.api.auth.resetPassword({
-    body: payload,
-  })
+  const [data, error] = await tuyau.api.auth.resetPassword({ body: payload }).safe()
+  return error ? error.response : data
+}
+
+export const getProfile = async (): Promise<User | null> => {
+  const [data, error] = await tuyau.api.auth.profile({}).safe()
+  if (error || !data?.success) return null
+  return (data.data as User) ?? null
 }
