@@ -36,6 +36,7 @@
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
     "#config/*": "./config/*.js",
+    "#constants/*": "./app/constants/*.js",
     "#utils/*": "./app/utils/*.js",
     "#repositories/*": "./app/repositories/*.js",
     "#email_templates/*": "./app/email_template/*.js",

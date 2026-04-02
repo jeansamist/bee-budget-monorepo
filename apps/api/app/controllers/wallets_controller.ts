@@ -1,7 +1,13 @@
 import { WalletService } from '#services/wallet_service'
 import WalletTransformer from '#transformers/wallet_transformer'
 import { ApiResponse } from '#utils/api_response'
-import { createWalletValidator, updateWalletValidator } from '#validators/wallet'
+import {
+  createWalletValidator,
+  createMassWalletValidator,
+  deleteMassWalletValidator,
+  updateWalletValidator,
+  updateMassWalletValidator,
+} from '#validators/wallet'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -28,6 +34,13 @@ export default class WalletsController {
     return response.ok(ApiResponse.success(serialized.data, 'Wallet created successfully'))
   }
 
+  async createMass({ request, response, serialize }: HttpContext) {
+    const payload = await request.validateUsing(createMassWalletValidator)
+    const wallets = await this.walletService.createMassWallets(payload.items)
+    const serialized = await serialize(WalletTransformer.transform(wallets))
+    return response.ok(ApiResponse.success(serialized.data, 'Wallets created successfully'))
+  }
+
   /**
    * Show individual record
    */
@@ -47,11 +60,26 @@ export default class WalletsController {
     return response.ok(ApiResponse.success(serialized.data, 'Wallet updated successfully'))
   }
 
+  async updateMass({ request, serialize, response }: HttpContext) {
+    const payload = await request.validateUsing(updateMassWalletValidator)
+    const wallets = await this.walletService.updateMassWallets(payload.items)
+    const serialized = await serialize(WalletTransformer.transform(wallets))
+    return response.ok(ApiResponse.success(serialized.data, 'Wallets updated successfully'))
+  }
+
   /**
    * Delete record
    */
   async destroy({ params, response }: HttpContext) {
     await this.walletService.deleteWallet(params.id)
     return response.ok(ApiResponse.success(null, 'Wallet deleted successfully'))
+  }
+
+  async deleteMass({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(deleteMassWalletValidator)
+    await this.walletService.deleteMassWallets(payload.ids)
+    return response.ok(
+      ApiResponse.success({ count: payload.ids.length }, 'Wallets deleted successfully')
+    )
   }
 }

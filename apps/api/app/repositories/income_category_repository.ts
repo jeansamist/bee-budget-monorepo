@@ -42,7 +42,11 @@ export default class IncomeCategoryRepository {
     return this.model.findOrFail(id)
   }
   async createMany(data: ModelProps<IncomeCategorySchema>[]): Promise<IncomeCategory[]> {
-    return this.model.createMany(data)
+    const incomeCategories: IncomeCategory[] = []
+    for (const item of data) {
+      incomeCategories.push(await this.create(item))
+    }
+    return incomeCategories
   }
   async findAllByUserId(userId: number): Promise<IncomeCategory[]> {
     return this.model.query().where('user_id', userId).preload('defaultWalletType')

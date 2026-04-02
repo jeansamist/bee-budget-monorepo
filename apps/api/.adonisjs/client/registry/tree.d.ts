@@ -14,6 +14,9 @@ export interface ApiDefinition {
     updateProfile: typeof routes['auth.update_profile']
   }
   incomeCategories: {
+    createMass: typeof routes['income_categories.create_mass']
+    updateMass: typeof routes['income_categories.update_mass']
+    deleteMass: typeof routes['income_categories.delete_mass']
     index: typeof routes['income_categories.index']
     store: typeof routes['income_categories.store']
     show: typeof routes['income_categories.show']
@@ -21,6 +24,9 @@ export interface ApiDefinition {
     destroy: typeof routes['income_categories.destroy']
   }
   incomes: {
+    createMass: typeof routes['incomes.create_mass']
+    updateMass: typeof routes['incomes.update_mass']
+    deleteMass: typeof routes['incomes.delete_mass']
     index: typeof routes['incomes.index']
     store: typeof routes['incomes.store']
     show: typeof routes['incomes.show']
@@ -28,6 +34,9 @@ export interface ApiDefinition {
     destroy: typeof routes['incomes.destroy']
   }
   walletTypes: {
+    createMass: typeof routes['wallet_types.create_mass']
+    updateMass: typeof routes['wallet_types.update_mass']
+    deleteMass: typeof routes['wallet_types.delete_mass']
     index: typeof routes['wallet_types.index']
     store: typeof routes['wallet_types.store']
     show: typeof routes['wallet_types.show']
@@ -35,6 +44,9 @@ export interface ApiDefinition {
     destroy: typeof routes['wallet_types.destroy']
   }
   wallets: {
+    createMass: typeof routes['wallets.create_mass']
+    updateMass: typeof routes['wallets.update_mass']
+    deleteMass: typeof routes['wallets.delete_mass']
     index: typeof routes['wallets.index']
     store: typeof routes['wallets.store']
     show: typeof routes['wallets.show']

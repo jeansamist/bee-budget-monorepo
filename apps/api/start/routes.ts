@@ -35,6 +35,38 @@ router
       })
       .prefix('/auth')
     router
+      .group(() => {
+        router.post('/create-mass', [controllers.IncomeCategories, 'createMass'])
+        router.put('/update-mass', [controllers.IncomeCategories, 'updateMass'])
+        router.post('/delete-mass', [controllers.IncomeCategories, 'deleteMass'])
+      })
+      .prefix('/income-categories')
+      .use([middleware.auth()])
+    router
+      .group(() => {
+        router.post('/create-mass', [controllers.Incomes, 'createMass'])
+        router.put('/update-mass', [controllers.Incomes, 'updateMass'])
+        router.post('/delete-mass', [controllers.Incomes, 'deleteMass'])
+      })
+      .prefix('/incomes')
+      .use([middleware.auth()])
+    router
+      .group(() => {
+        router.post('/create-mass', [controllers.WalletTypes, 'createMass'])
+        router.put('/update-mass', [controllers.WalletTypes, 'updateMass'])
+        router.post('/delete-mass', [controllers.WalletTypes, 'deleteMass'])
+      })
+      .prefix('/wallet-types')
+      .use([middleware.auth()])
+    router
+      .group(() => {
+        router.post('/create-mass', [controllers.Wallets, 'createMass'])
+        router.put('/update-mass', [controllers.Wallets, 'updateMass'])
+        router.post('/delete-mass', [controllers.Wallets, 'deleteMass'])
+      })
+      .prefix('/wallets')
+      .use([middleware.auth()])
+    router
       .resource('/income-categories', controllers.IncomeCategories)
       .apiOnly()
       .use('*', [middleware.auth()])

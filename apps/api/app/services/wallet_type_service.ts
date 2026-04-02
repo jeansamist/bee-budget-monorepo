@@ -15,6 +15,7 @@ type UpdateWalletTypePayload = Partial<{
   color: string
   icon: string | null
 }>
+type MassUpdateWalletTypePayload = UpdateWalletTypePayload & { id: number }
 
 @inject()
 export class WalletTypeService {
@@ -61,5 +62,28 @@ export class WalletTypeService {
 
   async getAllUserWalletTypes() {
     return this.repository.findAllByUserId(this.userId)
+  }
+
+  async createMassWalletTypes(items: CreateWalletTypePayload[]) {
+    const walletTypes = []
+    for (const item of items) {
+      walletTypes.push(await this.createWalletType(item))
+    }
+    return walletTypes
+  }
+
+  async updateMassWalletTypes(items: MassUpdateWalletTypePayload[]) {
+    const walletTypes = []
+    for (const item of items) {
+      const { id, ...data } = item
+      walletTypes.push(await this.updateWalletType(id, data))
+    }
+    return walletTypes
+  }
+
+  async deleteMassWalletTypes(ids: number[]) {
+    for (const id of ids) {
+      await this.deleteWalletType(id)
+    }
   }
 }

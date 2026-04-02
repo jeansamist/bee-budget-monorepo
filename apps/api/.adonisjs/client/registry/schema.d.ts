@@ -115,6 +115,150 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['updateProfile']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'income_categories.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/income-categories/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income_category').createMassIncomeCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income_category').createMassIncomeCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'income_categories.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/income-categories/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income_category').updateMassIncomeCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income_category').updateMassIncomeCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'income_categories.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/income-categories/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income_category').deleteMassIncomeCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income_category').deleteMassIncomeCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'incomes.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/incomes/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income').createMassIncomeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income').createMassIncomeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'incomes.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/incomes/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income').updateMassIncomeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income').updateMassIncomeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'incomes.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/incomes/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income').deleteMassIncomeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income').deleteMassIncomeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallet_types.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/wallet-types/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet_type').createMassWalletTypeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet_type').createMassWalletTypeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallet_types.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/wallet-types/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet_type').updateMassWalletTypeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet_type').updateMassWalletTypeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallet_types.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/wallet-types/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet_type').deleteMassWalletTypeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet_type').deleteMassWalletTypeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallets.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/wallets/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet').createMassWalletValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet').createMassWalletValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallets.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/wallets/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet').updateMassWalletValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet').updateMassWalletValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'wallets.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/wallets/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/wallet').deleteMassWalletValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/wallet').deleteMassWalletValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/income-categories'

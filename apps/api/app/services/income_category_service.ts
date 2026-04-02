@@ -18,6 +18,7 @@ type UpdateIncomeCategoryPayload = Partial<{
   color: string
   defaultWalletTypeId: number | null
 }>
+type MassUpdateIncomeCategoryPayload = UpdateIncomeCategoryPayload & { id: number }
 
 @inject()
 export class IncomeCategoryService {
@@ -75,5 +76,28 @@ export class IncomeCategoryService {
   }
   async getAllUserIncomeCategories() {
     return this.repository.findAllByUserId(this.userId)
+  }
+
+  async createMassIncomeCategories(items: CreateIncomeCategoryPayload[]) {
+    const incomeCategories = []
+    for (const item of items) {
+      incomeCategories.push(await this.createIncomeCategory(item))
+    }
+    return incomeCategories
+  }
+
+  async updateMassIncomeCategories(items: MassUpdateIncomeCategoryPayload[]) {
+    const incomeCategories = []
+    for (const item of items) {
+      const { id, ...data } = item
+      incomeCategories.push(await this.updateIncomeCategory(id, data))
+    }
+    return incomeCategories
+  }
+
+  async deleteMassIncomeCategories(ids: number[]) {
+    for (const id of ids) {
+      await this.deleteIncomeCategory(id)
+    }
   }
 }

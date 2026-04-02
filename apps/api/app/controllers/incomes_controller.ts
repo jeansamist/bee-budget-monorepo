@@ -1,7 +1,13 @@
 import { IncomeService } from '#services/income_service'
 import IncomeTransformer from '#transformers/income_transformer'
 import { ApiResponse } from '#utils/api_response'
-import { createIncomeValidator, updateIncomeValidator } from '#validators/income'
+import {
+  createIncomeValidator,
+  createMassIncomeValidator,
+  deleteMassIncomeValidator,
+  updateIncomeValidator,
+  updateMassIncomeValidator,
+} from '#validators/income'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 @inject()
@@ -26,6 +32,13 @@ export default class IncomesController {
     return response.ok(ApiResponse.success(serialized.data, 'Income created successfully'))
   }
 
+  async createMass({ request, response, serialize }: HttpContext) {
+    const payload = await request.validateUsing(createMassIncomeValidator)
+    const incomes = await this.incomeService.createMassIncomes(payload.items)
+    const serialized = await serialize(IncomeTransformer.transform(incomes))
+    return response.ok(ApiResponse.success(serialized.data, 'Incomes created successfully'))
+  }
+
   /**
    * Show individual record
    */
@@ -45,11 +58,26 @@ export default class IncomesController {
     return response.ok(ApiResponse.success(serialized.data, 'Income updated successfully'))
   }
 
+  async updateMass({ request, serialize, response }: HttpContext) {
+    const payload = await request.validateUsing(updateMassIncomeValidator)
+    const incomes = await this.incomeService.updateMassIncomes(payload.items)
+    const serialized = await serialize(IncomeTransformer.transform(incomes))
+    return response.ok(ApiResponse.success(serialized.data, 'Incomes updated successfully'))
+  }
+
   /**
    * Delete record
    */
   async destroy({ params, response }: HttpContext) {
     await this.incomeService.deleteIncome(params.id)
     return response.ok(ApiResponse.success(null, 'Income deleted successfully'))
+  }
+
+  async deleteMass({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(deleteMassIncomeValidator)
+    await this.incomeService.deleteMassIncomes(payload.ids)
+    return response.ok(
+      ApiResponse.success({ count: payload.ids.length }, 'Incomes deleted successfully')
+    )
   }
 }

@@ -5,16 +5,25 @@ import PasswordResetAlertNotification from '#mails/password_reset_alert_notifica
 import PasswordResetNotification from '#mails/password_reset_notification'
 import WelcomeNotification from '#mails/welcome_notification'
 import User from '#models/user'
+import IncomeCategoryRepository from '#repositories/income_category_repository'
 import UserRepository from '#repositories/user_repository'
+import WalletRepository from '#repositories/wallet_repository'
+import WalletTypeRepository from '#repositories/wallet_type_repository'
 import env from '#start/env'
 import { ModelProps } from '#utils/generics'
 import { Authenticator } from '@adonisjs/auth'
 import { Authenticators } from '@adonisjs/auth/types'
 import { inject } from '@adonisjs/core'
 import { Logger } from '@adonisjs/core/logger'
+import db from '@adonisjs/lucid/services/db'
 import mail from '@adonisjs/mail/services/main'
 import { DateTime } from 'luxon'
 import { randomInt } from 'node:crypto'
+import {
+  ACCOUNT_SETUP_INCOME_CATEGORIES,
+  ACCOUNT_SETUP_WALLETS,
+  ACCOUNT_SETUP_WALLET_TYPES,
+} from '../constants/index.ts'
 import CronManager from '../managers/crons_manager.js'
 
 @inject()
@@ -22,9 +31,54 @@ export class AuthService {
   // Your code here
   constructor(
     protected readonly userRepository: UserRepository,
+    protected readonly walletTypeRepository: WalletTypeRepository,
+    protected readonly walletRepository: WalletRepository,
+    protected readonly incomeCategoryRepository: IncomeCategoryRepository,
     protected readonly cronManager: CronManager,
     protected readonly logger: Logger
   ) {}
+
+  private async setup(user: User) {
+    await db.transaction(async (trx) => {
+      const walletTypes = await this.walletTypeRepository.createMany(
+        ACCOUNT_SETUP_WALLET_TYPES.map((walletType) => ({
+          ...walletType,
+          userId: user.id,
+        })),
+        trx
+      )
+
+      const walletTypeIdsByName = new Map(
+        walletTypes.map((walletType) => [walletType.name, walletType.id])
+      )
+
+      const incomeCategories = ACCOUNT_SETUP_INCOME_CATEGORIES.map((incomeCategory) => ({
+        name: incomeCategory.name,
+        color: incomeCategory.color,
+        icon: incomeCategory.icon,
+        defaultWalletTypeId: incomeCategory.defaultWalletTypeName
+          ? (walletTypeIdsByName.get(incomeCategory.defaultWalletTypeName) ?? null)
+          : null,
+        userId: user.id,
+      }))
+
+      for (const incomeCategory of incomeCategories) {
+        await this.incomeCategoryRepository.create(incomeCategory, trx)
+      }
+
+      await this.walletRepository.createMany(
+        ACCOUNT_SETUP_WALLETS.map((wallet) => ({
+          name: wallet.name,
+          description: wallet.description,
+          image: wallet.image,
+          amount: wallet.amount,
+          walletTypeId: walletTypeIdsByName.get(wallet.walletTypeName)!,
+          userId: user.id,
+        })),
+        trx
+      )
+    })
+  }
 
   generateVerificationCode() {
     return randomInt(100000, 1000000).toString()
@@ -219,6 +273,7 @@ export class AuthService {
       emailVerified: true,
       emailVerifiedAt: DateTime.now(),
     })
+    await this.setup(user)
     await this.wipeEmailVerificationCode(user)
     this.sendWelcomeNotification(user)
     return user

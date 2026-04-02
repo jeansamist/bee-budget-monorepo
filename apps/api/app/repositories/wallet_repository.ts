@@ -20,6 +20,17 @@ export default class WalletRepository {
     return wallet
   }
 
+  async createMany(
+    data: ModelProps<WalletSchema>[],
+    trx?: TransactionClientContract
+  ): Promise<Wallet[]> {
+    const wallets: Wallet[] = []
+    for (const item of data) {
+      wallets.push(await this.create(item, trx))
+    }
+    return wallets
+  }
+
   async update(
     wallet: Wallet,
     data: Partial<ModelProps<WalletSchema>>,
