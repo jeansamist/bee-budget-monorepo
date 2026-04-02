@@ -9,7 +9,7 @@ export const tuyau = createTuyau({
   hooks: {
     beforeRequest: [
       async (request) => {
-        const token = (await cookies()).get("token")?.value
+        const token = (await cookies()).get("AUTH_TOKEN")?.value
         if (token) {
           request.headers.set("Authorization", `Bearer ${token}`)
         }
