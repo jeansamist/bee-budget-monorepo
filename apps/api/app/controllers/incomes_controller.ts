@@ -1,0 +1,55 @@
+import { IncomeService } from '#services/income_service'
+import IncomeTransformer from '#transformers/income_transformer'
+import { ApiResponse } from '#utils/api_response'
+import { createIncomeValidator } from '#validators/income'
+import { inject } from '@adonisjs/core'
+import type { HttpContext } from '@adonisjs/core/http'
+@inject()
+export default class IncomesController {
+  constructor(protected readonly incomeService: IncomeService) {}
+  /**
+   * Display a list of resource
+   */
+  async index({ serialize, response }: HttpContext) {
+    const incomes = await this.incomeService.getAllUserIncomes()
+    const serialized = await serialize(IncomeTransformer.transform(incomes))
+    return response.ok(ApiResponse.success(serialized.data, 'Incomes retrieved successfully'))
+  }
+
+  /**
+   * Handle form submission for the create action
+   */
+  async store({ request, response, serialize }: HttpContext) {
+    const payload = await request.validateUsing(createIncomeValidator)
+    const income = await this.incomeService.createIncome(payload)
+    const serialized = await serialize(IncomeTransformer.transform(income))
+    return response.ok(ApiResponse.success(serialized.data, 'Income created successfully'))
+  }
+
+  /**
+   * Show individual record
+   */
+  async show({ params, serialize, response }: HttpContext) {
+    const income = await this.incomeService.getIncomeById(params.id)
+    const serialized = await serialize(IncomeTransformer.transform(income))
+    return response.ok(ApiResponse.success(serialized.data, 'Income retrieved successfully'))
+  }
+
+  /**
+   * Handle form submission for the edit action
+   */
+  async update({ params, request, serialize, response }: HttpContext) {
+    const payload = await request.validateUsing(createIncomeValidator)
+    const income = await this.incomeService.updateIncome(params.id, payload)
+    const serialized = await serialize(IncomeTransformer.transform(income))
+    return response.ok(ApiResponse.success(serialized.data, 'Income updated successfully'))
+  }
+
+  /**
+   * Delete record
+   */
+  async destroy({ params, response }: HttpContext) {
+    await this.incomeService.deleteIncome(params.id)
+    return response.ok(ApiResponse.success(null, 'Income deleted successfully'))
+  }
+}

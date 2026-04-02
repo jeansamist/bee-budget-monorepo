@@ -6,4 +6,5 @@
 export const controllers = {
   Auth: () => import('#controllers/auth_controller'),
   IncomeCategories: () => import('#controllers/income_categories_controller'),
+  Incomes: () => import('#controllers/incomes_controller'),
 }

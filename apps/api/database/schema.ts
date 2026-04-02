@@ -51,6 +51,29 @@ export class IncomeCategorySchema extends BaseModel {
   declare userId: number
 }
 
+export class IncomeSchema extends BaseModel {
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'id', 'incomeCategoryId', 'name', 'updatedAt', 'userId'] as const
+  $columns = IncomeSchema.$columns
+  @column()
+  declare amount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare date: DateTime
+  @column()
+  declare description: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare incomeCategoryId: number
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['avatar', 'createdAt', 'email', 'emailVerificationCode', 'emailVerificationCodeExpiresAt', 'emailVerified', 'emailVerifiedAt', 'firstName', 'id', 'lastName', 'password', 'resetPasswordToken', 'resetPasswordTokenExpiresAt', 'updatedAt'] as const
   $columns = UserSchema.$columns

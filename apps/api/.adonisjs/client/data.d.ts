@@ -7,6 +7,7 @@
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type UserTransformer from '#transformers/user_transformer'
 import type IncomeCategoryTransformer from '#transformers/income_category_transformer'
+import type IncomeTransformer from '#transformers/income_transformer'
 
 export namespace Data {
   export type User = InferData<UserTransformer>
@@ -16,5 +17,9 @@ export namespace Data {
   export type IncomeCategory = InferData<IncomeCategoryTransformer>
   export namespace IncomeCategory {
     export type Variants = InferVariants<IncomeCategoryTransformer>
+  }
+  export type Income = InferData<IncomeTransformer>
+  export namespace Income {
+    export type Variants = InferVariants<IncomeTransformer>
   }
 }
