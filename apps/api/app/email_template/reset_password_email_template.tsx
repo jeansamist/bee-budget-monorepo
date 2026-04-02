@@ -1,5 +1,6 @@
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -24,25 +25,51 @@ export function ResetPasswordEmailTemplate({
   return (
     <Html>
       <Head />
-      <Preview>Hi {firstName}, use this link to reset your password</Preview>
+      <Preview>Reset your BeeBudget password.</Preview>
       <Tailwind>
-        <Body className="bg-gray-100 font-sans py-20">
-          <Container className="w-[680px] max-w-full mx-auto bg-white p-8">
-            <Heading className="text-2xl font-bold text-gray-800">BeeBudget</Heading>
-            <Heading className="text-2xl font-bold text-gray-800">Hello, {firstName}! 👋</Heading>
-            <Text className="text-gray-600">
-              It looks like you have requested to reset your password. Use the link below to reset
-              your password.
+        <Body className="bg-white font-sans m-0 py-12">
+          <Container className="max-w-[540px] mx-auto px-6">
+            <Text className="text-base font-semibold m-0 mb-8" style={{ color: '#ea580c' }}>
+              BeeBudget
             </Text>
 
-            <Text className="text-gray-600 mt-6">
-              <Link href={resetPasswordLink}>{resetPasswordLink}</Link>
+            <Heading className="text-2xl font-semibold text-gray-900 m-0 mb-4 leading-snug">
+              Reset your password, {firstName}.
+            </Heading>
+
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-8">
+              We received a request to reset the password for your account. Click the button below
+              to set a new one. This link expires in 1 hour.
             </Text>
 
-            <Hr className="my-6 border-gray-200" />
+            <Button
+              href={resetPasswordLink}
+              style={{
+                backgroundColor: '#ea580c',
+                color: '#ffffff',
+                padding: '10px 24px',
+                borderRadius: '6px',
+                fontWeight: '500',
+                fontSize: '14px',
+                textDecoration: 'none',
+                display: 'inline-block',
+              }}
+            >
+              Reset password
+            </Button>
 
-            <Text className="text-xs text-gray-400">
-              If you didn't request a password reset, you can safely ignore this email.
+            <Text className="text-xs text-gray-400 m-0 mt-8 mb-1">
+              Or copy and paste this URL into your browser:
+            </Text>
+            <Link href={resetPasswordLink} className="text-xs break-all" style={{ color: '#ea580c' }}>
+              {resetPasswordLink}
+            </Link>
+
+            <Hr className="border-gray-100 my-10" />
+
+            <Text className="text-xs text-gray-400 m-0">
+              If you didn't request a password reset, you can ignore this email. Your password will
+              not change.
             </Text>
           </Container>
         </Body>

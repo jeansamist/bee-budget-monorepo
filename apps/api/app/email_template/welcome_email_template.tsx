@@ -1,5 +1,6 @@
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -19,20 +20,50 @@ export function WelcomeEmailTemplate({ firstName }: WelcomeEmailProps) {
   return (
     <Html>
       <Head />
-      <Preview>Hi {firstName}, welcome!</Preview>
+      <Preview>Welcome to BeeBudget, {firstName}.</Preview>
       <Tailwind>
-        <Body className="bg-gray-100 font-sans py-20">
-          <Container className="w-[680px] max-w-full mx-auto bg-white p-8">
-            <Heading className="text-2xl font-bold text-gray-800">BeeBudget</Heading>
-            <Heading className="text-2xl font-bold text-gray-800">Welcome, {firstName}! 👋</Heading>
-            <Text className="text-gray-600">
-              Thanks for signing up. Now you can start your journey.
+        <Body className="bg-white font-sans m-0 py-12">
+          <Container className="max-w-[540px] mx-auto px-6">
+            <Text className="text-base font-semibold m-0 mb-8" style={{ color: '#ea580c' }}>
+              BeeBudget
             </Text>
 
-            <Hr className="my-6 border-gray-200" />
+            <Heading className="text-2xl font-semibold text-gray-900 m-0 mb-4 leading-snug">
+              Welcome, {firstName}.
+            </Heading>
 
-            <Text className="text-xs text-gray-400">
-              Please ignore this email if you did not create an account.
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-3">
+              Your account is ready. You can now track your expenses, set savings goals, and get a
+              clear picture of your finances — all in one place.
+            </Text>
+
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-8">
+              We're glad to have you with us.
+            </Text>
+
+            <Button
+              href="https://beebudget.app/app/dashboard"
+              style={{
+                backgroundColor: '#ea580c',
+                color: '#ffffff',
+                padding: '10px 24px',
+                borderRadius: '6px',
+                fontWeight: '500',
+                fontSize: '14px',
+                textDecoration: 'none',
+                display: 'inline-block',
+              }}
+            >
+              Open BeeBudget
+            </Button>
+
+            <Hr className="border-gray-100 my-10" />
+
+            <Text className="text-xs text-gray-400 m-0 mb-1">
+              You're receiving this because you created a BeeBudget account.
+            </Text>
+            <Text className="text-xs text-gray-400 m-0">
+              If this wasn't you, you can safely ignore this email.
             </Text>
           </Container>
         </Body>

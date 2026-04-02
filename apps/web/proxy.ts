@@ -9,6 +9,11 @@ const I18nMiddleware = createI18nMiddleware({
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  if (pathname.includes("/_next/") || /\.\w+$/.test(pathname)) {
+    return NextResponse.next()
+  }
+
   const token = request.cookies.get("token")?.value
 
   if (token && /\/auth(\/|$)/.test(pathname)) {

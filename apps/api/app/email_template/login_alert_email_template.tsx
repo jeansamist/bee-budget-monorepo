@@ -1,5 +1,6 @@
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -20,20 +21,48 @@ export function LoginAlertEmailTemplate({ firstName, loggedInAt }: LoginAlertEma
   return (
     <Html>
       <Head />
-      <Preview>Security alert: New login to your account</Preview>
+      <Preview>New sign-in to your BeeBudget account.</Preview>
       <Tailwind>
-        <Body className="bg-gray-100 font-sans py-20">
-          <Container className="w-[680px] max-w-full mx-auto bg-white p-8">
-            <Heading className="text-2xl font-bold text-gray-800">BeeBudget</Heading>
-            <Heading className="text-2xl font-bold text-gray-800">Hello, {firstName}! 👋</Heading>
-            <Text className="text-gray-600">
-              We detected a new login to your account on <strong>{loggedInAt}</strong>.
+        <Body className="bg-white font-sans m-0 py-12">
+          <Container className="max-w-[540px] mx-auto px-6">
+            <Text className="text-base font-semibold m-0 mb-8" style={{ color: '#ea580c' }}>
+              BeeBudget
             </Text>
 
-            <Hr className="my-6 border-gray-200" />
+            <Heading className="text-2xl font-semibold text-gray-900 m-0 mb-4 leading-snug">
+              New sign-in detected, {firstName}.
+            </Heading>
 
-            <Text className="text-xs text-gray-400">
-              If this was not you, reset your password immediately and contact support.
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-6">
+              A sign-in to your BeeBudget account was recorded on{' '}
+              <span className="text-gray-700 font-medium">{loggedInAt}</span>. If this was you, no
+              action is needed.
+            </Text>
+
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-8">
+              If you don't recognize this activity, secure your account immediately.
+            </Text>
+
+            <Button
+              href="https://beebudget.app/auth/reset-password"
+              style={{
+                backgroundColor: '#111827',
+                color: '#ffffff',
+                padding: '10px 24px',
+                borderRadius: '6px',
+                fontWeight: '500',
+                fontSize: '14px',
+                textDecoration: 'none',
+                display: 'inline-block',
+              }}
+            >
+              Secure my account
+            </Button>
+
+            <Hr className="border-gray-100 my-10" />
+
+            <Text className="text-xs text-gray-400 m-0">
+              You're receiving this alert because a new sign-in occurred on your account.
             </Text>
           </Container>
         </Body>

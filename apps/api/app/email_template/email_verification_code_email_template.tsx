@@ -11,7 +11,7 @@ import {
 } from '@react-email/components'
 import React from 'react'
 
-interface WelcomeEmailProps {
+interface EmailVerificationCodeEmailProps {
   firstName: string
   emailVerificationCode: string
 }
@@ -19,28 +19,43 @@ interface WelcomeEmailProps {
 export function EmailVerificationCodeEmailTemplate({
   firstName,
   emailVerificationCode,
-}: WelcomeEmailProps) {
+}: EmailVerificationCodeEmailProps) {
   return (
     <Html>
       <Head />
-      <Preview>Your verification code is {emailVerificationCode}!</Preview>
+      <Preview>Your BeeBudget verification code: {emailVerificationCode}</Preview>
       <Tailwind>
-        <Body className="bg-gray-100 font-sans py-20">
-          <Container className="w-[680px] max-w-full mx-auto bg-white p-8">
-            <Heading className="text-2xl font-bold text-gray-800">BeeBudget</Heading>
-            <Heading className="text-2xl font-bold text-gray-800">Hello, {firstName}! 👋</Heading>
-            <Text className="text-gray-600">
-              Thanks for signing up. Please confirm your email to get started.
+        <Body className="bg-white font-sans m-0 py-12">
+          <Container className="max-w-[540px] mx-auto px-6">
+            <Text className="text-base font-semibold m-0 mb-8" style={{ color: '#ea580c' }}>
+              BeeBudget
             </Text>
 
-            <Text className="text-gray-600 mt-6">
-              Your verification code is: <strong>{emailVerificationCode}</strong>
+            <Heading className="text-2xl font-semibold text-gray-900 m-0 mb-4 leading-snug">
+              Verify your email, {firstName}.
+            </Heading>
+
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-8">
+              Use the code below to confirm your email address and activate your account.
             </Text>
 
-            <Hr className="my-6 border-gray-200" />
+            <Text
+              className="font-mono font-bold tracking-[0.25em] text-gray-900 m-0 mb-2"
+              style={{ fontSize: '36px', lineHeight: '1' }}
+            >
+              {emailVerificationCode}
+            </Text>
 
-            <Text className="text-xs text-gray-400">
-              If you didn't create an account, you can safely ignore this email.
+            <Text className="text-xs text-gray-400 m-0 mb-8">Expires in 15 minutes.</Text>
+
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-0">
+              If you didn't request this, you can ignore this email.
+            </Text>
+
+            <Hr className="border-gray-100 my-10" />
+
+            <Text className="text-xs text-gray-400 m-0">
+              Never share this code with anyone. BeeBudget will never ask for it.
             </Text>
           </Container>
         </Body>

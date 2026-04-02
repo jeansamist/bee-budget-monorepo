@@ -1,5 +1,6 @@
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -23,20 +24,48 @@ export function PasswordResetAlertEmailTemplate({
   return (
     <Html>
       <Head />
-      <Preview>Security alert: Your password was changed</Preview>
+      <Preview>Your BeeBudget password was changed.</Preview>
       <Tailwind>
-        <Body className="bg-gray-100 font-sans py-20">
-          <Container className="w-[680px] max-w-full mx-auto bg-white p-8">
-            <Heading className="text-2xl font-bold text-gray-800">BeeBudget</Heading>
-            <Heading className="text-2xl font-bold text-gray-800">Hello, {firstName}! 👋</Heading>
-            <Text className="text-gray-600">
-              Your password was changed on <strong>{resetAt}</strong>.
+        <Body className="bg-white font-sans m-0 py-12">
+          <Container className="max-w-[540px] mx-auto px-6">
+            <Text className="text-base font-semibold m-0 mb-8" style={{ color: '#ea580c' }}>
+              BeeBudget
             </Text>
 
-            <Hr className="my-6 border-gray-200" />
+            <Heading className="text-2xl font-semibold text-gray-900 m-0 mb-4 leading-snug">
+              Your password was changed, {firstName}.
+            </Heading>
 
-            <Text className="text-xs text-gray-400">
-              If you did not make this change, secure your account immediately.
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-6">
+              The password for your BeeBudget account was successfully updated on{' '}
+              <span className="text-gray-700 font-medium">{resetAt}</span>.
+            </Text>
+
+            <Text className="text-gray-500 text-sm leading-relaxed m-0 mb-8">
+              If you made this change, everything is in order. If you did not, your account may be
+              compromised — act immediately.
+            </Text>
+
+            <Button
+              href="https://beebudget.app/auth/reset-password"
+              style={{
+                backgroundColor: '#111827',
+                color: '#ffffff',
+                padding: '10px 24px',
+                borderRadius: '6px',
+                fontWeight: '500',
+                fontSize: '14px',
+                textDecoration: 'none',
+                display: 'inline-block',
+              }}
+            >
+              Secure my account
+            </Button>
+
+            <Hr className="border-gray-100 my-10" />
+
+            <Text className="text-xs text-gray-400 m-0">
+              You're receiving this because a password change was made on your BeeBudget account.
             </Text>
           </Container>
         </Body>
