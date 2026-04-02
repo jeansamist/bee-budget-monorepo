@@ -1,4 +1,5 @@
 import { AppHeader } from "@/components/app-header"
+import { DataCards } from "@/components/dashboard/data-cards"
 import { getI18n } from "@/lib/i18n/server"
 
 export default async function page() {
@@ -13,6 +14,7 @@ export default async function page() {
         ]}
         userFirstName="Ephraim"
       />
+      <DataCards />
     </main>
   )
 }

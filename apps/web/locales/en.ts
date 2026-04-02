@@ -101,6 +101,8 @@ export default {
   "app.header.openGithub": "Open on GitHub",
   "app.header.breadcrumb.brand": "BeeBudget",
   "app.header.breadcrumb.dashboard": "Dashboard",
+  "app.dashboard.dataCards.chart.total": "Total",
+  "app.dashboard.dataCards.evolution.fromLastMonth": "from last month",
 
   unknownError: "Something went wrong",
 } as const
