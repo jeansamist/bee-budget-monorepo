@@ -115,4 +115,124 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['updateProfile']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'income_categories.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/income-categories'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['index']>>>
+    }
+  }
+  'income_categories.store': {
+    methods: ["POST"]
+    pattern: '/api/income-categories'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income_category').createIncomeCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income_category').createIncomeCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'income_categories.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/income-categories/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['show']>>>
+    }
+  }
+  'income_categories.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/income-categories/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income_category').updateIncomeCategoryValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/income_category').updateIncomeCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'income_categories.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/income-categories/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['destroy']>>>
+    }
+  }
+  'incomes.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/incomes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
+    }
+  }
+  'incomes.store': {
+    methods: ["POST"]
+    pattern: '/api/incomes'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income').createIncomeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/income').createIncomeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'incomes.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/incomes/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['show']>>>
+    }
+  }
+  'incomes.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/incomes/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/income').createIncomeValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/income').createIncomeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'incomes.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/incomes/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['destroy']>>>
+    }
+  }
 }

@@ -34,5 +34,10 @@ router
           .use([middleware.auth()])
       })
       .prefix('/auth')
+    router
+      .resource('/income-categories', controllers.IncomeCategories)
+      .apiOnly()
+      .use('*', [middleware.auth()])
+    router.resource('/incomes', controllers.Incomes).apiOnly().use('*', [middleware.auth()])
   })
   .prefix('/api')

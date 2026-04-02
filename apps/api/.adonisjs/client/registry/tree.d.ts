@@ -13,4 +13,18 @@ export interface ApiDefinition {
     profile: typeof routes['auth.profile']
     updateProfile: typeof routes['auth.update_profile']
   }
+  incomeCategories: {
+    index: typeof routes['income_categories.index']
+    store: typeof routes['income_categories.store']
+    show: typeof routes['income_categories.show']
+    update: typeof routes['income_categories.update']
+    destroy: typeof routes['income_categories.destroy']
+  }
+  incomes: {
+    index: typeof routes['incomes.index']
+    store: typeof routes['incomes.store']
+    show: typeof routes['incomes.show']
+    update: typeof routes['incomes.update']
+    destroy: typeof routes['incomes.destroy']
+  }
 }

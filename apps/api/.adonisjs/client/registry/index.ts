@@ -60,6 +60,66 @@ const routes = {
     tokens: [{"old":"/api/auth/update-profile","type":0,"val":"api","end":""},{"old":"/api/auth/update-profile","type":0,"val":"auth","end":""},{"old":"/api/auth/update-profile","type":0,"val":"update-profile","end":""}],
     types: placeholder as Registry['auth.update_profile']['types'],
   },
+  'income_categories.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/income-categories',
+    tokens: [{"old":"/api/income-categories","type":0,"val":"api","end":""},{"old":"/api/income-categories","type":0,"val":"income-categories","end":""}],
+    types: placeholder as Registry['income_categories.index']['types'],
+  },
+  'income_categories.store': {
+    methods: ["POST"],
+    pattern: '/api/income-categories',
+    tokens: [{"old":"/api/income-categories","type":0,"val":"api","end":""},{"old":"/api/income-categories","type":0,"val":"income-categories","end":""}],
+    types: placeholder as Registry['income_categories.store']['types'],
+  },
+  'income_categories.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/income-categories/:id',
+    tokens: [{"old":"/api/income-categories/:id","type":0,"val":"api","end":""},{"old":"/api/income-categories/:id","type":0,"val":"income-categories","end":""},{"old":"/api/income-categories/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['income_categories.show']['types'],
+  },
+  'income_categories.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/income-categories/:id',
+    tokens: [{"old":"/api/income-categories/:id","type":0,"val":"api","end":""},{"old":"/api/income-categories/:id","type":0,"val":"income-categories","end":""},{"old":"/api/income-categories/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['income_categories.update']['types'],
+  },
+  'income_categories.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/income-categories/:id',
+    tokens: [{"old":"/api/income-categories/:id","type":0,"val":"api","end":""},{"old":"/api/income-categories/:id","type":0,"val":"income-categories","end":""},{"old":"/api/income-categories/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['income_categories.destroy']['types'],
+  },
+  'incomes.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/incomes',
+    tokens: [{"old":"/api/incomes","type":0,"val":"api","end":""},{"old":"/api/incomes","type":0,"val":"incomes","end":""}],
+    types: placeholder as Registry['incomes.index']['types'],
+  },
+  'incomes.store': {
+    methods: ["POST"],
+    pattern: '/api/incomes',
+    tokens: [{"old":"/api/incomes","type":0,"val":"api","end":""},{"old":"/api/incomes","type":0,"val":"incomes","end":""}],
+    types: placeholder as Registry['incomes.store']['types'],
+  },
+  'incomes.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/incomes/:id',
+    tokens: [{"old":"/api/incomes/:id","type":0,"val":"api","end":""},{"old":"/api/incomes/:id","type":0,"val":"incomes","end":""},{"old":"/api/incomes/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['incomes.show']['types'],
+  },
+  'incomes.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/incomes/:id',
+    tokens: [{"old":"/api/incomes/:id","type":0,"val":"api","end":""},{"old":"/api/incomes/:id","type":0,"val":"incomes","end":""},{"old":"/api/incomes/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['incomes.update']['types'],
+  },
+  'incomes.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/incomes/:id',
+    tokens: [{"old":"/api/incomes/:id","type":0,"val":"api","end":""},{"old":"/api/incomes/:id","type":0,"val":"incomes","end":""},{"old":"/api/incomes/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['incomes.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }
