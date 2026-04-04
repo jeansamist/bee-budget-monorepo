@@ -54,9 +54,6 @@ export default async function Layout({
     >
       <SidebarProvider>
         <AppSidebar />
-        {/* <SidebarInset className="border hover:border-primary duration-1000 transition-colors border-transparent">
-    {children}
-  </SidebarInset> */}
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>
     </AppProvider>
