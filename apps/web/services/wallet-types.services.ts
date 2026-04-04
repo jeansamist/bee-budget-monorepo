@@ -12,8 +12,8 @@ import type {
   MassDeleteResult,
 } from "@/types"
 
-export const getWalletTypes = async (): Promise<ApiResponse<WalletType[]>> => {
-  const [data, error] = await tuyau.api.walletTypes.index({}).safe()
+export const getWalletTypes = async (page = 1, perPage = 15): Promise<ApiResponse<WalletType[]>> => {
+  const [data, error] = await tuyau.api.walletTypes.index({ query: { page, perPage } }).safe()
   return (error ? error.response : data) as ApiResponse<WalletType[]>
 }
 

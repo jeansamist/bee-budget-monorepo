@@ -12,8 +12,8 @@ import type {
   MassDeleteResult,
 } from "@/types"
 
-export const getIncomes = async (): Promise<ApiResponse<Income[]>> => {
-  const [data, error] = await tuyau.api.incomes.index({}).safe()
+export const getIncomes = async (page = 1, perPage = 15): Promise<ApiResponse<Income[]>> => {
+  const [data, error] = await tuyau.api.incomes.index({ query: { page, perPage } }).safe()
   return (error ? error.response : data) as ApiResponse<Income[]>
 }
 

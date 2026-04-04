@@ -1,7 +1,20 @@
+export type PaginationMeta = {
+  total: number
+  perPage: number
+  currentPage: number
+  lastPage: number
+  firstPage: number
+  firstPageUrl: string
+  lastPageUrl: string
+  nextPageUrl: string | null
+  previousPageUrl: string | null
+}
+
 export type ApiSuccessResponse<T> = {
   success: true
   data?: T
   message?: string
+  meta?: PaginationMeta
 }
 
 export type ApiFailureResponse<T = unknown> = {

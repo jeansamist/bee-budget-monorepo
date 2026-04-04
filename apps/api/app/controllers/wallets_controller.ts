@@ -8,6 +8,7 @@ import {
   updateWalletValidator,
   updateMassWalletValidator,
 } from '#validators/wallet'
+import { paginateValidator } from '#validators/pagination'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -19,8 +20,7 @@ export default class WalletsController {
    * Display a list of resource
    */
   async index({ request, serialize, response }: HttpContext) {
-    const page = request.input('page', 1)
-    const perPage = request.input('perPage', 15)
+    const { page = 1, perPage = 15 } = await request.validateUsing(paginateValidator)
     const paginator = await this.walletService.getPaginatedUserWallets(page, perPage)
     const serialized = await serialize(WalletTransformer.transform(paginator.all()))
     return response.ok(

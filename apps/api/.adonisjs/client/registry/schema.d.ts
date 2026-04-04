@@ -266,9 +266,9 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'income_categories.store': {
@@ -326,7 +326,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
     }
@@ -386,9 +386,9 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_types_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'wallet_types.store': {
@@ -446,9 +446,9 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'wallets.store': {
