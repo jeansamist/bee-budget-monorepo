@@ -259,6 +259,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'transaction_analytics.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/transactions/analytics'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/transaction_analytics').transactionAnalyticsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/transaction_analytics_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/transaction_analytics_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'

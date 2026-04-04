@@ -155,3 +155,22 @@ export type Wallet = {
   createdAt: string | null
   updatedAt: string | null
 }
+
+export type TransactionAnalyticsPeriod = "daily" | "weekly" | "monthly"
+
+export type TransactionAnalyticsPoint = {
+  label: string
+  amount: number
+}
+
+export type TransactionAnalyticsMetric = {
+  total: number
+  data: TransactionAnalyticsPoint[]
+}
+
+export type TransactionAnalytics = {
+  period: TransactionAnalyticsPeriod
+  incomes: TransactionAnalyticsMetric
+  expenses: TransactionAnalyticsMetric
+  fees: TransactionAnalyticsMetric
+}

@@ -67,6 +67,9 @@ router
       .prefix('/internal-transfers')
       .use([middleware.auth()])
     router
+      .get('/transactions/analytics', [controllers.TransactionAnalytics, 'index'])
+      .use([middleware.auth()])
+    router
       .group(() => {
         router.post('/create-mass', [controllers.IncomeCategories, 'createMass'])
         router.put('/update-mass', [controllers.IncomeCategories, 'updateMass'])

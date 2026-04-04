@@ -53,6 +53,9 @@ export interface ApiDefinition {
     update: typeof routes['internal_transfers.update']
     destroy: typeof routes['internal_transfers.destroy']
   }
+  transactionAnalytics: {
+    index: typeof routes['transaction_analytics.index']
+  }
   incomeCategories: {
     createMass: typeof routes['income_categories.create_mass']
     updateMass: typeof routes['income_categories.update_mass']

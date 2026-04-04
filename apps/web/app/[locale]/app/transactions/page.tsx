@@ -1,4 +1,5 @@
 import { AppHeader } from "@/components/app-header"
+import { DataCards } from "@/components/transactions/data-cards"
 import { Expenses } from "@/components/transactions/expenses"
 import { Incomes } from "@/components/transactions/incomes"
 import { InternalTransfers } from "@/components/transactions/internal-transfers"
@@ -15,7 +16,8 @@ export default async function page() {
         ]}
         title={t("app.header.titles.transactions")}
       />
-      <Tabs defaultValue="expenses" className="w-full px-4">
+      <DataCards />
+      <Tabs defaultValue="expenses" className="w-full gap-4 px-4">
         <TabsList>
           <TabsTrigger value="expenses">Expenses</TabsTrigger>
           <TabsTrigger value="incomes">Incomes</TabsTrigger>

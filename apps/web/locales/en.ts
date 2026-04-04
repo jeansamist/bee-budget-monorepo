@@ -103,6 +103,21 @@ export default {
   "app.header.breadcrumb.brand": "BeeBudget",
   "app.header.breadcrumb.dashboard": "Dashboard",
   "app.header.breadcrumb.transactions": "Transactions",
+  "app.transactions.dataCards.chart.total": "Total",
+  "app.transactions.dataCards.chart.period": "Period",
+  "app.transactions.dataCards.period.placeholder": "Select period",
+  "app.transactions.dataCards.period.daily": "Daily",
+  "app.transactions.dataCards.period.weekly": "Weekly",
+  "app.transactions.dataCards.period.monthly": "Monthly",
+  "app.transactions.dataCards.cards.incomes.title": "Total income",
+  "app.transactions.dataCards.cards.incomes.description":
+    "Income aggregated for the selected period.",
+  "app.transactions.dataCards.cards.expenses.title": "Total expenses + fees",
+  "app.transactions.dataCards.cards.expenses.description":
+    "Expenses including transfer and payment fees.",
+  "app.transactions.dataCards.cards.fees.title": "Total fees",
+  "app.transactions.dataCards.cards.fees.description":
+    "Fee amounts isolated from all expense records.",
   "app.dashboard.dataCards.chart.total": "Balance",
   "app.dashboard.dataCards.evolution.fromLastMonth": "from last month",
   "app.dataTables.internalTransferTable.select": "Select row",

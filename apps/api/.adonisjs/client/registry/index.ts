@@ -132,6 +132,12 @@ const routes = {
     tokens: [{"old":"/api/internal-transfers/delete-mass","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/delete-mass","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/delete-mass","type":0,"val":"delete-mass","end":""}],
     types: placeholder as Registry['internal_transfers.delete_mass']['types'],
   },
+  'transaction_analytics.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/transactions/analytics',
+    tokens: [{"old":"/api/transactions/analytics","type":0,"val":"api","end":""},{"old":"/api/transactions/analytics","type":0,"val":"transactions","end":""},{"old":"/api/transactions/analytics","type":0,"val":"analytics","end":""}],
+    types: placeholder as Registry['transaction_analytics.index']['types'],
+  },
   'income_categories.create_mass': {
     methods: ["POST"],
     pattern: '/api/income-categories/create-mass',
