@@ -1,3 +1,9 @@
+export type IndexParams = {
+  page?: number
+  perPage?: number
+  fetchAll?: boolean
+}
+
 export type PaginationMeta = {
   total: number
   perPage: number

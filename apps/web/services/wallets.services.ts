@@ -8,12 +8,15 @@ import type {
 } from "@/schemas/wallets.schemas"
 import type {
   ApiResponse,
+  IndexParams,
   Wallet,
   MassDeleteResult,
 } from "@/types"
 
-export const getWallets = async (page = 1, perPage = 15): Promise<ApiResponse<Wallet[]>> => {
-  const [data, error] = await tuyau.api.wallets.index({ query: { page, perPage } }).safe()
+export const getWallets = async (params: IndexParams = {}): Promise<ApiResponse<Wallet[]>> => {
+  const { page = 1, perPage = 15, fetchAll = false } = params
+  const query = fetchAll ? { page: 1, perPage: 100000 } : { page, perPage }
+  const [data, error] = await tuyau.api.wallets.index({ query }).safe()
   return (error ? error.response : data) as ApiResponse<Wallet[]>
 }
 

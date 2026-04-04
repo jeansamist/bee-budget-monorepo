@@ -9,11 +9,14 @@ import type {
 import type {
   ApiResponse,
   Contact,
+  IndexParams,
   MassDeleteResult,
 } from "@/types"
 
-export const getContacts = async (page = 1, perPage = 15): Promise<ApiResponse<Contact[]>> => {
-  const [data, error] = await tuyau.api.contacts.index({ query: { page, perPage } }).safe()
+export const getContacts = async (params: IndexParams = {}): Promise<ApiResponse<Contact[]>> => {
+  const { page = 1, perPage = 15, fetchAll = false } = params
+  const query = fetchAll ? { page: 1, perPage: 100000 } : { page, perPage }
+  const [data, error] = await tuyau.api.contacts.index({ query }).safe()
   return (error ? error.response : data) as ApiResponse<Contact[]>
 }
 

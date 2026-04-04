@@ -13,10 +13,10 @@ export default async function Layout({
   children: React.ReactNode
 }) {
   const [walletTypes, incomeCategories, wallets, contacts] = await Promise.allSettled([
-    getWalletTypes(),
-    getIncomeCategories(),
-    getWallets(),
-    getContacts(),
+    getWalletTypes({ fetchAll: true }),
+    getIncomeCategories({ fetchAll: true }),
+    getWallets({ fetchAll: true }),
+    getContacts({ fetchAll: true }),
   ])
   if (
     walletTypes.status === "rejected" ||

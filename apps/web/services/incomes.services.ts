@@ -8,12 +8,15 @@ import type {
 } from "@/schemas/incomes.schemas"
 import type {
   ApiResponse,
+  IndexParams,
   Income,
   MassDeleteResult,
 } from "@/types"
 
-export const getIncomes = async (page = 1, perPage = 15): Promise<ApiResponse<Income[]>> => {
-  const [data, error] = await tuyau.api.incomes.index({ query: { page, perPage } }).safe()
+export const getIncomes = async (params: IndexParams = {}): Promise<ApiResponse<Income[]>> => {
+  const { page = 1, perPage = 15, fetchAll = false } = params
+  const query = fetchAll ? { page: 1, perPage: 100000 } : { page, perPage }
+  const [data, error] = await tuyau.api.incomes.index({ query }).safe()
   return (error ? error.response : data) as ApiResponse<Income[]>
 }
 
