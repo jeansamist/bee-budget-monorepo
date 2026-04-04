@@ -23,6 +23,26 @@ export interface ApiDefinition {
     update: typeof routes['contacts.update']
     destroy: typeof routes['contacts.destroy']
   }
+  expenseCategories: {
+    createMass: typeof routes['expense_categories.create_mass']
+    updateMass: typeof routes['expense_categories.update_mass']
+    deleteMass: typeof routes['expense_categories.delete_mass']
+    index: typeof routes['expense_categories.index']
+    store: typeof routes['expense_categories.store']
+    show: typeof routes['expense_categories.show']
+    update: typeof routes['expense_categories.update']
+    destroy: typeof routes['expense_categories.destroy']
+  }
+  expenses: {
+    createMass: typeof routes['expenses.create_mass']
+    updateMass: typeof routes['expenses.update_mass']
+    deleteMass: typeof routes['expenses.delete_mass']
+    index: typeof routes['expenses.index']
+    store: typeof routes['expenses.store']
+    show: typeof routes['expenses.show']
+    update: typeof routes['expenses.update']
+    destroy: typeof routes['expenses.destroy']
+  }
   incomeCategories: {
     createMass: typeof routes['income_categories.create_mass']
     updateMass: typeof routes['income_categories.update_mass']

@@ -1,11 +1,12 @@
 "use client"
 
-import { Contact, IncomeCategory, Wallet, WalletType } from "@/types"
+import { Contact, ExpenseCategory, IncomeCategory, Wallet, WalletType } from "@/types"
 import { createContext, useContext } from "react"
 
 type AppContextValue = {
   walletTypes: WalletType[]
   incomeCategories: IncomeCategory[]
+  expenseCategories: ExpenseCategory[]
   wallets: Wallet[]
   contacts: Contact[]
 }
@@ -16,6 +17,7 @@ export type AppProviderProps = {
   children: React.ReactNode
   walletTypes: WalletType[]
   incomeCategories: IncomeCategory[]
+  expenseCategories: ExpenseCategory[]
   wallets: Wallet[]
   contacts: Contact[]
 }
@@ -24,6 +26,7 @@ export function AppProvider({
   children,
   walletTypes,
   incomeCategories,
+  expenseCategories,
   wallets,
   contacts,
 }: AppProviderProps) {
@@ -34,6 +37,7 @@ export function AppProvider({
       value={{
         walletTypes,
         incomeCategories,
+        expenseCategories,
         wallets,
         contacts,
       }}

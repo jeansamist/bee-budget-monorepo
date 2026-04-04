@@ -75,6 +75,17 @@ export type IncomeCategory = {
   defaultContactId: number | null
 }
 
+export type ExpenseCategory = {
+  id: number
+  name: string
+  createdAt: string | null
+  updatedAt: string | null
+  icon: string | null
+  color: string
+  defaultWalletTypeId: number | null
+  defaultContactId: number | null
+}
+
 export type Income = {
   id: number
   name: string
@@ -84,6 +95,20 @@ export type Income = {
   incomeCategoryId: number
   walletId: number | null
   fromContactId: number | null
+  createdAt: string | null
+  updatedAt: string | null
+}
+
+export type Expense = {
+  id: number
+  name: string
+  description: string
+  amount: number
+  fees: number | null
+  date: string | null
+  expenseCategoryId: number
+  walletId: number | null
+  toContactId: number | null
   createdAt: string | null
   updatedAt: string | null
 }

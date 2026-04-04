@@ -5,6 +5,8 @@ import { compose } from '@adonisjs/core/helpers'
 import hash from '@adonisjs/core/services/hash'
 import { hasMany } from '@adonisjs/lucid/orm'
 import { type HasMany } from '@adonisjs/lucid/types/relations'
+import Expense from './expense.ts'
+import ExpenseCategory from './expense_category.ts'
 import Income from './income.ts'
 import IncomeCategory from './income_category.ts'
 import Wallet from './wallet.ts'
@@ -19,6 +21,12 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
 
   @hasMany(() => Income)
   declare incomes: HasMany<typeof Income>
+
+  @hasMany(() => ExpenseCategory)
+  declare expenseCategories: HasMany<typeof ExpenseCategory>
+
+  @hasMany(() => Expense)
+  declare expenses: HasMany<typeof Expense>
 
   @hasMany(() => Wallet)
   declare wallets: HasMany<typeof Wallet>

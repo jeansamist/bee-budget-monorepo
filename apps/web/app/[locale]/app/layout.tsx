@@ -1,10 +1,17 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { AppProvider } from "@/contexts/app.context"
 import { getContacts } from "@/services/contacts.services"
+import { getExpenseCategories } from "@/services/expense-categories.services"
 import { getIncomeCategories } from "@/services/income-categories.services"
 import { getWalletTypes } from "@/services/wallet-types.services"
 import { getWallets } from "@/services/wallets.services"
-import { Contact, IncomeCategory, Wallet, WalletType } from "@/types"
+import {
+  Contact,
+  ExpenseCategory,
+  IncomeCategory,
+  Wallet,
+  WalletType,
+} from "@/types"
 import { SidebarInset, SidebarProvider } from "@bee-budget/ui/sidebar"
 
 export default async function Layout({
@@ -12,16 +19,18 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const [walletTypes, incomeCategories, wallets, contacts] =
+  const [walletTypes, incomeCategories, expenseCategories, wallets, contacts] =
     await Promise.allSettled([
       getWalletTypes({ fetchAll: true }),
       getIncomeCategories({ fetchAll: true }),
+      getExpenseCategories({ fetchAll: true }),
       getWallets({ fetchAll: true }),
       getContacts({ fetchAll: true }),
     ])
   if (
     walletTypes.status === "rejected" ||
     incomeCategories.status === "rejected" ||
+    expenseCategories.status === "rejected" ||
     wallets.status === "rejected" ||
     contacts.status === "rejected"
   ) {
@@ -31,6 +40,8 @@ export default async function Layout({
         walletTypes.status === "rejected" ? walletTypes.reason : null,
       incomeCategories:
         incomeCategories.status === "rejected" ? incomeCategories.reason : null,
+      expenseCategories:
+        expenseCategories.status === "rejected" ? expenseCategories.reason : null,
       wallets: wallets.status === "rejected" ? wallets.reason : null,
       contacts: contacts.status === "rejected" ? contacts.reason : null,
     })
@@ -38,6 +49,7 @@ export default async function Layout({
       <AppProvider
         walletTypes={[]}
         incomeCategories={[]}
+        expenseCategories={[]}
         wallets={[]}
         contacts={[]}
       >
@@ -49,6 +61,7 @@ export default async function Layout({
     <AppProvider
       walletTypes={(walletTypes.value.data as WalletType[]) || []}
       incomeCategories={(incomeCategories.value.data as IncomeCategory[]) || []}
+      expenseCategories={(expenseCategories.value.data as ExpenseCategory[]) || []}
       wallets={(wallets.value.data as Wallet[]) || []}
       contacts={(contacts.value.data as Contact[]) || []}
     >

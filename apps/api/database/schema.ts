@@ -59,6 +59,58 @@ export class ContactSchema extends BaseModel {
   declare userId: number
 }
 
+export class ExpenseCategorySchema extends BaseModel {
+  static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
+  $columns = ExpenseCategorySchema.$columns
+  @column()
+  declare color: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare defaultContactId: number | null
+  @column()
+  declare defaultWalletTypeId: number | null
+  @column()
+  declare icon: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class ExpenseSchema extends BaseModel {
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'expenseCategoryId', 'fees', 'id', 'name', 'toContactId', 'updatedAt', 'userId', 'walletId'] as const
+  $columns = ExpenseSchema.$columns
+  @column()
+  declare amount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare date: DateTime
+  @column()
+  declare description: string
+  @column()
+  declare expenseCategoryId: number
+  @column()
+  declare fees: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare toContactId: number | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+  @column()
+  declare walletId: number | null
+}
+
 export class IncomeCategorySchema extends BaseModel {
   static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
   $columns = IncomeCategorySchema.$columns

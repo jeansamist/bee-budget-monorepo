@@ -6,6 +6,7 @@ import PasswordResetNotification from '#mails/password_reset_notification'
 import WelcomeNotification from '#mails/welcome_notification'
 import User from '#models/user'
 import IncomeCategoryRepository from '#repositories/income_category_repository'
+import ExpenseCategoryRepository from '#repositories/expense_category_repository'
 import UserRepository from '#repositories/user_repository'
 import WalletRepository from '#repositories/wallet_repository'
 import WalletTypeRepository from '#repositories/wallet_type_repository'
@@ -20,6 +21,7 @@ import mail from '@adonisjs/mail/services/main'
 import { DateTime } from 'luxon'
 import { randomInt } from 'node:crypto'
 import {
+  ACCOUNT_SETUP_EXPENSE_CATEGORIES,
   ACCOUNT_SETUP_INCOME_CATEGORIES,
   ACCOUNT_SETUP_WALLETS,
   ACCOUNT_SETUP_WALLET_TYPES,
@@ -34,6 +36,7 @@ export class AuthService {
     protected readonly walletTypeRepository: WalletTypeRepository,
     protected readonly walletRepository: WalletRepository,
     protected readonly incomeCategoryRepository: IncomeCategoryRepository,
+    protected readonly expenseCategoryRepository: ExpenseCategoryRepository,
     protected readonly cronManager: CronManager,
     protected readonly logger: Logger
   ) {}
@@ -59,11 +62,27 @@ export class AuthService {
         defaultWalletTypeId: incomeCategory.defaultWalletTypeName
           ? (walletTypeIdsByName.get(incomeCategory.defaultWalletTypeName) ?? null)
           : null,
+        defaultContactId: null,
         userId: user.id,
       }))
 
       for (const incomeCategory of incomeCategories) {
         await this.incomeCategoryRepository.create(incomeCategory, trx)
+      }
+
+      const expenseCategories = ACCOUNT_SETUP_EXPENSE_CATEGORIES.map((expenseCategory) => ({
+        name: expenseCategory.name,
+        color: expenseCategory.color,
+        icon: expenseCategory.icon,
+        defaultWalletTypeId: expenseCategory.defaultWalletTypeName
+          ? (walletTypeIdsByName.get(expenseCategory.defaultWalletTypeName) ?? null)
+          : null,
+        defaultContactId: null,
+        userId: user.id,
+      }))
+
+      for (const expenseCategory of expenseCategories) {
+        await this.expenseCategoryRepository.create(expenseCategory, trx)
       }
 
       await this.walletRepository.createMany(

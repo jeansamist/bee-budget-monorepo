@@ -44,6 +44,22 @@ router
       .use([middleware.auth()])
     router
       .group(() => {
+        router.post('/create-mass', [controllers.ExpenseCategories, 'createMass'])
+        router.put('/update-mass', [controllers.ExpenseCategories, 'updateMass'])
+        router.post('/delete-mass', [controllers.ExpenseCategories, 'deleteMass'])
+      })
+      .prefix('/expense-categories')
+      .use([middleware.auth()])
+    router
+      .group(() => {
+        router.post('/create-mass', [controllers.Expenses, 'createMass'])
+        router.put('/update-mass', [controllers.Expenses, 'updateMass'])
+        router.post('/delete-mass', [controllers.Expenses, 'deleteMass'])
+      })
+      .prefix('/expenses')
+      .use([middleware.auth()])
+    router
+      .group(() => {
         router.post('/create-mass', [controllers.IncomeCategories, 'createMass'])
         router.put('/update-mass', [controllers.IncomeCategories, 'updateMass'])
         router.post('/delete-mass', [controllers.IncomeCategories, 'deleteMass'])
@@ -75,6 +91,11 @@ router
       .prefix('/wallets')
       .use([middleware.auth()])
     router.resource('/contacts', controllers.Contacts).apiOnly().use('*', [middleware.auth()])
+    router
+      .resource('/expense-categories', controllers.ExpenseCategories)
+      .apiOnly()
+      .use('*', [middleware.auth()])
+    router.resource('/expenses', controllers.Expenses).apiOnly().use('*', [middleware.auth()])
     router
       .resource('/income-categories', controllers.IncomeCategories)
       .apiOnly()

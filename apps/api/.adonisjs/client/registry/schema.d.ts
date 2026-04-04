@@ -151,6 +151,78 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'expense_categories.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/expense-categories/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense_category').createMassExpenseCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense_category').createMassExpenseCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expense_categories.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/expense-categories/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense_category').updateMassExpenseCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense_category').updateMassExpenseCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expense_categories.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/expense-categories/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense_category').deleteMassExpenseCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense_category').deleteMassExpenseCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expenses.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/expenses/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense').createMassExpenseValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense').createMassExpenseValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expenses.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/expenses/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense').updateMassExpenseValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense').updateMassExpenseValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expenses.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/expenses/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense').deleteMassExpenseValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense').deleteMassExpenseValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'
@@ -353,6 +425,126 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['destroy']>>>
+    }
+  }
+  'expense_categories.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/expense-categories'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expense_categories.store': {
+    methods: ["POST"]
+    pattern: '/api/expense-categories'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense_category').createExpenseCategoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense_category').createExpenseCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expense_categories.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/expense-categories/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['show']>>>
+    }
+  }
+  'expense_categories.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/expense-categories/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense_category').updateExpenseCategoryValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense_category').updateExpenseCategoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expense_categories.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/expense-categories/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expense_categories_controller').default['destroy']>>>
+    }
+  }
+  'expenses.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/expenses'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expenses.store': {
+    methods: ["POST"]
+    pattern: '/api/expenses'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense').createExpenseValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense').createExpenseValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expenses.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/expenses/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['show']>>>
+    }
+  }
+  'expenses.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/expenses/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/expense').updateExpenseValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/expense').updateExpenseValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'expenses.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/expenses/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['destroy']>>>
     }
   }
   'income_categories.index': {

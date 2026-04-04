@@ -130,6 +130,35 @@ export default {
   "app.dataTables.incomeTable.detail.from": "From",
   "app.dataTables.incomeTable.detail.noDescription": "No description",
 
+  "app.dataTables.expenseTable.select": "Select row",
+  "app.dataTables.expenseTable.selectAll": "Select all",
+  "app.dataTables.expenseTable.columns.idExpense": "ID Expense",
+  "app.dataTables.expenseTable.columns.name": "Name",
+  "app.dataTables.expenseTable.columns.category": "Category",
+  "app.dataTables.expenseTable.columns.to": "To",
+  "app.dataTables.expenseTable.columns.wallet": "Wallet",
+  "app.dataTables.expenseTable.columns.date": "Date",
+  "app.dataTables.expenseTable.columns.totalAmount": "Total Amount",
+  "app.dataTables.expenseTable.columns.actions": "Actions",
+  "app.dataTables.expenseTable.actions.openMenu": "Open menu",
+  "app.dataTables.expenseTable.actions.label": "Actions",
+  "app.dataTables.expenseTable.actions.copyId": "Copy ID",
+  "app.dataTables.expenseTable.actions.view": "View expense",
+  "app.dataTables.expenseTable.actions.delete": "Delete expense",
+
+  "app.dataTables.expenseTable.detail.title": "Expense details",
+  "app.dataTables.expenseTable.detail.id": "ID",
+  "app.dataTables.expenseTable.detail.name": "Name",
+  "app.dataTables.expenseTable.detail.description": "Description",
+  "app.dataTables.expenseTable.detail.amount": "Amount",
+  "app.dataTables.expenseTable.detail.fees": "Fees",
+  "app.dataTables.expenseTable.detail.total": "Total charged",
+  "app.dataTables.expenseTable.detail.date": "Date",
+  "app.dataTables.expenseTable.detail.category": "Category",
+  "app.dataTables.expenseTable.detail.wallet": "Wallet",
+  "app.dataTables.expenseTable.detail.to": "To",
+  "app.dataTables.expenseTable.detail.noDescription": "No description",
+
   "app.confirm.confirm": "Confirm",
   "app.confirm.cancel": "Cancel",
 
@@ -143,6 +172,17 @@ export default {
   "app.dashboard.lastIncomes.deleteConfirm.confirm": "Delete",
   "app.dashboard.lastIncomes.deleting": "Deleting...",
   "app.dashboard.lastIncomes.perPage.placeholder": "Total",
+
+  "app.dashboard.lastExpenses.title": "Expenses",
+  "app.dashboard.lastExpenses.description":
+    "Track expense details, fees, and totals at a glance.",
+  "app.dashboard.lastExpenses.deleteCount": "Delete ({count})",
+  "app.dashboard.lastExpenses.deleteConfirm.title": "Delete expense",
+  "app.dashboard.lastExpenses.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.dashboard.lastExpenses.deleteConfirm.confirm": "Delete",
+  "app.dashboard.lastExpenses.deleting": "Deleting...",
+  "app.dashboard.lastExpenses.perPage.placeholder": "Total",
 
   unknownError: "Something went wrong",
 } as const

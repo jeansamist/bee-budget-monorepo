@@ -1,4 +1,4 @@
-import { ACCOUNT_SETUP_INCOME_CATEGORIES, ACCOUNT_SETUP_WALLET_TYPES } from '#constants/index'
+import { ACCOUNT_SETUP_INCOME_CATEGORIES } from '#constants/index'
 import IncomeCategory from '#models/income_category'
 import User from '#models/user'
 import WalletType from '#models/wallet_type'
