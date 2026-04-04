@@ -1,6 +1,7 @@
 "use client"
 
-import { getIncomes } from "@/services/incomes.services"
+import { useScopedI18n } from "@/lib/i18n/client"
+import { deleteMassIncomes, getIncomes } from "@/services/incomes.services"
 import { Income } from "@/types"
 import { Button } from "@bee-budget/ui/button"
 import {
@@ -20,8 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@bee-budget/ui/select"
-import { Trash } from "lucide-react"
+import { Loader, Trash } from "lucide-react"
 import { FunctionComponent, useCallback, useEffect, useState } from "react"
+import { Confirm } from "../confirm"
 import { IncomeDataTable } from "../data-tables/income-table/income-data-table"
 
 export type LastIncomesProps = {
@@ -29,40 +31,62 @@ export type LastIncomesProps = {
 }
 
 export const LastIncomes: FunctionComponent<LastIncomesProps> = () => {
+  const t = useScopedI18n("app.dashboard.lastIncomes")
   const [incomes, setIncomes] = useState<Income[]>([])
+  const [deleting, setDeleting] = useState(false)
   const [selectedRows, setSelectedRows] = useState<Income[]>([])
   const [perPage, setPerPage] = useState<number>(5)
+  const [fetchVersion, setFetchVersion] = useState(0)
   useEffect(() => {
-    // Fetch the last 5 incomes from your API or data source
     ;(async () => {
       const response = await getIncomes({ perPage: perPage })
       if (response.success) {
-        setIncomes(response.data ?? []) // Update state with fetched incomes
+        setIncomes(response.data ?? [])
       }
     })()
-  }, [perPage])
+  }, [perPage, fetchVersion])
   const handleRowSelection = useCallback(
     (row: Income[]) => {
       setSelectedRows(row)
     },
     [setSelectedRows]
   )
+
+  const handleDelete = useCallback(async () => {
+    setDeleting(true)
+    setIncomes((prevIncomes) =>
+      prevIncomes.filter((income) => !selectedRows.includes(income))
+    )
+    await deleteMassIncomes(selectedRows.map((income) => income.id))
+    setDeleting(false)
+    setSelectedRows([])
+    setFetchVersion((v) => v + 1)
+  }, [selectedRows])
   return (
     <div className="px-4">
       <Card>
         <CardHeader>
           <div className="space-y-1">
-            <CardTitle>Incomes</CardTitle>
-            <CardDescription>
-              Track income details and amounts at a glance.
-            </CardDescription>
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
           </div>
           <CardAction className="hidden gap-2 md:flex">
             {selectedRows.length > 0 && (
-              <Button variant={"destructive"}>
-                <Trash />
-                Delete ({selectedRows.length})
-              </Button>
+              <Confirm
+                title={t("deleteConfirm.title")}
+                content={t("deleteConfirm.content")}
+                confirmText={t("deleteConfirm.confirm")}
+                onConfirm={() => handleDelete()}
+              >
+                <Button variant={"destructive"} disabled={deleting}>
+                  {deleting ? <Loader className="animate-spin" /> : <Trash />}
+                  {deleting
+                    ? t("deleting")
+                    : t("deleteCount", {
+                        count: selectedRows.length.toString().padStart(2, "0"),
+                      })}
+                </Button>
+              </Confirm>
             )}
           </CardAction>
         </CardHeader>
@@ -70,6 +94,7 @@ export const LastIncomes: FunctionComponent<LastIncomesProps> = () => {
           <IncomeDataTable
             incomes={incomes}
             handleRowSelection={handleRowSelection}
+            resetSelectionTrigger={fetchVersion}
           />
         </CardContent>
         <CardFooter className="flex items-center justify-end">
@@ -79,7 +104,7 @@ export const LastIncomes: FunctionComponent<LastIncomesProps> = () => {
             defaultValue="5"
           >
             <SelectTrigger>
-              <SelectValue placeholder="Total" />
+              <SelectValue placeholder={t("perPage.placeholder")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>

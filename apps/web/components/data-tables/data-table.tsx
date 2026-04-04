@@ -23,12 +23,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   handleRowSelection?: (rowOriginals: TData[]) => void
+  resetSelectionTrigger?: unknown
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   handleRowSelection,
+  resetSelectionTrigger,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
@@ -54,6 +56,10 @@ export function DataTable<TData, TValue>({
       handleRowSelection(selectedRows)
     }
   }, [handleRowSelection, rowSelection, table])
+
+  useEffect(() => {
+    table.resetRowSelection()
+  }, [resetSelectionTrigger, table])
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>

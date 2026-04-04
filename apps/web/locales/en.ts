@@ -119,6 +119,20 @@ export default {
   "app.dataTables.incomeTable.actions.view": "View income",
   "app.dataTables.incomeTable.actions.delete": "Delete income",
 
+  "app.confirm.confirm": "Confirm",
+  "app.confirm.cancel": "Cancel",
+
+  "app.dashboard.lastIncomes.title": "Incomes",
+  "app.dashboard.lastIncomes.description":
+    "Track income details and amounts at a glance.",
+  "app.dashboard.lastIncomes.deleteCount": "Delete ({count})",
+  "app.dashboard.lastIncomes.deleteConfirm.title": "Delete income",
+  "app.dashboard.lastIncomes.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.dashboard.lastIncomes.deleteConfirm.confirm": "Delete",
+  "app.dashboard.lastIncomes.deleting": "Deleting...",
+  "app.dashboard.lastIncomes.perPage.placeholder": "Total",
+
   unknownError: "Something went wrong",
 } as const
 export type Locale = typeof import("./en").default

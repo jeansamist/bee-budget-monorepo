@@ -97,7 +97,7 @@ export const DataCards: FunctionComponent = () => {
           description={wallet.description}
           value={
             <span>
-              {`${wallet.amount.toLocaleString()}`}
+              {`${wallet.amount.toLocaleString().padStart(3, "0")}`}
               <span className="text-sm text-muted-foreground">XAF</span>
             </span>
           }
