@@ -3,14 +3,21 @@
 import { useApp } from "@/contexts/app.context"
 import { useI18n } from "@/lib/i18n/client"
 import { cn } from "@bee-budget/functions"
-import { ChartContainer, type ChartConfig } from "@bee-budget/ui/chart"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@bee-budget/ui/chart"
 import { FunctionComponent, ReactNode, useMemo } from "react"
 import { Area, AreaChart, CartesianGrid } from "recharts"
+
 type ChartProps = {
   className?: string
   fill?: string
   data: { month: string; amount: number }[]
 }
+
 const Chart: FunctionComponent<ChartProps> = ({ className, fill, data }) => {
   const t = useI18n()
   const chartData = useMemo<{ month: string; amount: number }[]>(() => {
@@ -27,6 +34,21 @@ const Chart: FunctionComponent<ChartProps> = ({ className, fill, data }) => {
     <ChartContainer config={chartConfig} className={cn("w-full", className)}>
       <AreaChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
+        <ChartTooltip
+          cursor={false}
+          content={
+            <ChartTooltipContent
+              labelFormatter={(_, payload) =>
+                `Month: ${String(payload?.[0]?.payload?.month ?? "-")}`
+              }
+              formatter={(value) => (
+                <span className="font-mono font-medium text-foreground tabular-nums">
+                  {typeof value === "number" ? value.toLocaleString() : String(value)} XAF
+                </span>
+              )}
+            />
+          }
+        />
         <Area
           dataKey="amount"
           type="natural"
@@ -45,14 +67,14 @@ type DataCardProps = {
   description: string
   value: ReactNode
   evolution: number
-  lastMonthssData: { month: string; amount: number }[]
+  lastMonthsData: { month: string; amount: number }[]
   [key: string]: unknown
 }
 
 const DataCard: FunctionComponent<DataCardProps> = ({
   description,
   evolution,
-  lastMonthssData,
+  lastMonthsData,
   name,
   value,
 }) => {
@@ -76,7 +98,7 @@ const DataCard: FunctionComponent<DataCardProps> = ({
         </p>
       </div>
       <Chart
-        data={lastMonthssData}
+        data={lastMonthsData}
         className="w-1/3"
         fill={evolution >= 0 ? "#1E90FF" : "#FF6347"}
       />
@@ -86,31 +108,28 @@ const DataCard: FunctionComponent<DataCardProps> = ({
 
 export const DataCards: FunctionComponent = () => {
   const { wallets } = useApp()
+
   return (
     <div
       className={"grid grid-cols-1 gap-4 px-4 md:grid-cols-2 lg:grid-cols-3"}
     >
-      {wallets.map((wallet) => (
-        <DataCard
-          key={wallet.id}
-          name={wallet.name}
-          description={wallet.description}
-          value={
-            <span>
-              {`${wallet.amount.toLocaleString().padStart(3, "0")}`}
-              <span className="text-sm text-muted-foreground">XAF</span>
-            </span>
-          }
-          evolution={5} // Placeholder for evolution percentage
-          lastMonthssData={[
-            { month: "Jan", amount: 38000 },
-            { month: "Feb", amount: 25000 },
-            { month: "Mar", amount: 55000 },
-            { month: "Apr", amount: 40000 },
-            { month: "May", amount: 43000 },
-          ]} // Placeholder for last month data
-        />
-      ))}
+      {wallets.map((wallet) => {
+        return (
+          <DataCard
+            key={wallet.id}
+            name={wallet.name}
+            description={wallet.description}
+            value={
+              <span>
+                {`${wallet.amount.toLocaleString().padStart(3, "0")}`}
+                <span className="text-sm text-muted-foreground">XAF</span>
+              </span>
+            }
+            evolution={wallet.evolution ?? 0}
+            lastMonthsData={wallet.lastMonthsData ?? []}
+          />
+        )
+      })}
     </div>
   )
 }

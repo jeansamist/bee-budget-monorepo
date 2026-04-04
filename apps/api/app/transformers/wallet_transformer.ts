@@ -10,6 +10,8 @@ export default class WalletTransformer extends BaseTransformer<Wallet> {
       'walletTypeId',
       'image',
       'amount',
+      'lastMonthsData',
+      'evolution',
       'createdAt',
       'updatedAt',
     ])

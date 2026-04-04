@@ -129,6 +129,8 @@ export type Wallet = {
   walletTypeId: number
   image: string | null
   amount: number
+  lastMonthsData: { month: string; amount: number }[]
+  evolution: number
   createdAt: string | null
   updatedAt: string | null
 }

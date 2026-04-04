@@ -1,4 +1,5 @@
 import Contact from '#models/contact'
+import Expense from '#models/expense'
 import Income from '#models/income'
 import IncomeCategory from '#models/income_category'
 import User from '#models/user'
@@ -9,9 +10,6 @@ import { DateTime } from 'luxon'
 export default class IncomeSeeder extends BaseSeeder {
   async run() {
     const user = await User.findByOrFail('email', 'demo@beebudget.app')
-
-    const existing = await Income.query().where('user_id', user.id).count('* as total')
-    if (Number(existing[0].$extras.total) > 0) return
 
     const [wallets, categories, contacts] = await Promise.all([
       Wallet.query().where('user_id', user.id),
@@ -468,6 +466,16 @@ export default class IncomeSeeder extends BaseSeeder {
         userId: user.id,
         date: now.minus({ months: 11 }),
       },
+      {
+        name: 'Cadeau familial',
+        description: 'Cadeau en especes pour depenses personnelles',
+        amount: 50_000,
+        incomeCategoryId: cat('GIFT').id,
+        walletId: physical.id,
+        fromContactId: contact('Sophie Bernard').id,
+        userId: user.id,
+        date: now.minus({ months: 1, days: 8 }),
+      },
 
       // --- OTHER — Remboursements (8 entries) — paid to PHYSICAL or ORANGE_MONEY ---
       {
@@ -552,16 +560,60 @@ export default class IncomeSeeder extends BaseSeeder {
       },
     ]
 
-    // Create incomes and accumulate totals per wallet
-    const walletTotals = new Map<number, number>()
-    for (const income of incomes) {
+    const existingIncomes = await Income.query().where('user_id', user.id)
+    const existingIncomeKeys = new Set(
+      existingIncomes.map((income) =>
+        [
+          income.name,
+          income.amount,
+          income.walletId,
+          income.fromContactId,
+          income.date.toISODate(),
+        ].join('|')
+      )
+    )
+
+    const missingIncomes = incomes.filter((income) => {
+      const key = [
+        income.name,
+        income.amount,
+        income.walletId,
+        income.fromContactId,
+        income.date.toISODate(),
+      ].join('|')
+      return !existingIncomeKeys.has(key)
+    })
+
+    for (const income of missingIncomes) {
       await Income.create(income)
-      walletTotals.set(income.walletId, (walletTotals.get(income.walletId) ?? 0) + income.amount)
     }
 
-    // Update each wallet balance to reflect the seeded incomes
-    for (const [walletId, total] of walletTotals) {
-      await Wallet.query().where('id', walletId).update({ amount: total })
+    const [seededIncomes, seededExpenses] = await Promise.all([
+      Income.query().where('user_id', user.id),
+      Expense.query().where('user_id', user.id),
+    ])
+
+    const incomeTotals = new Map<number, number>()
+    seededIncomes.forEach((income) => {
+      if (income.walletId === null) return
+      incomeTotals.set(income.walletId, (incomeTotals.get(income.walletId) ?? 0) + income.amount)
+    })
+
+    const expenseTotals = new Map<number, number>()
+    seededExpenses.forEach((expense) => {
+      if (expense.walletId === null) return
+      expenseTotals.set(
+        expense.walletId,
+        (expenseTotals.get(expense.walletId) ?? 0) + expense.amount + (expense.fees ?? 0)
+      )
+    })
+
+    for (const wallet of wallets) {
+      await Wallet.query()
+        .where('id', wallet.id)
+        .update({
+          amount: (incomeTotals.get(wallet.id) ?? 0) - (expenseTotals.get(wallet.id) ?? 0),
+        })
     }
   }
 }

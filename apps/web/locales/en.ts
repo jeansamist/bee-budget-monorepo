@@ -101,7 +101,7 @@ export default {
   "app.header.openGithub": "Open on GitHub",
   "app.header.breadcrumb.brand": "BeeBudget",
   "app.header.breadcrumb.dashboard": "Dashboard",
-  "app.dashboard.dataCards.chart.total": "Total",
+  "app.dashboard.dataCards.chart.total": "Balance",
   "app.dashboard.dataCards.evolution.fromLastMonth": "from last month",
   "app.dataTables.incomeTable.select": "Select row",
   "app.dataTables.incomeTable.selectAll": "Select all",

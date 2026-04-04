@@ -1,6 +1,7 @@
 import Contact from '#models/contact'
 import Expense from '#models/expense'
 import ExpenseCategory from '#models/expense_category'
+import Income from '#models/income'
 import User from '#models/user'
 import Wallet from '#models/wallet'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
@@ -13,10 +14,11 @@ export default class ExpenseSeeder extends BaseSeeder {
     const existing = await Expense.query().where('user_id', user.id).count('* as total')
     if (Number(existing[0].$extras.total) > 0) return
 
-    const [wallets, categories, contacts] = await Promise.all([
+    const [wallets, categories, contacts, incomes] = await Promise.all([
       Wallet.query().where('user_id', user.id),
       ExpenseCategory.query().where('user_id', user.id),
       Contact.query().where('user_id', user.id),
+      Income.query().where('user_id', user.id),
     ])
 
     const w = (name: string) => wallets.find((x) => x.name === name)!
@@ -45,7 +47,7 @@ export default class ExpenseSeeder extends BaseSeeder {
       {
         name: 'Courses hebdomadaires',
         description: 'Marché et supermarché',
-        amount: 21_500,
+        amount: 19_000,
         fees: null,
         expenseCategoryId: cat('GROCERIES').id,
         walletId: physical.id,
@@ -176,22 +178,74 @@ export default class ExpenseSeeder extends BaseSeeder {
       },
     ]
 
-    const walletTotals = new Map<number, number>()
+    const walletNames = new Map(wallets.map((wallet) => [wallet.id, wallet.name]))
+    const runningBalances = new Map<number, number>()
+    const ledger = [
+      ...incomes.map((income) => ({
+        walletId: income.walletId,
+        date: income.date,
+        label: income.name,
+        delta: income.amount,
+      })),
+      ...expenses.map((expense) => ({
+        walletId: expense.walletId,
+        date: expense.date,
+        label: expense.name,
+        delta: -(expense.amount + (expense.fees ?? 0)),
+      })),
+    ]
+      .filter((entry) => entry.walletId !== null)
+      .sort((left, right) => {
+        const dateDiff = left.date.toMillis() - right.date.toMillis()
+        if (dateDiff !== 0) return dateDiff
+        return left.label.localeCompare(right.label)
+      })
+
+    for (const entry of ledger) {
+      const walletId = entry.walletId
+      if (walletId === null) continue
+
+      const nextBalance = (runningBalances.get(walletId) ?? 0) + entry.delta
+      if (nextBalance < 0) {
+        throw new Error(
+          `Expense seed would make wallet ${
+            walletNames.get(walletId) ?? walletId
+          } negative on ${entry.date.toISODate()}`
+        )
+      }
+      runningBalances.set(walletId, nextBalance)
+    }
+
     for (const expense of expenses) {
-      const nextTotal = expense.amount + (expense.fees ?? 0)
-      walletTotals.set(expense.walletId, (walletTotals.get(expense.walletId) ?? 0) + nextTotal)
       await Expense.create(expense)
     }
 
-    for (const [walletId, total] of walletTotals) {
-      const wallet = wallets.find((item) => item.id === walletId)
-      if (!wallet) continue
-      if (wallet.amount < total) {
-        throw new Error(`Expense seed exceeds wallet balance for wallet ${wallet.name}`)
-      }
+    const [seededIncomes, seededExpenses] = await Promise.all([
+      Income.query().where('user_id', user.id),
+      Expense.query().where('user_id', user.id),
+    ])
+
+    const incomeTotals = new Map<number, number>()
+    seededIncomes.forEach((income) => {
+      if (income.walletId === null) return
+      incomeTotals.set(income.walletId, (incomeTotals.get(income.walletId) ?? 0) + income.amount)
+    })
+
+    const expenseTotals = new Map<number, number>()
+    seededExpenses.forEach((expense) => {
+      if (expense.walletId === null) return
+      expenseTotals.set(
+        expense.walletId,
+        (expenseTotals.get(expense.walletId) ?? 0) + expense.amount + (expense.fees ?? 0)
+      )
+    })
+
+    for (const wallet of wallets) {
       await Wallet.query()
-        .where('id', walletId)
-        .update({ amount: wallet.amount - total })
+        .where('id', wallet.id)
+        .update({
+          amount: (incomeTotals.get(wallet.id) ?? 0) - (expenseTotals.get(wallet.id) ?? 0),
+        })
     }
   }
 }
