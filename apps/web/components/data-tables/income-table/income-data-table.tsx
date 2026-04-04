@@ -3,8 +3,15 @@ import { FunctionComponent } from "react"
 import { DataTable } from "../data-table"
 import { columns } from "./columns"
 
-export const IncomeDataTable: FunctionComponent<{ incomes: Income[] }> = ({
-  incomes,
-}) => {
-  return <DataTable columns={columns} data={incomes} />
+export const IncomeDataTable: FunctionComponent<{
+  incomes: Income[]
+  handleRowSelection?: (state: Income[]) => void
+}> = ({ incomes, handleRowSelection }) => {
+  return (
+    <DataTable<Income, unknown>
+      columns={columns}
+      data={incomes}
+      handleRowSelection={handleRowSelection}
+    />
+  )
 }

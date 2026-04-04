@@ -17,16 +17,18 @@ import {
   TableHeader,
   TableRow,
 } from "@bee-budget/ui/table"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  handleRowSelection?: (rowOriginals: TData[]) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  handleRowSelection,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
@@ -44,6 +46,14 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  useEffect(() => {
+    if (handleRowSelection) {
+      const selectedRows = table
+        .getSelectedRowModel()
+        .rows.map((row) => row.original)
+      handleRowSelection(selectedRows)
+    }
+  }, [handleRowSelection, rowSelection, table])
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>

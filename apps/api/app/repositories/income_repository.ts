@@ -57,7 +57,12 @@ export default class IncomeRepository {
     return this.model.createMany(data)
   }
   async findAllByUserId(userId: number): Promise<Income[]> {
-    return this.model.query().where('user_id', userId).preload('wallet').preload('fromContact')
+    return this.model
+      .query()
+      .where('user_id', userId)
+      .preload('wallet')
+      .preload('fromContact')
+      .orderBy('created_at', 'desc')
   }
 
   async paginateByUserId(userId: number, page: number, perPage: number) {
@@ -66,6 +71,7 @@ export default class IncomeRepository {
       .where('user_id', userId)
       .preload('wallet')
       .preload('fromContact')
+      .orderBy('created_at', 'desc')
       .paginate(page, perPage)
   }
 }

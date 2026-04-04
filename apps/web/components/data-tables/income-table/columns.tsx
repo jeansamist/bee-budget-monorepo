@@ -2,6 +2,7 @@
 "use client"
 
 import { useApp } from "@/contexts/app.context"
+import { useI18n } from "@/lib/i18n/client"
 import { Contact, Income, IncomeCategory, Wallet, WalletType } from "@/types"
 import { cn, findById } from "@bee-budget/functions"
 import { Button } from "@bee-budget/ui/button"
@@ -14,9 +15,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bee-budget/ui/dropdown-menu"
-import { Column, ColumnDef } from "@tanstack/react-table"
+import { Column, ColumnDef, Table } from "@tanstack/react-table"
 import { ChevronsUpDown, Eye, MoreHorizontal } from "lucide-react"
 import { useMemo } from "react"
+
 const SortableHeader = ({
   column,
   title,
@@ -35,6 +37,155 @@ const SortableHeader = ({
       {title}
       <ChevronsUpDown className="h-4 w-4" />
     </Button>
+  )
+}
+
+// Header components (must be React components to use hooks)
+const SelectHeader = ({ table }: { table: Table<Income> }) => {
+  const t = useI18n()
+  return (
+    <Checkbox
+      checked={
+        table.getIsAllPageRowsSelected() ||
+        (table.getIsSomePageRowsSelected() && "indeterminate")
+      }
+      onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      aria-label={t("app.dataTables.incomeTable.selectAll")}
+    />
+  )
+}
+
+const SelectCell = ({
+  row,
+}: {
+  row: { getIsSelected: () => boolean; toggleSelected: (v: boolean) => void }
+}) => {
+  const t = useI18n()
+  return (
+    <Checkbox
+      checked={row.getIsSelected()}
+      onCheckedChange={(value) => row.toggleSelected(!!value)}
+      aria-label={t("app.dataTables.incomeTable.select")}
+    />
+  )
+}
+
+const IdHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.idIncome")}
+    />
+  )
+}
+
+const NameHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.name")}
+    />
+  )
+}
+
+const CategoryHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.category")}
+    />
+  )
+}
+
+const FromHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.from")}
+    />
+  )
+}
+
+const WalletHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.wallet")}
+    />
+  )
+}
+
+const DateHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.date")}
+    />
+  )
+}
+
+const AmountHeader = ({ column }: { column: Column<Income> }) => {
+  const t = useI18n()
+  return (
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.incomeTable.columns.totalAmount")}
+    />
+  )
+}
+
+const ActionsHeader = () => {
+  const t = useI18n()
+  return (
+    <div className="text-right">
+      {t("app.dataTables.incomeTable.columns.actions")}
+    </div>
+  )
+}
+
+const ActionsCell = ({ row }: { row: { original: Income } }) => {
+  const t = useI18n()
+  const income = row.original
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <Button variant="outline" size="icon">
+        <Eye className="h-4 w-4" />
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon" className="h-8 w-8 p-0">
+            <span className="sr-only">
+              {t("app.dataTables.incomeTable.actions.openMenu")}
+            </span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>
+            {t("app.dataTables.incomeTable.actions.label")}
+          </DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(income.id.toString())}
+          >
+            {t("app.dataTables.incomeTable.actions.copyId")}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            {t("app.dataTables.incomeTable.actions.view")}
+          </DropdownMenuItem>
+          <DropdownMenuItem variant="destructive">
+            {t("app.dataTables.incomeTable.actions.delete")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }
 
@@ -128,34 +279,18 @@ const WalletCell = ({ row }: { row: { original: Income } }) => {
     </div>
   )
 }
+
 export const columns: ColumnDef<Income>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    header: SelectHeader,
+    cell: SelectCell,
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "id",
-    header: ({ column }) => (
-      <SortableHeader column={column} title="ID Income" />
-    ),
+    header: IdHeader,
     cell: ({ row }) => {
       const income = row.original
       return (
@@ -167,7 +302,7 @@ export const columns: ColumnDef<Income>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => <SortableHeader column={column} title="Name" />,
+    header: NameHeader,
     cell: ({ row }) => {
       const income = row.original
       return (
@@ -184,23 +319,22 @@ export const columns: ColumnDef<Income>[] = [
   },
   {
     accessorKey: "incomeCategoryId",
-    header: ({ column }) => <SortableHeader column={column} title="Category" />,
+    header: CategoryHeader,
     cell: IncomeCategoryCell,
   },
   {
     accessorKey: "fromContactId",
-    header: ({ column }) => <SortableHeader column={column} title="From" />,
+    header: FromHeader,
     cell: ContactCell,
   },
   {
     accessorKey: "walletId",
-    header: ({ column }) => <SortableHeader column={column} title="Wallet" />,
+    header: WalletHeader,
     cell: WalletCell,
   },
-
   {
     accessorKey: "date",
-    header: ({ column }) => <SortableHeader column={column} title="Date" />,
+    header: DateHeader,
     cell: ({ row }) => {
       const income = row.original
       return (
@@ -218,14 +352,14 @@ export const columns: ColumnDef<Income>[] = [
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => (
-      <SortableHeader column={column} title="Total Amount" />
-    ),
+    header: AmountHeader,
     cell: ({ row }) => {
       const income = row.original
       return (
         <div>
-          <span>{income.amount}</span>
+          <span className="font-semibold">
+            {income.amount.toLocaleString()}
+          </span>
           <span className="text-muted-foreground">XAF</span>
         </div>
       )
@@ -233,41 +367,8 @@ export const columns: ColumnDef<Income>[] = [
   },
   {
     id: "actions",
-    header: () => <div className="text-right">Actions</div>, // no sorting here
+    header: ActionsHeader,
     enableSorting: false,
-    cell: ({ row }) => {
-      const income = row.original
-
-      return (
-        <div className="flex items-center justify-end gap-2">
-          <Button variant="outline" size="icon">
-            <Eye className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(income.id.toString())
-                }
-              >
-                Copy ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View income</DropdownMenuItem>
-              <DropdownMenuItem variant="destructive">
-                Delete income
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )
-    },
+    cell: ActionsCell,
   },
 ]
