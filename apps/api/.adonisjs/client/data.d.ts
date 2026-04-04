@@ -10,6 +10,7 @@ import type IncomeTransformer from '#transformers/income_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 import type WalletTransformer from '#transformers/wallet_transformer'
 import type WalletTypeTransformer from '#transformers/wallet_type_transformer'
+import type ContactTransformer from '#transformers/contact_transformer'
 
 export namespace Data {
   export type IncomeCategory = InferData<IncomeCategoryTransformer>
@@ -31,5 +32,9 @@ export namespace Data {
   export type WalletType = InferData<WalletTypeTransformer>
   export namespace WalletType {
     export type Variants = InferVariants<WalletTypeTransformer>
+  }
+  export type Contact = InferData<ContactTransformer>
+  export namespace Contact {
+    export type Variants = InferVariants<ContactTransformer>
   }
 }

@@ -2,6 +2,7 @@ import { IncomeSchema } from '#database/schema'
 import IncomeCategoryRepository from '#repositories/income_category_repository'
 import IncomeRepository from '#repositories/income_repository'
 import WalletRepository from '#repositories/wallet_repository'
+import ContactRepository from '#repositories/contact_repository'
 import { ModelProps } from '#utils/generics'
 import { httpError } from '#utils/http_error'
 import { inject } from '@adonisjs/core'
@@ -16,6 +17,7 @@ type CreateIncomePayload = {
   incomeCategoryId: number
   walletId: number
   date: DateTime
+  fromContactId?: number | null
 }
 
 type UpdateIncomePayload = Partial<CreateIncomePayload>
@@ -27,6 +29,7 @@ export class IncomeService {
     private readonly repository: IncomeRepository,
     private readonly incomeCategoryRepository: IncomeCategoryRepository,
     private readonly walletRepository: WalletRepository,
+    private readonly contactRepository: ContactRepository,
     private readonly ctx: HttpContext
   ) {}
 
@@ -76,8 +79,17 @@ export class IncomeService {
     return { incomeCategory, wallet }
   }
 
+  private async validateContactOwnership(fromContactId: number | null | undefined) {
+    if (fromContactId === undefined || fromContactId === null) return
+    const contact = await this.contactRepository.findById(fromContactId)
+    if (contact.userId !== this.userId) {
+      throw httpError(422, 'The selected contact is invalid')
+    }
+  }
+
   async createIncome(data: CreateIncomePayload) {
     const { wallet } = await this.validateWalletSelection(data)
+    await this.validateContactOwnership(data.fromContactId)
 
     return db.transaction(async (trx) => {
       wallet.useTransaction(trx)
@@ -92,6 +104,7 @@ export class IncomeService {
           date: data.date,
           incomeCategoryId: data.incomeCategoryId,
           walletId: data.walletId,
+          fromContactId: data.fromContactId ?? null,
           userId: this.userId,
         } as ModelProps<IncomeSchema>,
         trx
@@ -102,6 +115,7 @@ export class IncomeService {
   async updateIncome(id: number, data: UpdateIncomePayload) {
     const income = await this.repository.findById(id)
     this.checkOwnership(income)
+    await this.validateContactOwnership(data.fromContactId)
 
     const effectiveIncomeCategoryId = data.incomeCategoryId ?? income.incomeCategoryId
 
@@ -160,6 +174,7 @@ export class IncomeService {
           date: data.date,
           incomeCategoryId: data.incomeCategoryId,
           walletId: targetWallet.id,
+          fromContactId: data.fromContactId,
         } as Partial<ModelProps<IncomeSchema>>,
         trx
       )

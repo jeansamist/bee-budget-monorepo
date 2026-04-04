@@ -18,6 +18,7 @@ function createIncomeSchema() {
     incomeCategoryId: vine.number().positive(),
     walletId: vine.number().positive(),
     date: incomeDateField(),
+    fromContactId: vine.number().positive().nullable().optional(),
   })
 }
 
@@ -29,6 +30,7 @@ function updateIncomeSchema() {
     incomeCategoryId: vine.number().positive().optional(),
     walletId: vine.number().positive().optional(),
     date: incomeDateField().optional(),
+    fromContactId: vine.number().positive().nullable().optional(),
   })
 }
 

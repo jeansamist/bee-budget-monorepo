@@ -115,6 +115,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['updateProfile']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'contacts.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/contacts/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/contact').createMassContactValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/contact').createMassContactValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'contacts.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/contacts/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/contact').updateMassContactValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/contact').updateMassContactValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'contacts.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/contacts/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/contact').deleteMassContactValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/contact').deleteMassContactValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'
@@ -259,6 +295,66 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'contacts.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/contacts'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'contacts.store': {
+    methods: ["POST"]
+    pattern: '/api/contacts'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/contact').createContactValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/contact').createContactValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'contacts.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/contacts/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['show']>>>
+    }
+  }
+  'contacts.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/contacts/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/contact').updateContactValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/contact').updateContactValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'contacts.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/contacts/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/contacts_controller').default['destroy']>>>
+    }
+  }
   'income_categories.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/income-categories'
@@ -328,7 +424,7 @@ export interface Registry {
       params: {}
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'incomes.store': {

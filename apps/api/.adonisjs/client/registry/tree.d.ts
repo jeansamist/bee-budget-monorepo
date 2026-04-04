@@ -13,6 +13,16 @@ export interface ApiDefinition {
     profile: typeof routes['auth.profile']
     updateProfile: typeof routes['auth.update_profile']
   }
+  contacts: {
+    createMass: typeof routes['contacts.create_mass']
+    updateMass: typeof routes['contacts.update_mass']
+    deleteMass: typeof routes['contacts.delete_mass']
+    index: typeof routes['contacts.index']
+    store: typeof routes['contacts.store']
+    show: typeof routes['contacts.show']
+    update: typeof routes['contacts.update']
+    destroy: typeof routes['contacts.destroy']
+  }
   incomeCategories: {
     createMass: typeof routes['income_categories.create_mass']
     updateMass: typeof routes['income_categories.update_mass']

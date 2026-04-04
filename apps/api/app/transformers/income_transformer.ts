@@ -11,6 +11,7 @@ export default class IncomeTransformer extends BaseTransformer<Income> {
       'date',
       'incomeCategoryId',
       'walletId',
+      'fromContactId',
       'createdAt',
       'updatedAt',
     ])

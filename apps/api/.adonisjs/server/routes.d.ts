@@ -13,6 +13,9 @@ export type ScannedRoutes = {
     'auth.delete_account': { paramsTuple?: []; params?: {} }
     'auth.profile': { paramsTuple?: []; params?: {} }
     'auth.update_profile': { paramsTuple?: []; params?: {} }
+    'contacts.create_mass': { paramsTuple?: []; params?: {} }
+    'contacts.update_mass': { paramsTuple?: []; params?: {} }
+    'contacts.delete_mass': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
@@ -25,6 +28,11 @@ export type ScannedRoutes = {
     'wallets.create_mass': { paramsTuple?: []; params?: {} }
     'wallets.update_mass': { paramsTuple?: []; params?: {} }
     'wallets.delete_mass': { paramsTuple?: []; params?: {} }
+    'contacts.index': { paramsTuple?: []; params?: {} }
+    'contacts.store': { paramsTuple?: []; params?: {} }
+    'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'contacts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'contacts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.index': { paramsTuple?: []; params?: {} }
     'income_categories.store': { paramsTuple?: []; params?: {} }
     'income_categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -48,6 +56,8 @@ export type ScannedRoutes = {
   }
   GET: {
     'auth.profile': { paramsTuple?: []; params?: {} }
+    'contacts.index': { paramsTuple?: []; params?: {} }
+    'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.index': { paramsTuple?: []; params?: {} }
     'income_categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.index': { paramsTuple?: []; params?: {} }
@@ -59,6 +69,8 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'auth.profile': { paramsTuple?: []; params?: {} }
+    'contacts.index': { paramsTuple?: []; params?: {} }
+    'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.index': { paramsTuple?: []; params?: {} }
     'income_categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.index': { paramsTuple?: []; params?: {} }
@@ -76,6 +88,8 @@ export type ScannedRoutes = {
     'auth.reset_password': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'auth.delete_account': { paramsTuple?: []; params?: {} }
+    'contacts.create_mass': { paramsTuple?: []; params?: {} }
+    'contacts.delete_mass': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
     'incomes.create_mass': { paramsTuple?: []; params?: {} }
@@ -84,6 +98,7 @@ export type ScannedRoutes = {
     'wallet_types.delete_mass': { paramsTuple?: []; params?: {} }
     'wallets.create_mass': { paramsTuple?: []; params?: {} }
     'wallets.delete_mass': { paramsTuple?: []; params?: {} }
+    'contacts.store': { paramsTuple?: []; params?: {} }
     'income_categories.store': { paramsTuple?: []; params?: {} }
     'incomes.store': { paramsTuple?: []; params?: {} }
     'wallet_types.store': { paramsTuple?: []; params?: {} }
@@ -91,22 +106,26 @@ export type ScannedRoutes = {
   }
   PUT: {
     'auth.update_profile': { paramsTuple?: []; params?: {} }
+    'contacts.update_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
     'incomes.update_mass': { paramsTuple?: []; params?: {} }
     'wallet_types.update_mass': { paramsTuple?: []; params?: {} }
     'wallets.update_mass': { paramsTuple?: []; params?: {} }
+    'contacts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
+    'contacts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
+    'contacts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

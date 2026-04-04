@@ -60,6 +60,24 @@ const routes = {
     tokens: [{"old":"/api/auth/update-profile","type":0,"val":"api","end":""},{"old":"/api/auth/update-profile","type":0,"val":"auth","end":""},{"old":"/api/auth/update-profile","type":0,"val":"update-profile","end":""}],
     types: placeholder as Registry['auth.update_profile']['types'],
   },
+  'contacts.create_mass': {
+    methods: ["POST"],
+    pattern: '/api/contacts/create-mass',
+    tokens: [{"old":"/api/contacts/create-mass","type":0,"val":"api","end":""},{"old":"/api/contacts/create-mass","type":0,"val":"contacts","end":""},{"old":"/api/contacts/create-mass","type":0,"val":"create-mass","end":""}],
+    types: placeholder as Registry['contacts.create_mass']['types'],
+  },
+  'contacts.update_mass': {
+    methods: ["PUT"],
+    pattern: '/api/contacts/update-mass',
+    tokens: [{"old":"/api/contacts/update-mass","type":0,"val":"api","end":""},{"old":"/api/contacts/update-mass","type":0,"val":"contacts","end":""},{"old":"/api/contacts/update-mass","type":0,"val":"update-mass","end":""}],
+    types: placeholder as Registry['contacts.update_mass']['types'],
+  },
+  'contacts.delete_mass': {
+    methods: ["POST"],
+    pattern: '/api/contacts/delete-mass',
+    tokens: [{"old":"/api/contacts/delete-mass","type":0,"val":"api","end":""},{"old":"/api/contacts/delete-mass","type":0,"val":"contacts","end":""},{"old":"/api/contacts/delete-mass","type":0,"val":"delete-mass","end":""}],
+    types: placeholder as Registry['contacts.delete_mass']['types'],
+  },
   'income_categories.create_mass': {
     methods: ["POST"],
     pattern: '/api/income-categories/create-mass',
@@ -131,6 +149,36 @@ const routes = {
     pattern: '/api/wallets/delete-mass',
     tokens: [{"old":"/api/wallets/delete-mass","type":0,"val":"api","end":""},{"old":"/api/wallets/delete-mass","type":0,"val":"wallets","end":""},{"old":"/api/wallets/delete-mass","type":0,"val":"delete-mass","end":""}],
     types: placeholder as Registry['wallets.delete_mass']['types'],
+  },
+  'contacts.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/contacts',
+    tokens: [{"old":"/api/contacts","type":0,"val":"api","end":""},{"old":"/api/contacts","type":0,"val":"contacts","end":""}],
+    types: placeholder as Registry['contacts.index']['types'],
+  },
+  'contacts.store': {
+    methods: ["POST"],
+    pattern: '/api/contacts',
+    tokens: [{"old":"/api/contacts","type":0,"val":"api","end":""},{"old":"/api/contacts","type":0,"val":"contacts","end":""}],
+    types: placeholder as Registry['contacts.store']['types'],
+  },
+  'contacts.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/contacts/:id',
+    tokens: [{"old":"/api/contacts/:id","type":0,"val":"api","end":""},{"old":"/api/contacts/:id","type":0,"val":"contacts","end":""},{"old":"/api/contacts/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['contacts.show']['types'],
+  },
+  'contacts.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/contacts/:id',
+    tokens: [{"old":"/api/contacts/:id","type":0,"val":"api","end":""},{"old":"/api/contacts/:id","type":0,"val":"contacts","end":""},{"old":"/api/contacts/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['contacts.update']['types'],
+  },
+  'contacts.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/contacts/:id',
+    tokens: [{"old":"/api/contacts/:id","type":0,"val":"api","end":""},{"old":"/api/contacts/:id","type":0,"val":"contacts","end":""},{"old":"/api/contacts/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['contacts.destroy']['types'],
   },
   'income_categories.index': {
     methods: ["GET","HEAD"],

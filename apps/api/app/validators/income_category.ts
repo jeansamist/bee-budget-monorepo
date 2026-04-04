@@ -6,6 +6,7 @@ function createIncomeCategorySchema() {
     icon: vine.string().nullable().optional(),
     color: vine.string().minLength(3),
     defaultWalletTypeId: vine.number().positive().nullable().optional(),
+    defaultContactId: vine.number().positive().nullable().optional(),
   })
 }
 
@@ -15,6 +16,7 @@ function updateIncomeCategorySchema() {
     icon: vine.string().nullable().optional(),
     color: vine.string().minLength(3).optional(),
     defaultWalletTypeId: vine.number().positive().nullable().optional(),
+    defaultContactId: vine.number().positive().nullable().optional(),
   })
 }
 

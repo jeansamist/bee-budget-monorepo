@@ -9,4 +9,5 @@ export const controllers = {
   Incomes: () => import('#controllers/incomes_controller'),
   WalletTypes: () => import('#controllers/wallet_types_controller'),
   Wallets: () => import('#controllers/wallets_controller'),
+  Contacts: () => import('#controllers/contacts_controller'),
 }

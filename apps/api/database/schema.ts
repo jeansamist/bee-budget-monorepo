@@ -32,13 +32,42 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class ContactSchema extends BaseModel {
+  static $columns = ['color', 'comments', 'createdAt', 'email', 'id', 'image', 'name', 'phoneNumber', 'type', 'updatedAt', 'userId'] as const
+  $columns = ContactSchema.$columns
+  @column()
+  declare color: string
+  @column()
+  declare comments: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare email: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare image: string | null
+  @column()
+  declare name: string
+  @column()
+  declare phoneNumber: string | null
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class IncomeCategorySchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
+  static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
   $columns = IncomeCategorySchema.$columns
   @column()
   declare color: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare defaultContactId: number | null
   @column()
   declare defaultWalletTypeId: number | null
   @column()
@@ -54,7 +83,7 @@ export class IncomeCategorySchema extends BaseModel {
 }
 
 export class IncomeSchema extends BaseModel {
-  static $columns = ['amount', 'createdAt', 'date', 'description', 'id', 'incomeCategoryId', 'name', 'updatedAt', 'userId', 'walletId'] as const
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'fromContactId', 'id', 'incomeCategoryId', 'name', 'updatedAt', 'userId', 'walletId'] as const
   $columns = IncomeSchema.$columns
   @column()
   declare amount: number
@@ -64,6 +93,8 @@ export class IncomeSchema extends BaseModel {
   declare date: DateTime
   @column()
   declare description: string
+  @column()
+  declare fromContactId: number | null
   @column({ isPrimary: true })
   declare id: number
   @column()

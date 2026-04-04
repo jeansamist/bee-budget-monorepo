@@ -51,16 +51,21 @@ export default class IncomeRepository {
     await this.model.query().where('id', id).delete()
   }
   async findById(id: number): Promise<Income> {
-    return this.model.query().where('id', id).preload('wallet').firstOrFail()
+    return this.model.query().where('id', id).preload('wallet').preload('fromContact').firstOrFail()
   }
   async createMany(data: ModelProps<IncomeSchema>[]): Promise<Income[]> {
     return this.model.createMany(data)
   }
   async findAllByUserId(userId: number): Promise<Income[]> {
-    return this.model.query().where('user_id', userId).preload('wallet')
+    return this.model.query().where('user_id', userId).preload('wallet').preload('fromContact')
   }
 
   async paginateByUserId(userId: number, page: number, perPage: number) {
-    return this.model.query().where('user_id', userId).preload('wallet').paginate(page, perPage)
+    return this.model
+      .query()
+      .where('user_id', userId)
+      .preload('wallet')
+      .preload('fromContact')
+      .paginate(page, perPage)
   }
 }

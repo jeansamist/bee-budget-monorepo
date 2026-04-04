@@ -49,7 +49,11 @@ export default class IncomeCategoryRepository {
     return incomeCategories
   }
   async findAllByUserId(userId: number): Promise<IncomeCategory[]> {
-    return this.model.query().where('user_id', userId).preload('defaultWalletType')
+    return this.model
+      .query()
+      .where('user_id', userId)
+      .preload('defaultWalletType')
+      .preload('defaultContact')
   }
 
   async paginateByUserId(userId: number, page: number, perPage: number) {
@@ -57,6 +61,7 @@ export default class IncomeCategoryRepository {
       .query()
       .where('user_id', userId)
       .preload('defaultWalletType')
+      .preload('defaultContact')
       .paginate(page, perPage)
   }
 }

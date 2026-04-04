@@ -1,5 +1,6 @@
 import { IncomeCategorySchema } from '#database/schema'
 import IncomeCategoryRepository from '#repositories/income_category_repository'
+import ContactRepository from '#repositories/contact_repository'
 import WalletTypeRepository from '#repositories/wallet_type_repository'
 import { httpError } from '#utils/http_error'
 import { inject } from '@adonisjs/core'
@@ -10,6 +11,7 @@ type CreateIncomeCategoryPayload = {
   icon?: string | null
   color: string
   defaultWalletTypeId?: number | null
+  defaultContactId?: number | null
 }
 
 type UpdateIncomeCategoryPayload = Partial<{
@@ -17,6 +19,7 @@ type UpdateIncomeCategoryPayload = Partial<{
   icon: string | null
   color: string
   defaultWalletTypeId: number | null
+  defaultContactId: number | null
 }>
 type MassUpdateIncomeCategoryPayload = UpdateIncomeCategoryPayload & { id: number }
 
@@ -25,6 +28,7 @@ export class IncomeCategoryService {
   constructor(
     private readonly repository: IncomeCategoryRepository,
     private readonly walletTypeRepository: WalletTypeRepository,
+    private readonly contactRepository: ContactRepository,
     private readonly ctx: HttpContext
   ) {}
 
@@ -49,12 +53,22 @@ export class IncomeCategoryService {
     }
   }
 
+  private async validateDefaultContact(defaultContactId: number | null | undefined) {
+    if (defaultContactId === undefined || defaultContactId === null) return
+    const contact = await this.contactRepository.findById(defaultContactId)
+    if (contact.userId !== this.userId) {
+      throw httpError(422, 'The selected default contact is invalid')
+    }
+  }
+
   async createIncomeCategory(data: CreateIncomeCategoryPayload) {
     await this.validateDefaultWalletType(data.defaultWalletTypeId)
+    await this.validateDefaultContact(data.defaultContactId)
     return this.repository.create({
       ...data,
       icon: data.icon ?? null,
       defaultWalletTypeId: data.defaultWalletTypeId ?? null,
+      defaultContactId: data.defaultContactId ?? null,
       userId: this.userId,
     })
   }
@@ -62,6 +76,7 @@ export class IncomeCategoryService {
     const incomeCategory = await this.repository.findById(id)
     this.checkOwnership(incomeCategory)
     await this.validateDefaultWalletType(data.defaultWalletTypeId)
+    await this.validateDefaultContact(data.defaultContactId)
     return this.repository.update(incomeCategory, data)
   }
   async deleteIncomeCategory(id: number) {
