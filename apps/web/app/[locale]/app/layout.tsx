@@ -1,9 +1,10 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { AppProvider } from "@/contexts/app.context"
+import { getContacts } from "@/services/contacts.services"
 import { getIncomeCategories } from "@/services/income-categories.services"
 import { getWalletTypes } from "@/services/wallet-types.services"
 import { getWallets } from "@/services/wallets.services"
-import { IncomeCategory, Wallet, WalletType } from "@/types"
+import { Contact, IncomeCategory, Wallet, WalletType } from "@/types"
 import { SidebarInset, SidebarProvider } from "@bee-budget/ui/sidebar"
 
 export default async function Layout({
@@ -11,15 +12,17 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const [walletTypes, incomeCategories, wallets] = await Promise.allSettled([
+  const [walletTypes, incomeCategories, wallets, contacts] = await Promise.allSettled([
     getWalletTypes(),
     getIncomeCategories(),
     getWallets(),
+    getContacts(),
   ])
   if (
     walletTypes.status === "rejected" ||
     incomeCategories.status === "rejected" ||
-    wallets.status === "rejected"
+    wallets.status === "rejected" ||
+    contacts.status === "rejected"
   ) {
     // Handle errors as needed, for now we just log them and provide empty arrays
     console.error("Error fetching initial data:", {
@@ -28,9 +31,10 @@ export default async function Layout({
       incomeCategories:
         incomeCategories.status === "rejected" ? incomeCategories.reason : null,
       wallets: wallets.status === "rejected" ? wallets.reason : null,
+      contacts: contacts.status === "rejected" ? contacts.reason : null,
     })
     return (
-      <AppProvider walletTypes={[]} incomeCategories={[]} wallets={[]}>
+      <AppProvider walletTypes={[]} incomeCategories={[]} wallets={[]} contacts={[]}>
         {children}
       </AppProvider>
     )
@@ -40,6 +44,7 @@ export default async function Layout({
       walletTypes={(walletTypes.value.data as WalletType[]) || []}
       incomeCategories={(incomeCategories.value.data as IncomeCategory[]) || []}
       wallets={(wallets.value.data as Wallet[]) || []}
+      contacts={(contacts.value.data as Contact[]) || []}
     >
       <SidebarProvider>
         <AppSidebar

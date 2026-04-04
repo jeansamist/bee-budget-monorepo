@@ -1,12 +1,13 @@
 "use client"
 
-import { IncomeCategory, Wallet, WalletType } from "@/types"
+import { Contact, IncomeCategory, Wallet, WalletType } from "@/types"
 import { createContext, useContext } from "react"
 
 type AppContextValue = {
   walletTypes: WalletType[]
   incomeCategories: IncomeCategory[]
   wallets: Wallet[]
+  contacts: Contact[]
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
@@ -16,6 +17,7 @@ export type AppProviderProps = {
   walletTypes: WalletType[]
   incomeCategories: IncomeCategory[]
   wallets: Wallet[]
+  contacts: Contact[]
 }
 
 export function AppProvider({
@@ -23,6 +25,7 @@ export function AppProvider({
   walletTypes,
   incomeCategories,
   wallets,
+  contacts,
 }: AppProviderProps) {
   // Initialize any global state or functions here
 
@@ -32,6 +35,7 @@ export function AppProvider({
         walletTypes,
         incomeCategories,
         wallets,
+        contacts,
       }}
     >
       {children}
