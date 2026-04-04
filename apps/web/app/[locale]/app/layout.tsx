@@ -12,12 +12,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const [walletTypes, incomeCategories, wallets, contacts] = await Promise.allSettled([
-    getWalletTypes({ fetchAll: true }),
-    getIncomeCategories({ fetchAll: true }),
-    getWallets({ fetchAll: true }),
-    getContacts({ fetchAll: true }),
-  ])
+  const [walletTypes, incomeCategories, wallets, contacts] =
+    await Promise.allSettled([
+      getWalletTypes({ fetchAll: true }),
+      getIncomeCategories({ fetchAll: true }),
+      getWallets({ fetchAll: true }),
+      getContacts({ fetchAll: true }),
+    ])
   if (
     walletTypes.status === "rejected" ||
     incomeCategories.status === "rejected" ||
@@ -34,7 +35,12 @@ export default async function Layout({
       contacts: contacts.status === "rejected" ? contacts.reason : null,
     })
     return (
-      <AppProvider walletTypes={[]} incomeCategories={[]} wallets={[]} contacts={[]}>
+      <AppProvider
+        walletTypes={[]}
+        incomeCategories={[]}
+        wallets={[]}
+        contacts={[]}
+      >
         {children}
       </AppProvider>
     )
@@ -47,13 +53,7 @@ export default async function Layout({
       contacts={(contacts.value.data as Contact[]) || []}
     >
       <SidebarProvider>
-        <AppSidebar
-          user={{
-            avatarUrl: "https://avatars.githubusercontent.com/u/79153739?v=4",
-            name: "Ephraim BAHA",
-            jobTitle: "HR Manager At Company",
-          }}
-        />
+        <AppSidebar />
         {/* <SidebarInset className="border hover:border-primary duration-1000 transition-colors border-transparent">
     {children}
   </SidebarInset> */}
