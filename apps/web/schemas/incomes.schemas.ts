@@ -7,6 +7,7 @@ export const createIncomeSchema = z.object({
   incomeCategoryId: z.number().positive(),
   walletId: z.number().positive(),
   date: z.string().min(1),
+  fromContactId: z.number().positive().nullable().optional(),
 })
 export type CreateIncomeSchema = z.infer<typeof createIncomeSchema>
 

@@ -5,6 +5,7 @@ export const createIncomeCategorySchema = z.object({
   icon: z.string().nullable().optional(),
   color: z.string().min(3).trim(),
   defaultWalletTypeId: z.number().positive().nullable().optional(),
+  defaultContactId: z.number().positive().nullable().optional(),
 })
 export type CreateIncomeCategorySchema = z.infer<typeof createIncomeCategorySchema>
 

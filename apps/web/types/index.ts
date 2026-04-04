@@ -45,6 +45,19 @@ export type User = {
   initials: string
 }
 
+export type Contact = {
+  id: number
+  name: string
+  image: string | null
+  color: string
+  type: 'person' | 'entreprise' | 'other'
+  phoneNumber: string | null
+  email: string | null
+  comments: string | null
+  createdAt: string | null
+  updatedAt: string | null
+}
+
 export type IncomeCategory = {
   id: number
   name: string
@@ -53,6 +66,7 @@ export type IncomeCategory = {
   icon: string | null
   color: string
   defaultWalletTypeId: number | null
+  defaultContactId: number | null
 }
 
 export type Income = {
@@ -63,6 +77,7 @@ export type Income = {
   date: string | null
   incomeCategoryId: number
   walletId: number | null
+  fromContactId: number | null
   createdAt: string | null
   updatedAt: string | null
 }
