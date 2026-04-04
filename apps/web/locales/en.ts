@@ -99,8 +99,10 @@ export default {
   "app.header.welcomeBack": "Welcome back",
   "app.header.search.placeholder": "Search for anything",
   "app.header.openGithub": "Open on GitHub",
+  "app.header.titles.transactions": "Transactions overview",
   "app.header.breadcrumb.brand": "BeeBudget",
   "app.header.breadcrumb.dashboard": "Dashboard",
+  "app.header.breadcrumb.transactions": "Transactions",
   "app.dashboard.dataCards.chart.total": "Balance",
   "app.dashboard.dataCards.evolution.fromLastMonth": "from last month",
   "app.dataTables.internalTransferTable.select": "Select row",
@@ -234,6 +236,42 @@ export default {
   "app.dashboard.lastInternalTransfers.deleteConfirm.confirm": "Delete",
   "app.dashboard.lastInternalTransfers.deleting": "Deleting...",
   "app.dashboard.lastInternalTransfers.perPage.placeholder": "Total",
+  "app.transactions.expenses.title": "Expenses",
+  "app.transactions.expenses.description":
+    "Browse all your expense transactions with pagination.",
+  "app.transactions.expenses.deleteCount": "Delete ({count})",
+  "app.transactions.expenses.deleteConfirm.title": "Delete expense",
+  "app.transactions.expenses.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.transactions.expenses.deleteConfirm.confirm": "Delete",
+  "app.transactions.expenses.deleting": "Deleting...",
+  "app.transactions.expenses.perPage.placeholder": "Per page",
+  "app.transactions.expenses.pagination.previous": "Previous",
+  "app.transactions.expenses.pagination.next": "Next",
+  "app.transactions.incomes.title": "Incomes",
+  "app.transactions.incomes.description":
+    "Browse all your income transactions with pagination.",
+  "app.transactions.incomes.deleteCount": "Delete ({count})",
+  "app.transactions.incomes.deleteConfirm.title": "Delete income",
+  "app.transactions.incomes.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.transactions.incomes.deleteConfirm.confirm": "Delete",
+  "app.transactions.incomes.deleting": "Deleting...",
+  "app.transactions.incomes.perPage.placeholder": "Per page",
+  "app.transactions.incomes.pagination.previous": "Previous",
+  "app.transactions.incomes.pagination.next": "Next",
+  "app.transactions.internalTransfers.title": "Internal transfers",
+  "app.transactions.internalTransfers.description":
+    "Browse all wallet-to-wallet transfers with pagination.",
+  "app.transactions.internalTransfers.deleteCount": "Delete ({count})",
+  "app.transactions.internalTransfers.deleteConfirm.title": "Delete transfer",
+  "app.transactions.internalTransfers.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.transactions.internalTransfers.deleteConfirm.confirm": "Delete",
+  "app.transactions.internalTransfers.deleting": "Deleting...",
+  "app.transactions.internalTransfers.perPage.placeholder": "Per page",
+  "app.transactions.internalTransfers.pagination.previous": "Previous",
+  "app.transactions.internalTransfers.pagination.next": "Next",
 
   unknownError: "Something went wrong",
 } as const

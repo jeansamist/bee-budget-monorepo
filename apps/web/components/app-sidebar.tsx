@@ -18,6 +18,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@bee-budget/ui/sidebar"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   ArrowUpDown,
   BarChart2,
@@ -31,9 +33,7 @@ import {
   Settings,
   Wallet,
 } from "lucide-react"
-import { FunctionComponent, useMemo } from "react"
-
-export type AppSidebarProps = {}
+import { FunctionComponent, useCallback, useMemo } from "react"
 
 type AppSidebarLink = {
   label: string
@@ -50,10 +50,21 @@ type AppSidebarSection = {
   links: AppSidebarLink[]
 }
 
-export const AppSidebar: FunctionComponent<AppSidebarProps> = ({}) => {
+export const AppSidebar: FunctionComponent = ({}) => {
   const t = useI18n()
   const { currentLocaleUrl } = useCurrentLocaleUrl()
   const { user } = useAuth()
+  const pathname = usePathname()
+
+  const isLinkActive = useCallback(
+    (href: string) => {
+      if (!href.startsWith("/")) return false
+      if (href.includes("#")) return false
+      return pathname === href
+    },
+    [pathname]
+  )
+
   const sections = useMemo<AppSidebarSection[]>(
     () => [
       {
@@ -63,13 +74,14 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({}) => {
             label: t("app.sidebar.links.dashboard"),
             href: currentLocaleUrl("/app/dashboard"),
             icon: Home,
-            isActive: true,
+            isActive: isLinkActive(currentLocaleUrl("/app/dashboard")),
           },
 
           {
             label: t("app.sidebar.links.transactions"),
-            href: "/#transactions",
+            href: currentLocaleUrl("/app/transactions"),
             icon: ArrowUpDown,
+            isActive: isLinkActive(currentLocaleUrl("/app/transactions")),
           },
           {
             label: t("app.sidebar.links.wallets"),
@@ -126,7 +138,7 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({}) => {
         ],
       },
     ],
-    [t, currentLocaleUrl]
+    [currentLocaleUrl, isLinkActive, t]
   )
 
   return (
@@ -166,10 +178,10 @@ export const AppSidebar: FunctionComponent<AppSidebarProps> = ({}) => {
                 return (
                   <SidebarMenuItem key={link.href}>
                     <SidebarMenuButton asChild isActive={link.isActive}>
-                      <a href={link.href}>
+                      <Link href={link.href}>
                         <SectionIcon />
                         <span>{link.label}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     {link.isBeta && (
                       <Badge

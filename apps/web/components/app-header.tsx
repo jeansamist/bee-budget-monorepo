@@ -22,13 +22,10 @@ import React, { FunctionComponent } from "react"
 import { ModeToggle } from "./theme-toggle-button"
 export type AppHeaderProps = {
   path: { href: string; label: string }[]
-  userFirstName: string
+  title: string
 }
 
-export const AppHeader: FunctionComponent<AppHeaderProps> = ({
-  path,
-  userFirstName,
-}) => {
+export const AppHeader: FunctionComponent<AppHeaderProps> = ({ path, title }) => {
   const t = useI18n()
 
   return (
@@ -55,9 +52,7 @@ export const AppHeader: FunctionComponent<AppHeaderProps> = ({
               ))}
             </BreadcrumbList>
           </Breadcrumb>
-          <h2 className="font-semibold md:text-lg">
-            {t("app.header.welcomeBack")}, {userFirstName}.
-          </h2>
+          <h2 className="font-semibold md:text-lg">{title}</h2>
         </div>
       </div>
       <div className="hidden items-center gap-2 md:flex">
