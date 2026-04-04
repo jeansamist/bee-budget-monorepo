@@ -8,7 +8,7 @@ import {
   updateInternalTransferValidator,
   updateMassInternalTransferValidator,
 } from '#validators/internal_transfer'
-import { paginateValidator } from '#validators/pagination'
+import { paginateWithWalletValidator } from '#validators/pagination'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -17,10 +17,11 @@ export default class InternalTransfersController {
   constructor(protected readonly internalTransferService: InternalTransferService) {}
 
   async index({ request, serialize, response }: HttpContext) {
-    const { page = 1, perPage = 15 } = await request.validateUsing(paginateValidator)
+    const { page = 1, perPage = 15, walletId } = await request.validateUsing(paginateWithWalletValidator)
     const paginator = await this.internalTransferService.getPaginatedUserInternalTransfers(
       page,
-      perPage
+      perPage,
+      walletId
     )
     const serialized = await serialize(InternalTransferTransformer.transform(paginator.all()))
     return response.ok(

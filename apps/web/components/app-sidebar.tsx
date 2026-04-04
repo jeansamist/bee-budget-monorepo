@@ -18,8 +18,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@bee-budget/ui/sidebar"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 import {
   ArrowUpDown,
   BarChart2,
@@ -33,6 +31,8 @@ import {
   Settings,
   Wallet,
 } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { FunctionComponent, useCallback, useMemo } from "react"
 
 type AppSidebarLink = {
@@ -85,8 +85,9 @@ export const AppSidebar: FunctionComponent = ({}) => {
           },
           {
             label: t("app.sidebar.links.wallets"),
-            href: "/#wallets",
+            href: currentLocaleUrl("/app/wallets"),
             icon: Wallet,
+            isActive: isLinkActive(currentLocaleUrl("/app/wallets")),
           },
         ],
       },
@@ -95,8 +96,9 @@ export const AppSidebar: FunctionComponent = ({}) => {
         links: [
           {
             label: t("app.sidebar.links.analytics"),
-            href: "/#analytics",
+            href: currentLocaleUrl("/app/analytics"),
             icon: BarChart2,
+            isActive: isLinkActive(currentLocaleUrl("/app/analytics")),
             isBeta: true,
           },
           {
@@ -153,17 +155,17 @@ export const AppSidebar: FunctionComponent = ({}) => {
         <div className="flex cursor-pointer items-center gap-2 rounded-2xl border bg-background p-1 transition-colors hover:border-primary">
           <img
             src={
-              user!.avatar ??
-              "https://tapback.co/api/avatar/" + user!.firstName.toLowerCase()
+              user?.avatar ??
+              "https://tapback.co/api/avatar/" + user?.firstName.toLowerCase()
             }
-            alt={`${user!.initials} avatar`}
+            alt={`${user?.initials} avatar`}
             className="flex aspect-square w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-primary-foreground"
           />
           <div>
             <h3 className="text-sm font-semibold">
-              {user!.firstName} {user!.lastName}
+              {user?.firstName} {user?.lastName}
             </h3>
-            <p className="text-xs text-muted-foreground">{user!.email}</p>
+            <p className="text-xs text-muted-foreground">{user?.email}</p>
           </div>
         </div>
       </SidebarHeader>

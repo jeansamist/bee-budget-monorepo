@@ -271,6 +271,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/transaction_analytics_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'wallet_analytics.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/wallets/:id/analytics'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/wallet_analytics').walletAnalyticsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_analytics_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_analytics_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'
@@ -542,7 +554,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateWithWalletValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -662,7 +674,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateWithWalletValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -722,7 +734,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateWithWalletValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incomes_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -893,6 +905,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['destroy']>>>
+    }
+  }
+  'wallet_analytics.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/wallets/:id/analytics'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/wallet_analytics').walletAnalyticsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/wallet_analytics_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_analytics_controller').default['index']>>>
     }
   }
 }

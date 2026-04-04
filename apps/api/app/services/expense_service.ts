@@ -245,7 +245,10 @@ export class ExpenseService {
     return this.repository.findAllByUserId(this.userId)
   }
 
-  async getPaginatedUserExpenses(page: number, perPage: number) {
+  async getPaginatedUserExpenses(page: number, perPage: number, walletId?: number) {
+    if (walletId !== undefined) {
+      return this.repository.paginateByWalletAndUserId(this.userId, walletId, page, perPage)
+    }
     return this.repository.paginateByUserId(this.userId, page, perPage)
   }
 

@@ -103,6 +103,7 @@ export default {
   "app.header.breadcrumb.brand": "BeeBudget",
   "app.header.breadcrumb.dashboard": "Dashboard",
   "app.header.breadcrumb.transactions": "Transactions",
+  "app.header.breadcrumb.analytics": "Analytics",
   "app.transactions.dataCards.chart.total": "Total",
   "app.transactions.dataCards.chart.period": "Period",
   "app.transactions.dataCards.period.placeholder": "Select period",
@@ -288,6 +289,77 @@ export default {
   "app.transactions.internalTransfers.perPage.placeholder": "Per page",
   "app.transactions.internalTransfers.pagination.previous": "Previous",
   "app.transactions.internalTransfers.pagination.next": "Next",
+
+  "app.header.breadcrumb.wallets": "Wallets",
+  "app.header.titles.wallets": "Wallets overview",
+  "app.header.titles.analytics": "Analytics",
+
+  "app.wallets.empty": "No wallets yet",
+  "app.wallets.balance": "Balance",
+  "app.wallets.evolution": "vs last month",
+
+  "app.wallets.detail.period.placeholder": "Select period",
+  "app.wallets.detail.period.daily": "Daily",
+  "app.wallets.detail.period.weekly": "Weekly",
+  "app.wallets.detail.period.monthly": "Monthly",
+  "app.wallets.detail.period.yearly": "Yearly",
+
+  "app.wallets.detail.chart.title": "Incomes vs Expenses",
+  "app.wallets.detail.chart.incomes": "Incomes",
+  "app.wallets.detail.chart.expenses": "Expenses",
+
+  "app.wallets.detail.topIncomeCategories.title": "Top income categories",
+  "app.wallets.detail.topIncomeCategories.empty":
+    "No income data for this period",
+  "app.wallets.detail.topExpenseCategories.title": "Top expense categories",
+  "app.wallets.detail.topExpenseCategories.empty":
+    "No expense data for this period",
+
+  "app.wallets.detail.transactions.incomes": "Incomes",
+  "app.wallets.detail.transactions.expenses": "Expenses",
+  "app.wallets.detail.transactions.transfers": "Transfers",
+
+  "app.wallets.detail.transactions.incomes.title": "Incomes",
+  "app.wallets.detail.transactions.incomes.description":
+    "Income transactions for this wallet.",
+  "app.wallets.detail.transactions.incomes.deleteCount": "Delete ({count})",
+  "app.wallets.detail.transactions.incomes.deleteConfirm.title":
+    "Delete income",
+  "app.wallets.detail.transactions.incomes.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.wallets.detail.transactions.incomes.deleteConfirm.confirm": "Delete",
+  "app.wallets.detail.transactions.incomes.deleting": "Deleting...",
+  "app.wallets.detail.transactions.incomes.perPage.placeholder": "Per page",
+  "app.wallets.detail.transactions.incomes.pagination.previous": "Previous",
+  "app.wallets.detail.transactions.incomes.pagination.next": "Next",
+
+  "app.wallets.detail.transactions.expenses.title": "Expenses",
+  "app.wallets.detail.transactions.expenses.description":
+    "Expense transactions for this wallet.",
+  "app.wallets.detail.transactions.expenses.deleteCount": "Delete ({count})",
+  "app.wallets.detail.transactions.expenses.deleteConfirm.title":
+    "Delete expense",
+  "app.wallets.detail.transactions.expenses.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.wallets.detail.transactions.expenses.deleteConfirm.confirm": "Delete",
+  "app.wallets.detail.transactions.expenses.deleting": "Deleting...",
+  "app.wallets.detail.transactions.expenses.perPage.placeholder": "Per page",
+  "app.wallets.detail.transactions.expenses.pagination.previous": "Previous",
+  "app.wallets.detail.transactions.expenses.pagination.next": "Next",
+
+  "app.wallets.detail.transactions.transfers.title": "Transfers",
+  "app.wallets.detail.transactions.transfers.description":
+    "Internal transfers involving this wallet.",
+  "app.wallets.detail.transactions.transfers.deleteCount": "Delete ({count})",
+  "app.wallets.detail.transactions.transfers.deleteConfirm.title":
+    "Delete transfer",
+  "app.wallets.detail.transactions.transfers.deleteConfirm.content":
+    "This action cannot be undone.",
+  "app.wallets.detail.transactions.transfers.deleteConfirm.confirm": "Delete",
+  "app.wallets.detail.transactions.transfers.deleting": "Deleting...",
+  "app.wallets.detail.transactions.transfers.perPage.placeholder": "Per page",
+  "app.wallets.detail.transactions.transfers.pagination.previous": "Previous",
+  "app.wallets.detail.transactions.transfers.pagination.next": "Next",
 
   unknownError: "Something went wrong",
 } as const

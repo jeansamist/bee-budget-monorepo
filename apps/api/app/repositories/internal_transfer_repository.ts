@@ -74,4 +74,24 @@ export default class InternalTransferRepository {
       .orderBy('created_at', 'desc')
       .paginate(page, perPage)
   }
+
+  async paginateByWalletAndUserId(
+    userId: number,
+    walletId: number,
+    page: number,
+    perPage: number
+  ) {
+    return this.model
+      .query()
+      .where('user_id', userId)
+      .where((q) =>
+        q.where('source_wallet_id', walletId).orWhere('target_wallet_id', walletId)
+      )
+      .preload('sourceWallet')
+      .preload('targetWallet')
+      .preload('linkedExpense')
+      .preload('linkedIncome')
+      .orderBy('created_at', 'desc')
+      .paginate(page, perPage)
+  }
 }

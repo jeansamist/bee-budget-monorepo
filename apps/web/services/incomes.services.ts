@@ -14,8 +14,10 @@ import type {
 } from "@/types"
 
 export const getIncomes = async (params: IndexParams = {}): Promise<ApiResponse<Income[]>> => {
-  const { page = 1, perPage = 15, fetchAll = false } = params
-  const query = fetchAll ? { page: 1, perPage: 100000 } : { page, perPage }
+  const { page = 1, perPage = 15, fetchAll = false, walletId } = params
+  const query = fetchAll
+    ? { page: 1, perPage: 100000, walletId }
+    : { page, perPage, walletId }
   const [data, error] = await tuyau.api.incomes.index({ query }).safe()
   return (error ? error.response : data) as ApiResponse<Income[]>
 }

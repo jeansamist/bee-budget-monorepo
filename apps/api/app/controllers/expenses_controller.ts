@@ -8,7 +8,7 @@ import {
   updateExpenseValidator,
   updateMassExpenseValidator,
 } from '#validators/expense'
-import { paginateValidator } from '#validators/pagination'
+import { paginateWithWalletValidator } from '#validators/pagination'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -17,8 +17,8 @@ export default class ExpensesController {
   constructor(protected readonly expenseService: ExpenseService) {}
 
   async index({ request, serialize, response }: HttpContext) {
-    const { page = 1, perPage = 15 } = await request.validateUsing(paginateValidator)
-    const paginator = await this.expenseService.getPaginatedUserExpenses(page, perPage)
+    const { page = 1, perPage = 15, walletId } = await request.validateUsing(paginateWithWalletValidator)
+    const paginator = await this.expenseService.getPaginatedUserExpenses(page, perPage, walletId)
     const serialized = await serialize(ExpenseTransformer.transform(paginator.all()))
     return response.ok(
       ApiResponse.success(serialized.data, 'Expenses retrieved successfully', paginator.getMeta())

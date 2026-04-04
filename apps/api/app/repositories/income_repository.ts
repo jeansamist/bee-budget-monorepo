@@ -74,4 +74,20 @@ export default class IncomeRepository {
       .orderBy('created_at', 'desc')
       .paginate(page, perPage)
   }
+
+  async paginateByWalletAndUserId(
+    userId: number,
+    walletId: number,
+    page: number,
+    perPage: number
+  ) {
+    return this.model
+      .query()
+      .where('user_id', userId)
+      .where('wallet_id', walletId)
+      .preload('wallet')
+      .preload('fromContact')
+      .orderBy('created_at', 'desc')
+      .paginate(page, perPage)
+  }
 }

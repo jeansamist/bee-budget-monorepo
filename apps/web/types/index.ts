@@ -2,6 +2,7 @@ export type IndexParams = {
   page?: number
   perPage?: number
   fetchAll?: boolean
+  walletId?: number
 }
 
 export type PaginationMeta = {
@@ -154,6 +155,30 @@ export type Wallet = {
   evolution: number
   createdAt: string | null
   updatedAt: string | null
+}
+
+export type WalletAnalyticsPeriod = "daily" | "weekly" | "monthly" | "yearly"
+
+export type WalletAnalyticsCategoryStat = {
+  id: number
+  name: string
+  color: string
+  icon: string | null
+  total: number
+  count: number
+}
+
+export type WalletAnalyticsChartBucket = {
+  label: string
+  incomes: number
+  expenses: number
+}
+
+export type WalletAnalytics = {
+  period: WalletAnalyticsPeriod
+  chartData: WalletAnalyticsChartBucket[]
+  incomeCategoryBreakdown: WalletAnalyticsCategoryStat[]
+  expenseCategoryBreakdown: WalletAnalyticsCategoryStat[]
 }
 
 export type TransactionAnalyticsPeriod = "daily" | "weekly" | "monthly" | "yearly"

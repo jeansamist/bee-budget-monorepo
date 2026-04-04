@@ -16,8 +16,10 @@ import type {
 export const getInternalTransfers = async (
   params: IndexParams = {}
 ): Promise<ApiResponse<InternalTransfer[]>> => {
-  const { page = 1, perPage = 15, fetchAll = false } = params
-  const query = fetchAll ? { page: 1, perPage: 100000 } : { page, perPage }
+  const { page = 1, perPage = 15, fetchAll = false, walletId } = params
+  const query = fetchAll
+    ? { page: 1, perPage: 100000, walletId }
+    : { page, perPage, walletId }
   const [data, error] = await tuyau.api.internalTransfers.index({ query }).safe()
   return (error ? error.response : data) as ApiResponse<InternalTransfer[]>
 }

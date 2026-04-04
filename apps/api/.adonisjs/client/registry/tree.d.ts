@@ -56,6 +56,9 @@ export interface ApiDefinition {
   transactionAnalytics: {
     index: typeof routes['transaction_analytics.index']
   }
+  walletAnalytics: {
+    index: typeof routes['wallet_analytics.index']
+  }
   incomeCategories: {
     createMass: typeof routes['income_categories.create_mass']
     updateMass: typeof routes['income_categories.update_mass']
