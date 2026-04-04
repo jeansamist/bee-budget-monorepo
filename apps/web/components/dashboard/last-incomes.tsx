@@ -95,6 +95,7 @@ export const LastIncomes: FunctionComponent<LastIncomesProps> = () => {
             incomes={incomes}
             handleRowSelection={handleRowSelection}
             resetSelectionTrigger={fetchVersion}
+            onDeleted={() => setFetchVersion((v) => v + 1)}
           />
         </CardContent>
         <CardFooter className="flex items-center justify-end">

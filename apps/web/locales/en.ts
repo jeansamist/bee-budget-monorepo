@@ -119,6 +119,17 @@ export default {
   "app.dataTables.incomeTable.actions.view": "View income",
   "app.dataTables.incomeTable.actions.delete": "Delete income",
 
+  "app.dataTables.incomeTable.detail.title": "Income details",
+  "app.dataTables.incomeTable.detail.id": "ID",
+  "app.dataTables.incomeTable.detail.name": "Name",
+  "app.dataTables.incomeTable.detail.description": "Description",
+  "app.dataTables.incomeTable.detail.amount": "Amount",
+  "app.dataTables.incomeTable.detail.date": "Date",
+  "app.dataTables.incomeTable.detail.category": "Category",
+  "app.dataTables.incomeTable.detail.wallet": "Wallet",
+  "app.dataTables.incomeTable.detail.from": "From",
+  "app.dataTables.incomeTable.detail.noDescription": "No description",
+
   "app.confirm.confirm": "Confirm",
   "app.confirm.cancel": "Cancel",
 

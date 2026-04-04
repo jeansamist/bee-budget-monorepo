@@ -5,9 +5,17 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  RowData,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table"
+
+declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface TableMeta<TData extends RowData> { // NOSONAR
+    onDeleted?: () => void
+  }
+}
 
 import {
   Table,
@@ -24,6 +32,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   handleRowSelection?: (rowOriginals: TData[]) => void
   resetSelectionTrigger?: unknown
+  onDeleted?: () => void
 }
 
 export function DataTable<TData, TValue>({
@@ -31,6 +40,7 @@ export function DataTable<TData, TValue>({
   data,
   handleRowSelection,
   resetSelectionTrigger,
+  onDeleted,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
@@ -46,6 +56,7 @@ export function DataTable<TData, TValue>({
       sorting,
       rowSelection,
     },
+    meta: { onDeleted },
   })
 
   useEffect(() => {

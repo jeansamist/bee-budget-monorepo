@@ -3,6 +3,7 @@
 
 import { useApp } from "@/contexts/app.context"
 import { useI18n } from "@/lib/i18n/client"
+import { deleteIncome } from "@/services/incomes.services"
 import { Contact, Income, IncomeCategory, Wallet, WalletType } from "@/types"
 import { cn, findById } from "@bee-budget/functions"
 import { Button } from "@bee-budget/ui/button"
@@ -17,7 +18,9 @@ import {
 } from "@bee-budget/ui/dropdown-menu"
 import { Column, ColumnDef, Table } from "@tanstack/react-table"
 import { ChevronsUpDown, Eye, MoreHorizontal } from "lucide-react"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { Confirm } from "../../confirm"
+import { IncomeDetailDialog } from "./income-detail-dialog"
 
 const SortableHeader = ({
   column,
@@ -149,15 +152,29 @@ const ActionsHeader = () => {
   )
 }
 
-const ActionsCell = ({ row }: { row: { original: Income } }) => {
+const ActionsCell = ({
+  row,
+  table,
+}: {
+  row: { original: Income }
+  table: Table<Income>
+}) => {
   const t = useI18n()
   const income = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
+  const handleDelete = async () => {
+    await deleteIncome(income.id)
+    table.options.meta?.onDeleted?.()
+  }
 
   return (
     <div className="flex items-center justify-end gap-2">
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
         <Eye className="h-4 w-4" />
       </Button>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon" className="h-8 w-8 p-0">
@@ -177,14 +194,32 @@ const ActionsCell = ({ row }: { row: { original: Income } }) => {
             {t("app.dataTables.incomeTable.actions.copyId")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDetailOpen(true)}>
             {t("app.dataTables.incomeTable.actions.view")}
           </DropdownMenuItem>
-          <DropdownMenuItem variant="destructive">
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => setDeleteOpen(true)}
+          >
             {t("app.dataTables.incomeTable.actions.delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <IncomeDetailDialog
+        income={income}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+      />
+
+      <Confirm
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title={t("app.dataTables.incomeTable.actions.delete")}
+        content={t("app.dashboard.lastIncomes.deleteConfirm.content")}
+        confirmText={t("app.dashboard.lastIncomes.deleteConfirm.confirm")}
+        onConfirm={handleDelete}
+      />
     </div>
   )
 }

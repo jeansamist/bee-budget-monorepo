@@ -7,13 +7,15 @@ export const IncomeDataTable: FunctionComponent<{
   incomes: Income[]
   handleRowSelection?: (state: Income[]) => void
   resetSelectionTrigger?: unknown
-}> = ({ incomes, handleRowSelection, resetSelectionTrigger }) => {
+  onDeleted?: () => void
+}> = ({ incomes, handleRowSelection, resetSelectionTrigger, onDeleted }) => {
   return (
     <DataTable<Income, unknown>
       columns={columns}
       data={incomes}
       handleRowSelection={handleRowSelection}
       resetSelectionTrigger={resetSelectionTrigger}
+      onDeleted={onDeleted}
     />
   )
 }
