@@ -59,4 +59,8 @@ export default class WalletTypeRepository {
   async findAllByUserId(userId: number): Promise<WalletType[]> {
     return this.model.query().where('user_id', userId)
   }
+
+  async paginateByUserId(userId: number, page: number, perPage: number) {
+    return this.model.query().where('user_id', userId).paginate(page, perPage)
+  }
 }

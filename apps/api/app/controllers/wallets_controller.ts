@@ -18,10 +18,14 @@ export default class WalletsController {
   /**
    * Display a list of resource
    */
-  async index({ serialize, response }: HttpContext) {
-    const wallets = await this.walletService.getAllUserWallets()
-    const serialized = await serialize(WalletTransformer.transform(wallets))
-    return response.ok(ApiResponse.success(serialized.data, 'Wallets retrieved successfully'))
+  async index({ request, serialize, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 15)
+    const paginator = await this.walletService.getPaginatedUserWallets(page, perPage)
+    const serialized = await serialize(WalletTransformer.transform(paginator.all()))
+    return response.ok(
+      ApiResponse.success(serialized.data, 'Wallets retrieved successfully', paginator.getMeta())
+    )
   }
 
   /**

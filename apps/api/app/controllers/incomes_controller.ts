@@ -16,10 +16,14 @@ export default class IncomesController {
   /**
    * Display a list of resource
    */
-  async index({ serialize, response }: HttpContext) {
-    const incomes = await this.incomeService.getAllUserIncomes()
-    const serialized = await serialize(IncomeTransformer.transform(incomes))
-    return response.ok(ApiResponse.success(serialized.data, 'Incomes retrieved successfully'))
+  async index({ request, serialize, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 15)
+    const paginator = await this.incomeService.getPaginatedUserIncomes(page, perPage)
+    const serialized = await serialize(IncomeTransformer.transform(paginator.all()))
+    return response.ok(
+      ApiResponse.success(serialized.data, 'Incomes retrieved successfully', paginator.getMeta())
+    )
   }
 
   /**

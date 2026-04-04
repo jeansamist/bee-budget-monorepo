@@ -59,4 +59,8 @@ export default class IncomeRepository {
   async findAllByUserId(userId: number): Promise<Income[]> {
     return this.model.query().where('user_id', userId).preload('wallet')
   }
+
+  async paginateByUserId(userId: number, page: number, perPage: number) {
+    return this.model.query().where('user_id', userId).preload('wallet').paginate(page, perPage)
+  }
 }

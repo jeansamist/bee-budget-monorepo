@@ -15,10 +15,18 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class WalletTypesController {
   constructor(protected readonly walletTypeService: WalletTypeService) {}
 
-  async index({ serialize, response }: HttpContext) {
-    const walletTypes = await this.walletTypeService.getAllUserWalletTypes()
-    const serialized = await serialize(WalletTypeTransformer.transform(walletTypes))
-    return response.ok(ApiResponse.success(serialized.data, 'Wallet types retrieved successfully'))
+  async index({ request, serialize, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 15)
+    const paginator = await this.walletTypeService.getPaginatedUserWalletTypes(page, perPage)
+    const serialized = await serialize(WalletTypeTransformer.transform(paginator.all()))
+    return response.ok(
+      ApiResponse.success(
+        serialized.data,
+        'Wallet types retrieved successfully',
+        paginator.getMeta()
+      )
+    )
   }
 
   async store({ request, response, serialize }: HttpContext) {

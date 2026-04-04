@@ -78,6 +78,10 @@ export class IncomeCategoryService {
     return this.repository.findAllByUserId(this.userId)
   }
 
+  async getPaginatedUserIncomeCategories(page: number, perPage: number) {
+    return this.repository.paginateByUserId(this.userId, page, perPage)
+  }
+
   async createMassIncomeCategories(items: CreateIncomeCategoryPayload[]) {
     const incomeCategories = []
     for (const item of items) {

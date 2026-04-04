@@ -64,6 +64,10 @@ export class WalletTypeService {
     return this.repository.findAllByUserId(this.userId)
   }
 
+  async getPaginatedUserWalletTypes(page: number, perPage: number) {
+    return this.repository.paginateByUserId(this.userId, page, perPage)
+  }
+
   async createMassWalletTypes(items: CreateWalletTypePayload[]) {
     const walletTypes = []
     for (const item of items) {
