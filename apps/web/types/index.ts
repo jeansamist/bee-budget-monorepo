@@ -73,6 +73,7 @@ export type IncomeCategory = {
   color: string
   defaultWalletTypeId: number | null
   defaultContactId: number | null
+  isSystem: boolean
 }
 
 export type ExpenseCategory = {
@@ -84,6 +85,7 @@ export type ExpenseCategory = {
   color: string
   defaultWalletTypeId: number | null
   defaultContactId: number | null
+  isSystem: boolean
 }
 
 export type Income = {
@@ -95,6 +97,8 @@ export type Income = {
   incomeCategoryId: number
   walletId: number | null
   fromContactId: number | null
+  internalTransferId: number | null
+  isInternalTransfer: boolean
   createdAt: string | null
   updatedAt: string | null
 }
@@ -109,6 +113,23 @@ export type Expense = {
   expenseCategoryId: number
   walletId: number | null
   toContactId: number | null
+  internalTransferId: number | null
+  isInternalTransfer: boolean
+  createdAt: string | null
+  updatedAt: string | null
+}
+
+export type InternalTransfer = {
+  id: number
+  name: string
+  description: string | null
+  amount: number
+  fee: number | null
+  sourceWalletId: number
+  targetWalletId: number
+  linkedExpenseId: number | null
+  linkedIncomeId: number | null
+  date: string | null
   createdAt: string | null
   updatedAt: string | null
 }

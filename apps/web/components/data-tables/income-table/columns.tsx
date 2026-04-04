@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n/client"
 import { deleteIncome } from "@/services/incomes.services"
 import { Contact, Income, IncomeCategory, Wallet, WalletType } from "@/types"
 import { cn, findById } from "@bee-budget/functions"
+import { Badge } from "@bee-budget/ui/badge"
 import { Button } from "@bee-budget/ui/button"
 import { Checkbox } from "@bee-budget/ui/checkbox"
 import {
@@ -61,12 +62,17 @@ const SelectHeader = ({ table }: { table: Table<Income> }) => {
 const SelectCell = ({
   row,
 }: {
-  row: { getIsSelected: () => boolean; toggleSelected: (v: boolean) => void }
+  row: {
+    getIsSelected: () => boolean
+    toggleSelected: (v: boolean) => void
+    getCanSelect: () => boolean
+  }
 }) => {
   const t = useI18n()
   return (
     <Checkbox
       checked={row.getIsSelected()}
+      disabled={!row.getCanSelect()}
       onCheckedChange={(value) => row.toggleSelected(!!value)}
       aria-label={t("app.dataTables.incomeTable.select")}
     />
@@ -152,6 +158,27 @@ const ActionsHeader = () => {
   )
 }
 
+const NameCell = ({ row }: { row: { original: Income } }) => {
+  const t = useI18n()
+  const income = row.original
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex flex-col space-y-1 leading-none">
+        <p className="leading-none font-medium">{income.name}</p>
+        <p className="line-clamp-1 text-sm text-muted-foreground">
+          {income.description}
+        </p>
+        {income.isInternalTransfer && (
+          <Badge variant="outline">
+            {t("app.dataTables.incomeTable.badges.internalTransfer")}
+          </Badge>
+        )}
+      </div>
+    </div>
+  )
+}
+
 const ActionsCell = ({
   row,
   table,
@@ -163,6 +190,7 @@ const ActionsCell = ({
   const income = row.original
   const [detailOpen, setDetailOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const isInternalTransfer = Boolean(income.internalTransferId)
 
   const handleDelete = async () => {
     await deleteIncome(income.id)
@@ -199,9 +227,12 @@ const ActionsCell = ({
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
+            disabled={isInternalTransfer}
             onClick={() => setDeleteOpen(true)}
           >
-            {t("app.dataTables.incomeTable.actions.delete")}
+            {isInternalTransfer
+              ? t("app.dataTables.incomeTable.actions.manageFromTransfers")
+              : t("app.dataTables.incomeTable.actions.delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -338,19 +369,7 @@ export const columns: ColumnDef<Income>[] = [
   {
     accessorKey: "name",
     header: NameHeader,
-    cell: ({ row }) => {
-      const income = row.original
-      return (
-        <div className="flex items-center gap-2">
-          <div className="flex flex-col space-y-1 leading-none">
-            <p className="leading-none font-medium">{income.name}</p>
-            <p className="line-clamp-1 text-sm text-muted-foreground">
-              {income.description}
-            </p>
-          </div>
-        </div>
-      )
-    },
+    cell: NameCell,
   },
   {
     accessorKey: "incomeCategoryId",

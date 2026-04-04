@@ -43,6 +43,16 @@ export interface ApiDefinition {
     update: typeof routes['expenses.update']
     destroy: typeof routes['expenses.destroy']
   }
+  internalTransfers: {
+    createMass: typeof routes['internal_transfers.create_mass']
+    updateMass: typeof routes['internal_transfers.update_mass']
+    deleteMass: typeof routes['internal_transfers.delete_mass']
+    index: typeof routes['internal_transfers.index']
+    store: typeof routes['internal_transfers.store']
+    show: typeof routes['internal_transfers.show']
+    update: typeof routes['internal_transfers.update']
+    destroy: typeof routes['internal_transfers.destroy']
+  }
   incomeCategories: {
     createMass: typeof routes['income_categories.create_mass']
     updateMass: typeof routes['income_categories.update_mass']

@@ -63,6 +63,7 @@ export class AuthService {
           ? (walletTypeIdsByName.get(incomeCategory.defaultWalletTypeName) ?? null)
           : null,
         defaultContactId: null,
+        isSystem: incomeCategory.isSystem,
         userId: user.id,
       }))
 
@@ -78,6 +79,7 @@ export class AuthService {
           ? (walletTypeIdsByName.get(expenseCategory.defaultWalletTypeName) ?? null)
           : null,
         defaultContactId: null,
+        isSystem: expenseCategory.isSystem,
         userId: user.id,
       }))
 

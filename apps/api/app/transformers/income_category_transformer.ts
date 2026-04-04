@@ -12,6 +12,7 @@ export default class IncomeCategoryTransformer extends BaseTransformer<IncomeCat
       'color',
       'defaultWalletTypeId',
       'defaultContactId',
+      'isSystem',
     ])
   }
 }

@@ -14,5 +14,6 @@ export default class MainSeeder extends BaseSeeder {
     await this.seed(await import('./contact_seeder.js'))
     await this.seed(await import('./income_seeder.js'))
     await this.seed(await import('./expense_seeder.js'))
+    await this.seed(await import('./internal_transfer_seeder.js'))
   }
 }

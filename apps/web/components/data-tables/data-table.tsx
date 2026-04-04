@@ -33,6 +33,7 @@ interface DataTableProps<TData, TValue> {
   handleRowSelection?: (rowOriginals: TData[]) => void
   resetSelectionTrigger?: unknown
   onDeleted?: () => void
+  canSelectRow?: (rowOriginal: TData) => boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -41,6 +42,7 @@ export function DataTable<TData, TValue>({
   handleRowSelection,
   resetSelectionTrigger,
   onDeleted,
+  canSelectRow,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
@@ -52,6 +54,7 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
+    enableRowSelection: (row) => (canSelectRow ? canSelectRow(row.original) : true),
     state: {
       sorting,
       rowSelection,

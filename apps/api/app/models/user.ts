@@ -9,6 +9,7 @@ import Expense from './expense.ts'
 import ExpenseCategory from './expense_category.ts'
 import Income from './income.ts'
 import IncomeCategory from './income_category.ts'
+import InternalTransfer from './internal_transfer.ts'
 import Wallet from './wallet.ts'
 import WalletType from './wallet_type.ts'
 
@@ -27,6 +28,9 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
 
   @hasMany(() => Expense)
   declare expenses: HasMany<typeof Expense>
+
+  @hasMany(() => InternalTransfer)
+  declare internalTransfers: HasMany<typeof InternalTransfer>
 
   @hasMany(() => Wallet)
   declare wallets: HasMany<typeof Wallet>

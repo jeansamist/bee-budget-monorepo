@@ -5,6 +5,7 @@ import ExpenseRepository from '#repositories/expense_repository'
 import WalletRepository from '#repositories/wallet_repository'
 import { ModelProps } from '#utils/generics'
 import { httpError } from '#utils/http_error'
+import { INTERNAL_TRANSFER_EXPENSE_CATEGORY_NAME } from '#utils/internal_transfer'
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
@@ -53,11 +54,28 @@ export class ExpenseService {
     }
   }
 
+  private ensureExpenseIsEditable(expense: ExpenseSchema) {
+    if (expense.internalTransferId !== null) {
+      throw httpError(
+        422,
+        'This expense comes from an internal transfer. Manage it from transfers.'
+      )
+    }
+  }
+
   private async getOwnedExpenseCategory(expenseCategoryId: number) {
     const expenseCategory = await this.expenseCategoryRepository.findById(expenseCategoryId)
     if (expenseCategory.userId !== this.userId) {
       throw httpError(422, 'The selected expense category is invalid')
     }
+
+    if (
+      expenseCategory.isSystem ||
+      expenseCategory.name === INTERNAL_TRANSFER_EXPENSE_CATEGORY_NAME
+    ) {
+      throw httpError(422, 'The selected expense category is reserved for internal transfers')
+    }
+
     return expenseCategory
   }
 
@@ -128,6 +146,7 @@ export class ExpenseService {
   async updateExpense(id: number, data: UpdateExpensePayload) {
     const expense = await this.repository.findById(id)
     this.checkOwnership(expense)
+    this.ensureExpenseIsEditable(expense)
     await this.validateContactOwnership(data.toContactId)
 
     const effectiveExpenseCategoryId = data.expenseCategoryId ?? expense.expenseCategoryId
@@ -202,6 +221,7 @@ export class ExpenseService {
   async deleteExpense(id: number) {
     const expense = await this.repository.findById(id)
     this.checkOwnership(expense)
+    this.ensureExpenseIsEditable(expense)
 
     return db.transaction(async (trx) => {
       if (expense.walletId) {

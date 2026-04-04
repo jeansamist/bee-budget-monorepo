@@ -10,6 +10,7 @@ export const controllers = {
   Expenses: () => import('#controllers/expenses_controller'),
   IncomeCategories: () => import('#controllers/income_categories_controller'),
   Incomes: () => import('#controllers/incomes_controller'),
+  InternalTransfers: () => import('#controllers/internal_transfers_controller'),
   WalletTypes: () => import('#controllers/wallet_types_controller'),
   Wallets: () => import('#controllers/wallets_controller'),
 }

@@ -114,6 +114,24 @@ const routes = {
     tokens: [{"old":"/api/expenses/delete-mass","type":0,"val":"api","end":""},{"old":"/api/expenses/delete-mass","type":0,"val":"expenses","end":""},{"old":"/api/expenses/delete-mass","type":0,"val":"delete-mass","end":""}],
     types: placeholder as Registry['expenses.delete_mass']['types'],
   },
+  'internal_transfers.create_mass': {
+    methods: ["POST"],
+    pattern: '/api/internal-transfers/create-mass',
+    tokens: [{"old":"/api/internal-transfers/create-mass","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/create-mass","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/create-mass","type":0,"val":"create-mass","end":""}],
+    types: placeholder as Registry['internal_transfers.create_mass']['types'],
+  },
+  'internal_transfers.update_mass': {
+    methods: ["PUT"],
+    pattern: '/api/internal-transfers/update-mass',
+    tokens: [{"old":"/api/internal-transfers/update-mass","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/update-mass","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/update-mass","type":0,"val":"update-mass","end":""}],
+    types: placeholder as Registry['internal_transfers.update_mass']['types'],
+  },
+  'internal_transfers.delete_mass': {
+    methods: ["POST"],
+    pattern: '/api/internal-transfers/delete-mass',
+    tokens: [{"old":"/api/internal-transfers/delete-mass","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/delete-mass","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/delete-mass","type":0,"val":"delete-mass","end":""}],
+    types: placeholder as Registry['internal_transfers.delete_mass']['types'],
+  },
   'income_categories.create_mass': {
     methods: ["POST"],
     pattern: '/api/income-categories/create-mass',
@@ -305,6 +323,36 @@ const routes = {
     pattern: '/api/income-categories/:id',
     tokens: [{"old":"/api/income-categories/:id","type":0,"val":"api","end":""},{"old":"/api/income-categories/:id","type":0,"val":"income-categories","end":""},{"old":"/api/income-categories/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['income_categories.destroy']['types'],
+  },
+  'internal_transfers.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/internal-transfers',
+    tokens: [{"old":"/api/internal-transfers","type":0,"val":"api","end":""},{"old":"/api/internal-transfers","type":0,"val":"internal-transfers","end":""}],
+    types: placeholder as Registry['internal_transfers.index']['types'],
+  },
+  'internal_transfers.store': {
+    methods: ["POST"],
+    pattern: '/api/internal-transfers',
+    tokens: [{"old":"/api/internal-transfers","type":0,"val":"api","end":""},{"old":"/api/internal-transfers","type":0,"val":"internal-transfers","end":""}],
+    types: placeholder as Registry['internal_transfers.store']['types'],
+  },
+  'internal_transfers.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/internal-transfers/:id',
+    tokens: [{"old":"/api/internal-transfers/:id","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/:id","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['internal_transfers.show']['types'],
+  },
+  'internal_transfers.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/internal-transfers/:id',
+    tokens: [{"old":"/api/internal-transfers/:id","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/:id","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['internal_transfers.update']['types'],
+  },
+  'internal_transfers.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/internal-transfers/:id',
+    tokens: [{"old":"/api/internal-transfers/:id","type":0,"val":"api","end":""},{"old":"/api/internal-transfers/:id","type":0,"val":"internal-transfers","end":""},{"old":"/api/internal-transfers/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['internal_transfers.destroy']['types'],
   },
   'incomes.index': {
     methods: ["GET","HEAD"],

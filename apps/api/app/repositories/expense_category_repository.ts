@@ -49,6 +49,10 @@ export default class ExpenseCategoryRepository {
     return this.model.findOrFail(id)
   }
 
+  async findByNameForUser(userId: number, name: string): Promise<ExpenseCategory | null> {
+    return this.model.query().where('user_id', userId).where('name', name).first()
+  }
+
   async createMany(data: ModelProps<ExpenseCategorySchema>[]): Promise<ExpenseCategory[]> {
     const expenseCategories: ExpenseCategory[] = []
     for (const item of data) {

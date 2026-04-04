@@ -13,6 +13,8 @@ export default class ExpenseTransformer extends BaseTransformer<Expense> {
       'expenseCategoryId',
       'walletId',
       'toContactId',
+      'internalTransferId',
+      'isInternalTransfer',
       'createdAt',
       'updatedAt',
     ])

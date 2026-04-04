@@ -22,6 +22,9 @@ export type ScannedRoutes = {
     'expenses.create_mass': { paramsTuple?: []; params?: {} }
     'expenses.update_mass': { paramsTuple?: []; params?: {} }
     'expenses.delete_mass': { paramsTuple?: []; params?: {} }
+    'internal_transfers.create_mass': { paramsTuple?: []; params?: {} }
+    'internal_transfers.update_mass': { paramsTuple?: []; params?: {} }
+    'internal_transfers.delete_mass': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
@@ -54,6 +57,11 @@ export type ScannedRoutes = {
     'income_categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.index': { paramsTuple?: []; params?: {} }
+    'internal_transfers.store': { paramsTuple?: []; params?: {} }
+    'internal_transfers.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.index': { paramsTuple?: []; params?: {} }
     'incomes.store': { paramsTuple?: []; params?: {} }
     'incomes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -80,6 +88,8 @@ export type ScannedRoutes = {
     'expenses.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.index': { paramsTuple?: []; params?: {} }
     'income_categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.index': { paramsTuple?: []; params?: {} }
+    'internal_transfers.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.index': { paramsTuple?: []; params?: {} }
     'incomes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.index': { paramsTuple?: []; params?: {} }
@@ -97,6 +107,8 @@ export type ScannedRoutes = {
     'expenses.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.index': { paramsTuple?: []; params?: {} }
     'income_categories.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.index': { paramsTuple?: []; params?: {} }
+    'internal_transfers.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.index': { paramsTuple?: []; params?: {} }
     'incomes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.index': { paramsTuple?: []; params?: {} }
@@ -118,6 +130,8 @@ export type ScannedRoutes = {
     'expense_categories.delete_mass': { paramsTuple?: []; params?: {} }
     'expenses.create_mass': { paramsTuple?: []; params?: {} }
     'expenses.delete_mass': { paramsTuple?: []; params?: {} }
+    'internal_transfers.create_mass': { paramsTuple?: []; params?: {} }
+    'internal_transfers.delete_mass': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
     'incomes.create_mass': { paramsTuple?: []; params?: {} }
@@ -130,6 +144,7 @@ export type ScannedRoutes = {
     'expense_categories.store': { paramsTuple?: []; params?: {} }
     'expenses.store': { paramsTuple?: []; params?: {} }
     'income_categories.store': { paramsTuple?: []; params?: {} }
+    'internal_transfers.store': { paramsTuple?: []; params?: {} }
     'incomes.store': { paramsTuple?: []; params?: {} }
     'wallet_types.store': { paramsTuple?: []; params?: {} }
     'wallets.store': { paramsTuple?: []; params?: {} }
@@ -139,6 +154,7 @@ export type ScannedRoutes = {
     'contacts.update_mass': { paramsTuple?: []; params?: {} }
     'expense_categories.update_mass': { paramsTuple?: []; params?: {} }
     'expenses.update_mass': { paramsTuple?: []; params?: {} }
+    'internal_transfers.update_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
     'incomes.update_mass': { paramsTuple?: []; params?: {} }
     'wallet_types.update_mass': { paramsTuple?: []; params?: {} }
@@ -147,6 +163,7 @@ export type ScannedRoutes = {
     'expense_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -156,6 +173,7 @@ export type ScannedRoutes = {
     'expense_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expenses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -165,6 +183,7 @@ export type ScannedRoutes = {
     'expense_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'income_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incomes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

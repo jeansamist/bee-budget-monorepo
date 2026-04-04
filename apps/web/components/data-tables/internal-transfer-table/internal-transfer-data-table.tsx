@@ -1,22 +1,21 @@
-import { Income } from "@/types"
+import { InternalTransfer } from "@/types"
 import { FunctionComponent } from "react"
 import { DataTable } from "../data-table"
 import { columns } from "./columns"
 
-export const IncomeDataTable: FunctionComponent<{
-  incomes: Income[]
-  handleRowSelection?: (state: Income[]) => void
+export const InternalTransferDataTable: FunctionComponent<{
+  transfers: InternalTransfer[]
+  handleRowSelection?: (state: InternalTransfer[]) => void
   resetSelectionTrigger?: unknown
   onDeleted?: () => void
-}> = ({ incomes, handleRowSelection, resetSelectionTrigger, onDeleted }) => {
+}> = ({ transfers, handleRowSelection, resetSelectionTrigger, onDeleted }) => {
   return (
-    <DataTable<Income, unknown>
+    <DataTable<InternalTransfer, unknown>
       columns={columns}
-      data={incomes}
+      data={transfers}
       handleRowSelection={handleRowSelection}
       resetSelectionTrigger={resetSelectionTrigger}
       onDeleted={onDeleted}
-      canSelectRow={(income) => !income.internalTransferId}
     />
   )
 }

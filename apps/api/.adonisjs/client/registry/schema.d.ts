@@ -223,6 +223,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/expenses_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'internal_transfers.create_mass': {
+    methods: ["POST"]
+    pattern: '/api/internal-transfers/create-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/internal_transfer').createMassInternalTransferValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/internal_transfer').createMassInternalTransferValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['createMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['createMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'internal_transfers.update_mass': {
+    methods: ["PUT"]
+    pattern: '/api/internal-transfers/update-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/internal_transfer').updateMassInternalTransferValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/internal_transfer').updateMassInternalTransferValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['updateMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['updateMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'internal_transfers.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/internal-transfers/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/internal_transfer').deleteMassInternalTransferValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/internal_transfer').deleteMassInternalTransferValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'
@@ -605,6 +641,66 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/income_categories_controller').default['destroy']>>>
+    }
+  }
+  'internal_transfers.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/internal-transfers'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'internal_transfers.store': {
+    methods: ["POST"]
+    pattern: '/api/internal-transfers'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/internal_transfer').createInternalTransferValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/internal_transfer').createInternalTransferValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'internal_transfers.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/internal-transfers/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['show']>>>
+    }
+  }
+  'internal_transfers.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/internal-transfers/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/internal_transfer').updateInternalTransferValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/internal_transfer').updateInternalTransferValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'internal_transfers.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/internal-transfers/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/internal_transfers_controller').default['destroy']>>>
     }
   }
   'incomes.index': {

@@ -2,6 +2,7 @@ import { IncomeCategorySchema } from '#database/schema'
 import IncomeCategoryRepository from '#repositories/income_category_repository'
 import ContactRepository from '#repositories/contact_repository'
 import WalletTypeRepository from '#repositories/wallet_type_repository'
+import { INTERNAL_TRANSFER_INCOME_CATEGORY_NAME } from '#utils/internal_transfer'
 import { httpError } from '#utils/http_error'
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
@@ -42,6 +43,19 @@ export class IncomeCategoryService {
     }
   }
 
+  private ensureIncomeCategoryIsEditable(incomeCategory: IncomeCategorySchema) {
+    if (incomeCategory.isSystem) {
+      throw httpError(422, 'System income categories cannot be modified')
+    }
+  }
+
+  private ensureIncomeCategoryNameIsAllowed(name: string | undefined) {
+    if (name === undefined) return
+    if (name === INTERNAL_TRANSFER_INCOME_CATEGORY_NAME) {
+      throw httpError(422, 'This income category name is reserved')
+    }
+  }
+
   private async validateDefaultWalletType(defaultWalletTypeId: number | null | undefined) {
     if (defaultWalletTypeId === undefined || defaultWalletTypeId === null) {
       return
@@ -62,6 +76,7 @@ export class IncomeCategoryService {
   }
 
   async createIncomeCategory(data: CreateIncomeCategoryPayload) {
+    this.ensureIncomeCategoryNameIsAllowed(data.name)
     await this.validateDefaultWalletType(data.defaultWalletTypeId)
     await this.validateDefaultContact(data.defaultContactId)
     return this.repository.create({
@@ -69,12 +84,15 @@ export class IncomeCategoryService {
       icon: data.icon ?? null,
       defaultWalletTypeId: data.defaultWalletTypeId ?? null,
       defaultContactId: data.defaultContactId ?? null,
+      isSystem: false,
       userId: this.userId,
     })
   }
   async updateIncomeCategory(id: number, data: UpdateIncomeCategoryPayload) {
     const incomeCategory = await this.repository.findById(id)
     this.checkOwnership(incomeCategory)
+    this.ensureIncomeCategoryIsEditable(incomeCategory)
+    this.ensureIncomeCategoryNameIsAllowed(data.name)
     await this.validateDefaultWalletType(data.defaultWalletTypeId)
     await this.validateDefaultContact(data.defaultContactId)
     return this.repository.update(incomeCategory, data)
@@ -82,6 +100,7 @@ export class IncomeCategoryService {
   async deleteIncomeCategory(id: number) {
     const incomeCategory = await this.repository.findById(id)
     this.checkOwnership(incomeCategory)
+    this.ensureIncomeCategoryIsEditable(incomeCategory)
     return this.repository.delete(incomeCategory)
   }
   async getIncomeCategoryById(id: number) {

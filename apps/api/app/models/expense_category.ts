@@ -22,4 +22,8 @@ export default class ExpenseCategory extends ExpenseCategorySchema {
 
   @hasMany(() => Expense)
   declare expenses: HasMany<typeof Expense>
+
+  get isTransferCategory() {
+    return this.isSystem
+  }
 }

@@ -10,6 +10,7 @@ import type ExpenseCategoryTransformer from '#transformers/expense_category_tran
 import type ExpenseTransformer from '#transformers/expense_transformer'
 import type IncomeCategoryTransformer from '#transformers/income_category_transformer'
 import type IncomeTransformer from '#transformers/income_transformer'
+import type InternalTransferTransformer from '#transformers/internal_transfer_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 import type WalletTransformer from '#transformers/wallet_transformer'
 import type WalletTypeTransformer from '#transformers/wallet_type_transformer'
@@ -34,6 +35,10 @@ export namespace Data {
   export type Income = InferData<IncomeTransformer>
   export namespace Income {
     export type Variants = InferVariants<IncomeTransformer>
+  }
+  export type InternalTransfer = InferData<InternalTransferTransformer>
+  export namespace InternalTransfer {
+    export type Variants = InferVariants<InternalTransferTransformer>
   }
   export type User = InferData<UserTransformer>
   export namespace User {

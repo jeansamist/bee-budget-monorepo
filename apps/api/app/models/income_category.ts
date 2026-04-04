@@ -22,4 +22,8 @@ export default class IncomeCategory extends IncomeCategorySchema {
 
   @hasMany(() => Income)
   declare incomes: HasMany<typeof Income>
+
+  get isTransferCategory() {
+    return this.isSystem
+  }
 }

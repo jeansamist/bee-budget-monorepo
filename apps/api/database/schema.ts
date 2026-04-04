@@ -60,7 +60,7 @@ export class ContactSchema extends BaseModel {
 }
 
 export class ExpenseCategorySchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
+  static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'isSystem', 'name', 'updatedAt', 'userId'] as const
   $columns = ExpenseCategorySchema.$columns
   @column()
   declare color: string
@@ -75,6 +75,8 @@ export class ExpenseCategorySchema extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
   @column()
+  declare isSystem: boolean
+  @column()
   declare name: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
@@ -83,7 +85,7 @@ export class ExpenseCategorySchema extends BaseModel {
 }
 
 export class ExpenseSchema extends BaseModel {
-  static $columns = ['amount', 'createdAt', 'date', 'description', 'expenseCategoryId', 'fees', 'id', 'name', 'toContactId', 'updatedAt', 'userId', 'walletId'] as const
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'expenseCategoryId', 'fees', 'id', 'internalTransferId', 'name', 'toContactId', 'updatedAt', 'userId', 'walletId'] as const
   $columns = ExpenseSchema.$columns
   @column()
   declare amount: number
@@ -100,6 +102,8 @@ export class ExpenseSchema extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
   @column()
+  declare internalTransferId: number | null
+  @column()
   declare name: string
   @column()
   declare toContactId: number | null
@@ -112,7 +116,7 @@ export class ExpenseSchema extends BaseModel {
 }
 
 export class IncomeCategorySchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'name', 'updatedAt', 'userId'] as const
+  static $columns = ['color', 'createdAt', 'defaultContactId', 'defaultWalletTypeId', 'icon', 'id', 'isSystem', 'name', 'updatedAt', 'userId'] as const
   $columns = IncomeCategorySchema.$columns
   @column()
   declare color: string
@@ -127,6 +131,8 @@ export class IncomeCategorySchema extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
   @column()
+  declare isSystem: boolean
+  @column()
   declare name: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
@@ -135,7 +141,7 @@ export class IncomeCategorySchema extends BaseModel {
 }
 
 export class IncomeSchema extends BaseModel {
-  static $columns = ['amount', 'createdAt', 'date', 'description', 'fromContactId', 'id', 'incomeCategoryId', 'name', 'updatedAt', 'userId', 'walletId'] as const
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'fromContactId', 'id', 'incomeCategoryId', 'internalTransferId', 'name', 'updatedAt', 'userId', 'walletId'] as const
   $columns = IncomeSchema.$columns
   @column()
   declare amount: number
@@ -152,6 +158,8 @@ export class IncomeSchema extends BaseModel {
   @column()
   declare incomeCategoryId: number
   @column()
+  declare internalTransferId: number | null
+  @column()
   declare name: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
@@ -159,6 +167,37 @@ export class IncomeSchema extends BaseModel {
   declare userId: number
   @column()
   declare walletId: number | null
+}
+
+export class InternalTransferSchema extends BaseModel {
+  static $columns = ['amount', 'createdAt', 'date', 'description', 'fee', 'id', 'linkedExpenseId', 'linkedIncomeId', 'name', 'sourceWalletId', 'targetWalletId', 'updatedAt', 'userId'] as const
+  $columns = InternalTransferSchema.$columns
+  @column()
+  declare amount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare date: DateTime
+  @column()
+  declare description: string | null
+  @column()
+  declare fee: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare linkedExpenseId: number | null
+  @column()
+  declare linkedIncomeId: number | null
+  @column()
+  declare name: string
+  @column()
+  declare sourceWalletId: number
+  @column()
+  declare targetWalletId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
 }
 
 export class UserSchema extends BaseModel {

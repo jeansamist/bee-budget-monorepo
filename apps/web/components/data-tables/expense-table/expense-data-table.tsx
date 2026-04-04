@@ -16,6 +16,7 @@ export const ExpenseDataTable: FunctionComponent<{
       handleRowSelection={handleRowSelection}
       resetSelectionTrigger={resetSelectionTrigger}
       onDeleted={onDeleted}
+      canSelectRow={(expense) => !expense.internalTransferId}
     />
   )
 }

@@ -12,6 +12,7 @@ export default class ExpenseCategoryTransformer extends BaseTransformer<ExpenseC
       'color',
       'defaultWalletTypeId',
       'defaultContactId',
+      'isSystem',
     ])
   }
 }

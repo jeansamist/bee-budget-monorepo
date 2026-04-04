@@ -4,6 +4,7 @@ import { type BelongsTo, type HasMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import Expense from './expense.ts'
 import Income from './income.ts'
+import InternalTransfer from './internal_transfer.ts'
 import User from './user.ts'
 import WalletType from './wallet_type.ts'
 
@@ -26,6 +27,16 @@ export default class Wallet extends WalletSchema {
 
   @hasMany(() => Expense)
   declare expenses: HasMany<typeof Expense>
+
+  @hasMany(() => InternalTransfer, {
+    foreignKey: 'sourceWalletId',
+  })
+  declare outgoingInternalTransfers: HasMany<typeof InternalTransfer>
+
+  @hasMany(() => InternalTransfer, {
+    foreignKey: 'targetWalletId',
+  })
+  declare incomingInternalTransfers: HasMany<typeof InternalTransfer>
 
   private buildMonthBuckets() {
     const currentMonth = DateTime.now().startOf('month')

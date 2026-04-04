@@ -3,6 +3,7 @@ import IncomeCategoryRepository from '#repositories/income_category_repository'
 import IncomeRepository from '#repositories/income_repository'
 import WalletRepository from '#repositories/wallet_repository'
 import ContactRepository from '#repositories/contact_repository'
+import { INTERNAL_TRANSFER_INCOME_CATEGORY_NAME } from '#utils/internal_transfer'
 import { ModelProps } from '#utils/generics'
 import { httpError } from '#utils/http_error'
 import { inject } from '@adonisjs/core'
@@ -43,11 +44,22 @@ export class IncomeService {
     }
   }
 
+  private ensureIncomeIsEditable(income: IncomeSchema) {
+    if (income.internalTransferId !== null) {
+      throw httpError(422, 'This income comes from an internal transfer. Manage it from transfers.')
+    }
+  }
+
   private async getOwnedIncomeCategory(incomeCategoryId: number) {
     const incomeCategory = await this.incomeCategoryRepository.findById(incomeCategoryId)
     if (incomeCategory.userId !== this.userId) {
       throw httpError(422, 'The selected income category is invalid')
     }
+
+    if (incomeCategory.isSystem || incomeCategory.name === INTERNAL_TRANSFER_INCOME_CATEGORY_NAME) {
+      throw httpError(422, 'The selected income category is reserved for internal transfers')
+    }
+
     return incomeCategory
   }
 
@@ -115,6 +127,7 @@ export class IncomeService {
   async updateIncome(id: number, data: UpdateIncomePayload) {
     const income = await this.repository.findById(id)
     this.checkOwnership(income)
+    this.ensureIncomeIsEditable(income)
     await this.validateContactOwnership(data.fromContactId)
 
     const effectiveIncomeCategoryId = data.incomeCategoryId ?? income.incomeCategoryId
@@ -183,6 +196,7 @@ export class IncomeService {
   async deleteIncome(id: number) {
     const income = await this.repository.findById(id)
     this.checkOwnership(income)
+    this.ensureIncomeIsEditable(income)
 
     return db.transaction(async (trx) => {
       if (income.walletId) {

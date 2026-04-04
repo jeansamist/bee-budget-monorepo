@@ -115,6 +115,19 @@ export function ExpenseDetailDialog({
               : "---"}
           </DetailRow>
 
+          {expense.internalTransferId && (
+            <DetailRow label={t("transfer")}>
+              <span className="flex flex-col items-end gap-1">
+                <span className="font-mono text-muted-foreground">
+                  #{expense.internalTransferId.toString().padStart(5, "0")}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {t("manageFromTransfers")}
+                </span>
+              </span>
+            </DetailRow>
+          )}
+
           <Separator />
 
           <DetailRow label={t("category")}>
