@@ -17,6 +17,7 @@
     "@bee-budget/hooks": "workspace:*",
     "@bee-budget/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@tanstack/react-table": "^8.21.3",
     "@tuyau/client": "^0.2.10",
     "@tuyau/core": "^1.2.2",
     "api": "workspace:*",

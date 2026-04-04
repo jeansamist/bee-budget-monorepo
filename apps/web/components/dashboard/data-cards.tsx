@@ -1,10 +1,10 @@
 "use client"
 
-import { useI18n } from "@/lib/i18n/client"
 import { useApp } from "@/contexts/app.context"
+import { useI18n } from "@/lib/i18n/client"
 import { cn } from "@bee-budget/functions"
 import { ChartContainer, type ChartConfig } from "@bee-budget/ui/chart"
-import { FunctionComponent, useMemo } from "react"
+import { FunctionComponent, ReactNode, useMemo } from "react"
 import { Area, AreaChart, CartesianGrid } from "recharts"
 type ChartProps = {
   className?: string
@@ -43,7 +43,7 @@ const Chart: FunctionComponent<ChartProps> = ({ className, fill, data }) => {
 type DataCardProps = {
   name: string
   description: string
-  value: string
+  value: ReactNode
   evolution: number
   lastMonthssData: { month: string; amount: number }[]
   [key: string]: unknown
@@ -71,7 +71,8 @@ const DataCard: FunctionComponent<DataCardProps> = ({
           className={`text-sm ${evolution >= 0 ? "text-green-500" : "text-red-500"}`}
         >
           {evolution >= 0 ? "+" : "-"}
-          {Math.abs(evolution)}% {t("app.dashboard.dataCards.evolution.fromLastMonth")}
+          {Math.abs(evolution)}%{" "}
+          {t("app.dashboard.dataCards.evolution.fromLastMonth")}
         </p>
       </div>
       <Chart
@@ -94,7 +95,12 @@ export const DataCards: FunctionComponent = () => {
           key={wallet.id}
           name={wallet.name}
           description={wallet.description}
-          value={`${wallet.amount.toFixed(2)}XAF`}
+          value={
+            <span>
+              {`${wallet.amount.toFixed(2)}`}
+              <span className="text-sm text-muted-foreground">XAF</span>
+            </span>
+          }
           evolution={5} // Placeholder for evolution percentage
           lastMonthssData={[
             { month: "Jan", amount: 38000 },
