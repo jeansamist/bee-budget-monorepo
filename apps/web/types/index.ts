@@ -156,7 +156,7 @@ export type Wallet = {
   updatedAt: string | null
 }
 
-export type TransactionAnalyticsPeriod = "daily" | "weekly" | "monthly"
+export type TransactionAnalyticsPeriod = "daily" | "weekly" | "monthly" | "yearly"
 
 export type TransactionAnalyticsPoint = {
   label: string

@@ -41,7 +41,9 @@ export default async function Layout({
       incomeCategories:
         incomeCategories.status === "rejected" ? incomeCategories.reason : null,
       expenseCategories:
-        expenseCategories.status === "rejected" ? expenseCategories.reason : null,
+        expenseCategories.status === "rejected"
+          ? expenseCategories.reason
+          : null,
       wallets: wallets.status === "rejected" ? wallets.reason : null,
       contacts: contacts.status === "rejected" ? contacts.reason : null,
     })
@@ -59,11 +61,15 @@ export default async function Layout({
   }
   return (
     <AppProvider
-      walletTypes={(walletTypes.value.data as WalletType[]) || []}
-      incomeCategories={(incomeCategories.value.data as IncomeCategory[]) || []}
-      expenseCategories={(expenseCategories.value.data as ExpenseCategory[]) || []}
-      wallets={(wallets.value.data as Wallet[]) || []}
-      contacts={(contacts.value.data as Contact[]) || []}
+      walletTypes={(walletTypes.value?.data as WalletType[]) || []}
+      incomeCategories={
+        (incomeCategories.value?.data as IncomeCategory[]) || []
+      }
+      expenseCategories={
+        (expenseCategories.value?.data as ExpenseCategory[]) || []
+      }
+      wallets={(wallets.value?.data as Wallet[]) || []}
+      contacts={(contacts.value?.data as Contact[]) || []}
     >
       <SidebarProvider>
         <AppSidebar />

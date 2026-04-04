@@ -109,9 +109,10 @@ export default {
   "app.transactions.dataCards.period.daily": "Daily",
   "app.transactions.dataCards.period.weekly": "Weekly",
   "app.transactions.dataCards.period.monthly": "Monthly",
+  "app.transactions.dataCards.period.yearly": "Yearly",
   "app.transactions.dataCards.cards.incomes.title": "Total income",
   "app.transactions.dataCards.cards.incomes.description":
-    "Income aggregated for the selected period.",
+    "Income for the selected period.",
   "app.transactions.dataCards.cards.expenses.title": "Total expenses + fees",
   "app.transactions.dataCards.cards.expenses.description":
     "Expenses including transfer and payment fees.",

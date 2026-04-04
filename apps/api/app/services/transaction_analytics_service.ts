@@ -4,7 +4,7 @@ import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 
-type AnalyticsPeriod = 'daily' | 'weekly' | 'monthly'
+type AnalyticsPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly'
 
 type AnalyticsPoint = {
   label: string
@@ -18,9 +18,9 @@ type AnalyticsMetric = {
 
 type PeriodConfig = {
   count: number
-  cursorUnit: 'days' | 'weeks' | 'months'
-  bucketStartUnit: 'day' | 'week' | 'month'
-  bucketEndUnit: 'day' | 'week' | 'month'
+  cursorUnit: 'days' | 'weeks' | 'months' | 'years'
+  bucketStartUnit: 'day' | 'week' | 'month' | 'year'
+  bucketEndUnit: 'day' | 'week' | 'month' | 'year'
 }
 
 @inject()
@@ -48,12 +48,19 @@ export class TransactionAnalyticsService {
           bucketEndUnit: 'week',
         }
       case 'monthly':
-      default:
         return {
           count: 6,
           cursorUnit: 'months',
           bucketStartUnit: 'month',
           bucketEndUnit: 'month',
+        }
+      case 'yearly':
+      default:
+        return {
+          count: 5,
+          cursorUnit: 'years',
+          bucketStartUnit: 'year',
+          bucketEndUnit: 'year',
         }
     }
   }
@@ -65,8 +72,10 @@ export class TransactionAnalyticsService {
       case 'weekly':
         return `W${date.weekNumber}`
       case 'monthly':
-      default:
         return date.toFormat('LLL')
+      case 'yearly':
+      default:
+        return date.toFormat('yyyy')
     }
   }
 
@@ -88,8 +97,8 @@ export class TransactionAnalyticsService {
     })
   }
 
-  private sumMetric(points: AnalyticsPoint[]) {
-    return points.reduce((total, point) => total + point.amount, 0)
+  private getCurrentBucketTotal(points: AnalyticsPoint[]) {
+    return points.at(-1)?.amount ?? 0
   }
 
   async getTransactionAnalytics(period: AnalyticsPeriod = 'monthly') {
@@ -143,15 +152,15 @@ export class TransactionAnalyticsService {
     return {
       period,
       incomes: {
-        total: this.sumMetric(incomeSeries),
+        total: this.getCurrentBucketTotal(incomeSeries),
         data: incomeSeries,
       } satisfies AnalyticsMetric,
       expenses: {
-        total: this.sumMetric(expenseSeries),
+        total: this.getCurrentBucketTotal(expenseSeries),
         data: expenseSeries,
       } satisfies AnalyticsMetric,
       fees: {
-        total: this.sumMetric(feeSeries),
+        total: this.getCurrentBucketTotal(feeSeries),
         data: feeSeries,
       } satisfies AnalyticsMetric,
     }

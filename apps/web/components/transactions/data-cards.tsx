@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@bee-budget/ui/select"
-import { Skeleton } from "@bee-budget/ui/skeleton"
 import {
   FunctionComponent,
   ReactNode,
@@ -112,14 +111,7 @@ const DataCard: FunctionComponent<DataCardProps> = ({
 }
 
 const DataCardSkeleton = () => (
-  <div className="flex min-h-52 gap-6 rounded-3xl bg-accent p-6">
-    <div className="flex w-2/3 flex-col gap-3">
-      <Skeleton className="h-5 w-28" />
-      <Skeleton className="h-4 w-44" />
-      <Skeleton className="h-8 w-36" />
-    </div>
-    <Skeleton className="h-40 w-1/3 rounded-2xl" />
-  </div>
+  <div className="flex h-32 gap-6 rounded-3xl bg-accent p-6"></div>
 )
 
 export const DataCards: FunctionComponent = () => {
@@ -194,6 +186,7 @@ export const DataCards: FunctionComponent = () => {
             <SelectItem value="daily">{t("period.daily")}</SelectItem>
             <SelectItem value="weekly">{t("period.weekly")}</SelectItem>
             <SelectItem value="monthly">{t("period.monthly")}</SelectItem>
+            <SelectItem value="yearly">{t("period.yearly")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
