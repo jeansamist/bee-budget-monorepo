@@ -1,6 +1,6 @@
 "use client"
 
-import { useScopedI18n } from "@/lib/i18n/client"
+import { useCurrentLocaleUrl, useScopedI18n } from "@/lib/i18n/client"
 import {
   deleteMassInternalTransfers,
   getInternalTransfers,
@@ -33,12 +33,14 @@ import {
   SelectValue,
 } from "@bee-budget/ui/select"
 import { Loader, Trash } from "lucide-react"
+import Link from "next/link"
 import { FunctionComponent, useCallback, useEffect, useState } from "react"
 import { Confirm } from "../confirm"
 import { InternalTransferDataTable } from "../data-tables/internal-transfer-table/internal-transfer-data-table"
 
 export const InternalTransfers: FunctionComponent = () => {
   const t = useScopedI18n("app.transactions.internalTransfers")
+  const { currentLocaleUrl } = useCurrentLocaleUrl()
   const [transfers, setTransfers] = useState<InternalTransfer[]>([])
   const [deleting, setDeleting] = useState(false)
   const [selectedRows, setSelectedRows] = useState<InternalTransfer[]>([])
@@ -87,7 +89,12 @@ export const InternalTransfers: FunctionComponent = () => {
             <CardTitle>{t("title")}</CardTitle>
             <CardDescription>{t("description")}</CardDescription>
           </div>
-          <CardAction className="hidden gap-2 md:flex">
+          <CardAction className="flex flex-wrap gap-2">
+            <Button asChild>
+              <Link href={currentLocaleUrl("/app/internal-transferts/create")}>
+                {t("create")}
+              </Link>
+            </Button>
             {selectedRows.length > 0 && (
               <Confirm
                 title={t("deleteConfirm.title")}

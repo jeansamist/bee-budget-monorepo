@@ -221,6 +221,8 @@ export type DateFieldProps = {
   placeholder?: string;
   disabledDates?: ({ startDate: Date; endDate: Date } | Date)[];
   name: string;
+  minDate?: Date;
+  maxDate?: Date;
 };
 
 export const DateField: FunctionComponent<DateFieldProps> = ({
@@ -230,18 +232,37 @@ export const DateField: FunctionComponent<DateFieldProps> = ({
   placeholder,
   description,
   disabledDates,
+  minDate,
+  maxDate,
 }) => {
+  const normalizeDate = (date: Date) => {
+    const normalized = new Date(date);
+    normalized.setHours(0, 0, 0, 0);
+    return normalized;
+  };
+
   const isDateDisabled = (date: Date) => {
-    if (date <= new Date() || date < new Date("1900-01-01")) {
+    const normalizedDate = normalizeDate(date);
+
+    if (normalizedDate < normalizeDate(new Date("1900-01-01"))) {
+      return true;
+    }
+    if (minDate && normalizedDate < normalizeDate(minDate)) {
+      return true;
+    }
+    if (maxDate && normalizedDate > normalizeDate(maxDate)) {
       return true;
     }
     if (disabledDates && disabledDates.length > 0) {
       return disabledDates.some((disabledDate) => {
         if (disabledDate instanceof Date) {
-          return date.toDateString() === disabledDate.toDateString();
+          return normalizedDate.getTime() === normalizeDate(disabledDate).getTime();
         } else {
           const { startDate, endDate } = disabledDate;
-          return date >= startDate && date <= endDate;
+          return (
+            normalizedDate >= normalizeDate(startDate) &&
+            normalizedDate <= normalizeDate(endDate)
+          );
         }
       });
     }

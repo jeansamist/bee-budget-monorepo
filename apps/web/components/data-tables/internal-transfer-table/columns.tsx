@@ -1,7 +1,7 @@
 "use client"
 
 import { useApp } from "@/contexts/app.context"
-import { useI18n } from "@/lib/i18n/client"
+import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
 import { deleteInternalTransfer } from "@/services/internal-transfers.services"
 import { InternalTransfer, Wallet, WalletType } from "@/types"
 import { cn, findById } from "@bee-budget/functions"
@@ -16,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@bee-budget/ui/dropdown-menu"
 import { Column, ColumnDef, Table } from "@tanstack/react-table"
-import { ChevronsUpDown, Eye, MoreHorizontal } from "lucide-react"
+import { ChevronsUpDown, Eye, MoreHorizontal, Pencil } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import { Confirm } from "../../confirm"
 import { InternalTransferDetailDialog } from "./internal-transfer-detail-dialog"
@@ -198,10 +199,18 @@ const ActionsCell = ({
   const transfer = row.original
   const [detailOpen, setDetailOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const router = useRouter()
+  const { currentLocaleUrl } = useCurrentLocaleUrl()
 
   const handleDelete = async () => {
     await deleteInternalTransfer(transfer.id)
     table.options.meta?.onDeleted?.()
+  }
+
+  const handleEdit = () => {
+    router.push(
+      currentLocaleUrl(`/app/internal-transferts/update?id=${transfer.id}`)
+    )
   }
 
   return (
@@ -231,6 +240,10 @@ const ActionsCell = ({
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setDetailOpen(true)}>
             {t("app.dataTables.internalTransferTable.actions.view")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleEdit}>
+            <Pencil className="h-4 w-4" />
+            {t("app.dataTables.internalTransferTable.actions.edit")}
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"

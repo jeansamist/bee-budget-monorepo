@@ -5,8 +5,22 @@ import { Incomes } from "@/components/transactions/incomes"
 import { InternalTransfers } from "@/components/transactions/internal-transfers"
 import { getI18n } from "@/lib/i18n/server"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@bee-budget/ui/tabs"
-export default async function page() {
+
+const TRANSACTION_TABS = ["expenses", "incomes", "internal-transfers"] as const
+
+export default async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>
+}) {
+  const { tab } = await searchParams
   const t = await getI18n()
+  const defaultTab = TRANSACTION_TABS.includes(
+    tab as (typeof TRANSACTION_TABS)[number]
+  )
+    ? tab
+    : "expenses"
+
   return (
     <main className="space-y-4">
       <AppHeader
@@ -17,7 +31,7 @@ export default async function page() {
         title={t("app.header.titles.transactions")}
       />
       <DataCards />
-      <Tabs defaultValue="expenses" className="w-full gap-4 px-4">
+      <Tabs defaultValue={defaultTab} className="w-full gap-4 px-4">
         <TabsList>
           <TabsTrigger value="expenses">Expenses</TabsTrigger>
           <TabsTrigger value="incomes">Incomes</TabsTrigger>

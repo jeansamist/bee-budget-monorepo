@@ -137,6 +137,7 @@ export default {
   "app.dataTables.internalTransferTable.actions.label": "Actions",
   "app.dataTables.internalTransferTable.actions.copyId": "Copy ID",
   "app.dataTables.internalTransferTable.actions.view": "View transfer",
+  "app.dataTables.internalTransferTable.actions.edit": "Edit transfer",
   "app.dataTables.internalTransferTable.actions.delete": "Delete transfer",
   "app.dataTables.internalTransferTable.detail.title": "Transfer details",
   "app.dataTables.internalTransferTable.detail.id": "ID",
@@ -171,6 +172,7 @@ export default {
   "app.dataTables.incomeTable.actions.label": "Actions",
   "app.dataTables.incomeTable.actions.copyId": "Copy ID",
   "app.dataTables.incomeTable.actions.view": "View income",
+  "app.dataTables.incomeTable.actions.edit": "Edit income",
   "app.dataTables.incomeTable.actions.delete": "Delete income",
 
   "app.dataTables.incomeTable.detail.title": "Income details",
@@ -198,6 +200,7 @@ export default {
   "app.dataTables.expenseTable.actions.label": "Actions",
   "app.dataTables.expenseTable.actions.copyId": "Copy ID",
   "app.dataTables.expenseTable.actions.view": "View expense",
+  "app.dataTables.expenseTable.actions.edit": "Edit expense",
   "app.dataTables.expenseTable.actions.delete": "Delete expense",
   "app.dataTables.expenseTable.badges.internalTransfer": "Internal transfer",
   "app.dataTables.expenseTable.actions.manageFromTransfers":
@@ -265,6 +268,7 @@ export default {
   "app.transactions.expenses.perPage.placeholder": "Per page",
   "app.transactions.expenses.pagination.previous": "Previous",
   "app.transactions.expenses.pagination.next": "Next",
+  "app.transactions.expenses.create": "New expense",
   "app.transactions.incomes.title": "Incomes",
   "app.transactions.incomes.description":
     "Browse all your income transactions with pagination.",
@@ -277,6 +281,7 @@ export default {
   "app.transactions.incomes.perPage.placeholder": "Per page",
   "app.transactions.incomes.pagination.previous": "Previous",
   "app.transactions.incomes.pagination.next": "Next",
+  "app.transactions.incomes.create": "New income",
   "app.transactions.internalTransfers.title": "Internal transfers",
   "app.transactions.internalTransfers.description":
     "Browse all wallet-to-wallet transfers with pagination.",
@@ -289,6 +294,176 @@ export default {
   "app.transactions.internalTransfers.perPage.placeholder": "Per page",
   "app.transactions.internalTransfers.pagination.previous": "Previous",
   "app.transactions.internalTransfers.pagination.next": "Next",
+  "app.transactions.internalTransfers.create": "New transfer",
+
+  "app.forms.common.cancel": "Cancel",
+  "app.forms.common.noContact": "No contact",
+
+  "app.forms.expenses.create.meta.title": "Create expense",
+  "app.forms.expenses.create.meta.description":
+    "Create a new expense transaction.",
+  "app.forms.expenses.create.page.title": "Create expense",
+  "app.forms.expenses.create.page.description":
+    "Add a new expense to one of your wallets.",
+  "app.forms.expenses.update.meta.title": "Update expense",
+  "app.forms.expenses.update.meta.description":
+    "Update an existing expense transaction.",
+  "app.forms.expenses.update.page.title": "Update expense",
+  "app.forms.expenses.update.page.description":
+    "Edit the details of this expense transaction.",
+  "app.forms.expenses.actions.create": "Create expense",
+  "app.forms.expenses.actions.update": "Update expense",
+  "app.forms.expenses.fields.name.label": "Name",
+  "app.forms.expenses.fields.name.placeholder": "Enter the expense name",
+  "app.forms.expenses.fields.description.label": "Description",
+  "app.forms.expenses.fields.description.placeholder":
+    "Describe this expense",
+  "app.forms.expenses.fields.amount.label": "Amount",
+  "app.forms.expenses.fields.amount.placeholder": "Enter the expense amount",
+  "app.forms.expenses.fields.fees.label": "Fees",
+  "app.forms.expenses.fields.fees.placeholder":
+    "Enter fees if there are any",
+  "app.forms.expenses.fields.category.label": "Category",
+  "app.forms.expenses.fields.category.placeholder": "Select a category",
+  "app.forms.expenses.fields.wallet.label": "Wallet",
+  "app.forms.expenses.fields.wallet.placeholder": "Select a wallet",
+  "app.forms.expenses.fields.date.label": "Date",
+  "app.forms.expenses.fields.date.placeholder": "Pick an expense date",
+  "app.forms.expenses.fields.contact.label": "To contact",
+  "app.forms.expenses.fields.contact.placeholder":
+    "Select a contact if needed",
+
+  "app.forms.incomes.create.meta.title": "Create income",
+  "app.forms.incomes.create.meta.description":
+    "Create a new income transaction.",
+  "app.forms.incomes.create.page.title": "Create income",
+  "app.forms.incomes.create.page.description":
+    "Add a new income to one of your wallets.",
+  "app.forms.incomes.update.meta.title": "Update income",
+  "app.forms.incomes.update.meta.description":
+    "Update an existing income transaction.",
+  "app.forms.incomes.update.page.title": "Update income",
+  "app.forms.incomes.update.page.description":
+    "Edit the details of this income transaction.",
+  "app.forms.incomes.actions.create": "Create income",
+  "app.forms.incomes.actions.update": "Update income",
+  "app.forms.incomes.fields.name.label": "Name",
+  "app.forms.incomes.fields.name.placeholder": "Enter the income name",
+  "app.forms.incomes.fields.description.label": "Description",
+  "app.forms.incomes.fields.description.placeholder": "Describe this income",
+  "app.forms.incomes.fields.amount.label": "Amount",
+  "app.forms.incomes.fields.amount.placeholder": "Enter the income amount",
+  "app.forms.incomes.fields.category.label": "Category",
+  "app.forms.incomes.fields.category.placeholder": "Select a category",
+  "app.forms.incomes.fields.wallet.label": "Wallet",
+  "app.forms.incomes.fields.wallet.placeholder": "Select a wallet",
+  "app.forms.incomes.fields.date.label": "Date",
+  "app.forms.incomes.fields.date.placeholder": "Pick an income date",
+  "app.forms.incomes.fields.contact.label": "From contact",
+  "app.forms.incomes.fields.contact.placeholder":
+    "Select a contact if needed",
+
+  "app.forms.internalTransfers.create.meta.title": "Create transfer",
+  "app.forms.internalTransfers.create.meta.description":
+    "Create a new internal transfer.",
+  "app.forms.internalTransfers.create.page.title": "Create transfer",
+  "app.forms.internalTransfers.create.page.description":
+    "Move money from one wallet to another.",
+  "app.forms.internalTransfers.update.meta.title": "Update transfer",
+  "app.forms.internalTransfers.update.meta.description":
+    "Update an existing internal transfer.",
+  "app.forms.internalTransfers.update.page.title": "Update transfer",
+  "app.forms.internalTransfers.update.page.description":
+    "Edit the details of this internal transfer.",
+  "app.forms.internalTransfers.actions.create": "Create transfer",
+  "app.forms.internalTransfers.actions.update": "Update transfer",
+  "app.forms.internalTransfers.fields.amount.label": "Amount",
+  "app.forms.internalTransfers.fields.amount.placeholder":
+    "Enter the transferred amount",
+  "app.forms.internalTransfers.fields.fee.label": "Fee",
+  "app.forms.internalTransfers.fields.fee.placeholder":
+    "Enter fees if there are any",
+  "app.forms.internalTransfers.fields.sourceWallet.label": "Source wallet",
+  "app.forms.internalTransfers.fields.sourceWallet.placeholder":
+    "Select the wallet to debit",
+  "app.forms.internalTransfers.fields.targetWallet.label": "Target wallet",
+  "app.forms.internalTransfers.fields.targetWallet.placeholder":
+    "Select the wallet to credit",
+  "app.forms.internalTransfers.fields.date.label": "Date",
+  "app.forms.internalTransfers.fields.date.placeholder":
+    "Pick a transfer date",
+  "app.forms.internalTransfers.fields.description.label": "Description",
+  "app.forms.internalTransfers.fields.description.placeholder":
+    "Add a note for this transfer",
+
+  "app.inlineCreate.expenseCategory.button": "Add category",
+  "app.inlineCreate.expenseCategory.title": "Create expense category",
+  "app.inlineCreate.expenseCategory.description":
+    "Create a new expense category without leaving the transaction form.",
+  "app.inlineCreate.expenseCategory.actions.create": "Create category",
+  "app.inlineCreate.expenseCategory.fields.name.label": "Category name",
+  "app.inlineCreate.expenseCategory.fields.name.placeholder":
+    "Enter the category name",
+  "app.inlineCreate.expenseCategory.fields.color.label": "Category color",
+
+  "app.inlineCreate.incomeCategory.button": "Add category",
+  "app.inlineCreate.incomeCategory.title": "Create income category",
+  "app.inlineCreate.incomeCategory.description":
+    "Create a new income category without leaving the transaction form.",
+  "app.inlineCreate.incomeCategory.actions.create": "Create category",
+  "app.inlineCreate.incomeCategory.fields.name.label": "Category name",
+  "app.inlineCreate.incomeCategory.fields.name.placeholder":
+    "Enter the category name",
+  "app.inlineCreate.incomeCategory.fields.color.label": "Category color",
+
+  "app.inlineCreate.contact.button": "Add contact",
+  "app.inlineCreate.contact.title": "Create contact",
+  "app.inlineCreate.contact.description":
+    "Create a new contact and use it right away in the current form.",
+  "app.inlineCreate.contact.actions.create": "Create contact",
+  "app.inlineCreate.contact.fields.name.label": "Contact name",
+  "app.inlineCreate.contact.fields.name.placeholder": "Enter the contact name",
+  "app.inlineCreate.contact.fields.type.label": "Contact type",
+  "app.inlineCreate.contact.fields.type.placeholder": "Select a type",
+  "app.inlineCreate.contact.fields.type.options.person": "Person",
+  "app.inlineCreate.contact.fields.type.options.entreprise": "Enterprise",
+  "app.inlineCreate.contact.fields.type.options.other": "Other",
+  "app.inlineCreate.contact.fields.color.label": "Contact color",
+  "app.inlineCreate.contact.fields.phone.label": "Phone number",
+  "app.inlineCreate.contact.fields.phone.placeholder":
+    "Enter the phone number",
+  "app.inlineCreate.contact.fields.email.label": "Email",
+  "app.inlineCreate.contact.fields.email.placeholder": "Enter the email",
+  "app.inlineCreate.contact.fields.comments.label": "Comments",
+  "app.inlineCreate.contact.fields.comments.placeholder":
+    "Add a short note about this contact",
+
+  "app.inlineCreate.walletType.button": "Add type",
+  "app.inlineCreate.walletType.title": "Create wallet type",
+  "app.inlineCreate.walletType.description":
+    "Create a wallet type without leaving the wallet form.",
+  "app.inlineCreate.walletType.actions.create": "Create type",
+  "app.inlineCreate.walletType.fields.name.label": "Wallet type name",
+  "app.inlineCreate.walletType.fields.name.placeholder":
+    "Enter the wallet type name",
+  "app.inlineCreate.walletType.fields.color.label": "Wallet type color",
+
+  "app.inlineCreate.wallet.button": "Add wallet",
+  "app.inlineCreate.wallet.title": "Create wallet",
+  "app.inlineCreate.wallet.description":
+    "Create a new wallet and use it immediately in the current form.",
+  "app.inlineCreate.wallet.actions.create": "Create wallet",
+  "app.inlineCreate.wallet.fields.name.label": "Wallet name",
+  "app.inlineCreate.wallet.fields.name.placeholder": "Enter the wallet name",
+  "app.inlineCreate.wallet.fields.description.label": "Description",
+  "app.inlineCreate.wallet.fields.description.placeholder":
+    "Describe this wallet",
+  "app.inlineCreate.wallet.fields.walletType.label": "Wallet type",
+  "app.inlineCreate.wallet.fields.walletType.placeholder":
+    "Select a wallet type",
+  "app.inlineCreate.wallet.fields.amount.label": "Opening balance",
+  "app.inlineCreate.wallet.fields.amount.placeholder":
+    "Enter the opening balance",
 
   "app.header.breadcrumb.wallets": "Wallets",
   "app.header.titles.wallets": "Wallets overview",

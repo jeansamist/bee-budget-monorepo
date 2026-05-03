@@ -2,7 +2,7 @@
 "use client"
 
 import { useApp } from "@/contexts/app.context"
-import { useI18n } from "@/lib/i18n/client"
+import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
 import { deleteExpense } from "@/services/expenses.services"
 import { Contact, Expense, ExpenseCategory, Wallet, WalletType } from "@/types"
 import { cn, findById } from "@bee-budget/functions"
@@ -18,7 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@bee-budget/ui/dropdown-menu"
 import { Column, ColumnDef, Table } from "@tanstack/react-table"
-import { ChevronsUpDown, Eye, MoreHorizontal } from "lucide-react"
+import { ChevronsUpDown, Eye, MoreHorizontal, Pencil } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import { Confirm } from "../../confirm"
 import { ExpenseDetailDialog } from "./expense-detail-dialog"
@@ -180,10 +181,25 @@ const ActionsCell = ({
   const [detailOpen, setDetailOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const isInternalTransfer = Boolean(expense.internalTransferId)
+  const router = useRouter()
+  const { currentLocaleUrl } = useCurrentLocaleUrl()
 
   const handleDelete = async () => {
     await deleteExpense(expense.id)
     table.options.meta?.onDeleted?.()
+  }
+
+  const handleEdit = () => {
+    if (expense.internalTransferId) {
+      router.push(
+        currentLocaleUrl(
+          `/app/internal-transferts/update?id=${expense.internalTransferId}`
+        )
+      )
+      return
+    }
+
+    router.push(currentLocaleUrl(`/app/expenses/update?id=${expense.id}`))
   }
 
   return (
@@ -211,6 +227,12 @@ const ActionsCell = ({
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setDetailOpen(true)}>
             {t("app.dataTables.expenseTable.actions.view")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleEdit}>
+            <Pencil className="h-4 w-4" />
+            {isInternalTransfer
+              ? t("app.dataTables.expenseTable.actions.manageFromTransfers")
+              : t("app.dataTables.expenseTable.actions.edit")}
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"

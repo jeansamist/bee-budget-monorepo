@@ -1,6 +1,6 @@
 "use client"
 
-import { useScopedI18n } from "@/lib/i18n/client"
+import { useCurrentLocaleUrl, useScopedI18n } from "@/lib/i18n/client"
 import { deleteMassExpenses, getExpenses } from "@/services/expenses.services"
 import { Expense } from "@/types"
 import { Button } from "@bee-budget/ui/button"
@@ -30,6 +30,7 @@ import {
   PaginationPrevious,
 } from "@bee-budget/ui/pagination"
 import { Loader, Trash } from "lucide-react"
+import Link from "next/link"
 import { FunctionComponent, useCallback, useEffect, useState } from "react"
 import { Confirm } from "../confirm"
 import { ExpenseDataTable } from "../data-tables/expense-table/expense-data-table"
@@ -40,6 +41,7 @@ export type ExpensesProps = {
 
 export const Expenses: FunctionComponent<ExpensesProps> = () => {
   const t = useScopedI18n("app.transactions.expenses")
+  const { currentLocaleUrl } = useCurrentLocaleUrl()
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [deleting, setDeleting] = useState(false)
   const [selectedRows, setSelectedRows] = useState<Expense[]>([])
@@ -90,7 +92,12 @@ export const Expenses: FunctionComponent<ExpensesProps> = () => {
             <CardTitle>{t("title")}</CardTitle>
             <CardDescription>{t("description")}</CardDescription>
           </div>
-          <CardAction className="hidden gap-2 md:flex">
+          <CardAction className="flex flex-wrap gap-2">
+            <Button asChild>
+              <Link href={currentLocaleUrl("/app/expenses/create")}>
+                {t("create")}
+              </Link>
+            </Button>
             {selectedRows.length > 0 && (
               <Confirm
                 title={t("deleteConfirm.title")}
