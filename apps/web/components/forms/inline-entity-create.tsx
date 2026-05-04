@@ -132,10 +132,7 @@ const CreateExpenseCategoryForm: FunctionComponent<
   }
 
   return (
-    <form
-      id="create-expense-category-form"
-      onSubmit={form.handleSubmit(onSubmit)}
-    >
+    <form id="create-expense-category-form">
       <FieldGroup className="gap-4">
         {errorMessage && (
           <Alert variant="destructive">
@@ -158,7 +155,8 @@ const CreateExpenseCategoryForm: FunctionComponent<
         />
         <Field orientation="horizontal">
           <Button
-            type="submit"
+            type="button"
+            onClick={form.handleSubmit(onSubmit)}
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {t("app.inlineCreate.expenseCategory.actions.create")}
@@ -304,7 +302,7 @@ const CreateContactForm: FunctionComponent<
   }
 
   return (
-    <form id="create-contact-form" onSubmit={form.handleSubmit(onSubmit)}>
+    <form id="create-contact-form">
       <FieldGroup className="gap-4">
         {errorMessage && (
           <Alert variant="destructive">
@@ -358,7 +356,8 @@ const CreateContactForm: FunctionComponent<
         />
         <Field orientation="horizontal">
           <Button
-            type="submit"
+            type="button"
+            onClick={form.handleSubmit(onSubmit)}
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {t("app.inlineCreate.contact.actions.create")}
@@ -486,7 +485,7 @@ const CreateWalletForm: FunctionComponent<
   }
 
   return (
-    <form id="create-wallet-form" onSubmit={form.handleSubmit(onSubmit)}>
+    <form id="create-wallet-form">
       <FieldGroup className="gap-4">
         {errorMessage && (
           <Alert variant="destructive">
@@ -540,7 +539,8 @@ const CreateWalletForm: FunctionComponent<
         />
         <Field orientation="horizontal">
           <Button
-            type="submit"
+            type="button"
+            onClick={form.handleSubmit(onSubmit)}
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {t("app.inlineCreate.wallet.actions.create")}

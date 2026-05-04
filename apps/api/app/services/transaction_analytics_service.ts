@@ -109,11 +109,13 @@ export class TransactionAnalyticsService {
     const [incomes, expenses] = await Promise.all([
       Income.query()
         .where('user_id', this.userId)
+        .whereNull('internal_transfer_id')
         .if(startDate !== undefined, (query) => query.where('date', '>=', startDate!))
         .if(endDate !== undefined, (query) => query.where('date', '<=', endDate!))
         .select(['amount', 'date']),
       Expense.query()
         .where('user_id', this.userId)
+        .whereNull('internal_transfer_id')
         .if(startDate !== undefined, (query) => query.where('date', '>=', startDate!))
         .if(endDate !== undefined, (query) => query.where('date', '<=', endDate!))
         .select(['amount', 'fees', 'date']),

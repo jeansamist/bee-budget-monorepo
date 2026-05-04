@@ -1,11 +1,11 @@
 import { IncomeSchema } from '#database/schema'
+import ContactRepository from '#repositories/contact_repository'
 import IncomeCategoryRepository from '#repositories/income_category_repository'
 import IncomeRepository from '#repositories/income_repository'
 import WalletRepository from '#repositories/wallet_repository'
-import ContactRepository from '#repositories/contact_repository'
-import { INTERNAL_TRANSFER_INCOME_CATEGORY_NAME } from '#utils/internal_transfer'
 import { ModelProps } from '#utils/generics'
 import { httpError } from '#utils/http_error'
+import { INTERNAL_TRANSFER_INCOME_CATEGORY_NAME } from '#utils/internal_transfer'
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
@@ -80,13 +80,13 @@ export class IncomeService {
       this.getOwnedWallet(walletId),
     ])
 
-    if (
-      incomeCategory.defaultWalletTypeId !== null &&
-      incomeCategory.defaultWalletTypeId !== undefined &&
-      incomeCategory.defaultWalletTypeId !== wallet.walletTypeId
-    ) {
-      throw httpError(422, 'The selected wallet does not match the category default wallet type')
-    }
+    // if (
+    //   incomeCategory.defaultWalletTypeId !== null &&
+    //   incomeCategory.defaultWalletTypeId !== undefined &&
+    //   incomeCategory.defaultWalletTypeId !== wallet.walletTypeId
+    // ) {
+    //   throw httpError(422, 'The selected wallet does not match the category default wallet type')
+    // }
 
     return { incomeCategory, wallet }
   }
@@ -145,14 +145,14 @@ export class IncomeService {
         throw httpError(422, 'This income has no wallet assignment yet. Provide walletId')
       }
 
-      const incomeCategory = await this.getOwnedIncomeCategory(effectiveIncomeCategoryId)
-      if (
-        incomeCategory.defaultWalletTypeId !== null &&
-        incomeCategory.defaultWalletTypeId !== undefined &&
-        incomeCategory.defaultWalletTypeId !== targetWallet.walletTypeId
-      ) {
-        throw httpError(422, 'The selected wallet does not match the category default wallet type')
-      }
+      // const incomeCategory = await this.getOwnedIncomeCategory(effectiveIncomeCategoryId)
+      // if (
+      //   incomeCategory.defaultWalletTypeId !== null &&
+      //   incomeCategory.defaultWalletTypeId !== undefined &&
+      //   incomeCategory.defaultWalletTypeId !== targetWallet.walletTypeId
+      // ) {
+      //   throw httpError(422, 'The selected wallet does not match the category default wallet type')
+      // }
     }
 
     const nextAmount = data.amount ?? income.amount

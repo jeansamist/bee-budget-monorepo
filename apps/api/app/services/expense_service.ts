@@ -96,13 +96,13 @@ export class ExpenseService {
       this.getOwnedWallet(walletId),
     ])
 
-    if (
-      expenseCategory.defaultWalletTypeId !== null &&
-      expenseCategory.defaultWalletTypeId !== undefined &&
-      expenseCategory.defaultWalletTypeId !== wallet.walletTypeId
-    ) {
-      throw httpError(422, 'The selected wallet does not match the category default wallet type')
-    }
+    // if (
+    //   expenseCategory.defaultWalletTypeId !== null &&
+    //   expenseCategory.defaultWalletTypeId !== undefined &&
+    //   expenseCategory.defaultWalletTypeId !== wallet.walletTypeId
+    // ) {
+    //   throw httpError(422, 'The selected wallet does not match the category default wallet type')
+    // }
 
     return { expenseCategory, wallet }
   }
@@ -163,14 +163,14 @@ export class ExpenseService {
         throw httpError(422, 'This expense has no wallet assignment yet. Provide walletId')
       }
 
-      const expenseCategory = await this.getOwnedExpenseCategory(effectiveExpenseCategoryId)
-      if (
-        expenseCategory.defaultWalletTypeId !== null &&
-        expenseCategory.defaultWalletTypeId !== undefined &&
-        expenseCategory.defaultWalletTypeId !== targetWallet.walletTypeId
-      ) {
-        throw httpError(422, 'The selected wallet does not match the category default wallet type')
-      }
+      // const expenseCategory = await this.getOwnedExpenseCategory(effectiveExpenseCategoryId)
+      // if (
+      //   expenseCategory.defaultWalletTypeId !== null &&
+      //   expenseCategory.defaultWalletTypeId !== undefined &&
+      //   expenseCategory.defaultWalletTypeId !== targetWallet.walletTypeId
+      // ) {
+      //   throw httpError(422, 'The selected wallet does not match the category default wallet type')
+      // }
     }
 
     const nextAmount = data.amount ?? expense.amount
