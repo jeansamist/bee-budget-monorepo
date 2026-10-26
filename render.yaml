@@ -71,6 +71,9 @@ services:
         sync: false
       - key: SMTP_PASSWORD
         sync: false # Gmail app password
+      # No OTP on sign-up while SMTP is blocked on the free plan
+      - key: EMAIL_VERIFICATION_ENABLED
+        value: "false"
       - key: FRONTEND_APP_URL
         sync: false # https://<your-app>.vercel.app
       - key: CORS_ORIGIN

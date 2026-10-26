@@ -20,7 +20,12 @@ export default class AuthController {
       return response.conflict(ApiResponse.failure(null, 'You can not sign up while logged in'))
     }
     const data = await request.validateUsing(signUpValidator)
-    await this.authService.signUp(data)
+    const user = await this.authService.signUp(data)
+    if (!this.authService.emailVerificationEnabled) {
+      // No OTP to confirm: sign the user in right away
+      const accessToken = await this.authService.generateAccessToken(user, auth)
+      return response.ok(ApiResponse.success({ accessToken }, 'User created successfully'))
+    }
     return response.ok(ApiResponse.success(null, 'User created successfully'))
   }
 

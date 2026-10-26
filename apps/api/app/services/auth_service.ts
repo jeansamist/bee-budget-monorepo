@@ -105,7 +105,14 @@ export class AuthService {
     return randomInt(100000, 1000000).toString()
   }
 
+  get emailVerificationEnabled() {
+    return env.get('EMAIL_VERIFICATION_ENABLED', true)
+  }
+
   async signUp(data: Pick<ModelProps<User>, 'firstName' | 'lastName' | 'email' | 'password'>) {
+    if (!this.emailVerificationEnabled) {
+      return this.signUpWithoutEmailVerification(data)
+    }
     const verificationCode = this.generateVerificationCode()
     const verificationCodeExpiresAt = DateTime.now().plus({ hours: 1 })
     const restOfData = {
@@ -128,6 +135,35 @@ export class AuthService {
     }
     const user = await this.userRepository.create({ ...data, ...restOfData })
     this.sendEmailVerificationCodeNotification(user)
+    return user
+  }
+
+  /**
+   * Creates an already verified account and sets it up right away, without
+   * sending the OTP email.
+   */
+  private async signUpWithoutEmailVerification(
+    data: Pick<ModelProps<User>, 'firstName' | 'lastName' | 'email' | 'password'>
+  ) {
+    const restOfData = {
+      avatar: null,
+      emailVerificationCode: null,
+      emailVerificationCodeExpiresAt: null,
+      emailVerified: true,
+      emailVerifiedAt: DateTime.now(),
+      resetPasswordToken: null,
+      resetPasswordTokenExpiresAt: null,
+    } satisfies Omit<ModelProps<UserSchema>, 'firstName' | 'lastName' | 'email' | 'password'>
+    const existingUser = await this.userRepository.findByEmail(data.email)
+    if (existingUser?.emailVerified) {
+      throw new Error('Email has already been taken')
+    }
+    // An unverified user left over from when verification was enabled
+    const user = existingUser
+      ? await this.userRepository.update(existingUser, { ...data, ...restOfData })
+      : await this.userRepository.create({ ...data, ...restOfData })
+    await this.setup(user)
+    this.sendWelcomeNotification(user)
     return user
   }
 

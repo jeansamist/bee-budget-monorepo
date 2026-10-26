@@ -10,11 +10,26 @@ import {
 import type { ApiResponse, AuthAccessTokenPayload, User } from "@/types"
 import { cookies } from "next/headers"
 
+// The API returns an access token when email verification is disabled
 export const signUp = async (
   payload: SignUpSchema
-): Promise<ApiResponse<null>> => {
+): Promise<ApiResponse<AuthAccessTokenPayload | null>> => {
   const [data, error] = await tuyau.api.auth.signUp({ body: payload }).safe()
-  return (error ? error.response : data) as ApiResponse<null>
+
+  const accessToken = (data?.data as AuthAccessTokenPayload | null)
+    ?.accessToken as { token?: string; expiresAt?: string } | undefined
+  if (data?.success && accessToken?.token) {
+    const cookiesStore = await cookies()
+    cookiesStore.set("AUTH_TOKEN", accessToken.token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      expires: new Date(accessToken.expiresAt!),
+    })
+  }
+
+  return (error ? error.response : data) as ApiResponse<AuthAccessTokenPayload | null>
 }
 
 export const signIn = async (

@@ -56,6 +56,14 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   /*
   |----------------------------------------------------------
+  | Email verification (OTP) on sign-up. Turn it off where
+  | emails can't be sent (e.g. Render free blocks SMTP).
+  |----------------------------------------------------------
+  */
+  EMAIL_VERIFICATION_ENABLED: Env.schema.boolean.optional(),
+
+  /*
+  |----------------------------------------------------------
   | Comma-separated CORS origin allowlist (production only)
   |----------------------------------------------------------
   */
