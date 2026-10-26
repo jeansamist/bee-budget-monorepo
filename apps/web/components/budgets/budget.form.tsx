@@ -17,7 +17,7 @@ import { InputField, SelectField } from "@bee-budget/ui/fields"
 import { ToggleGroup, ToggleGroupItem } from "@bee-budget/ui/toggle-group"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { toast } from "sonner"
 
 export function BudgetForm({
@@ -46,7 +46,7 @@ export function BudgetForm({
     },
   })
   const [errorMessage, setErrorMessage] = useState<string>()
-  const targetType = form.watch("targetType")
+  const targetType = useWatch({ control: form.control, name: "targetType" })
 
   const categoryItems = useMemo(
     () =>
