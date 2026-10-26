@@ -907,4 +907,76 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallets_controller').default['destroy']>>>
     }
   }
+  'budgets.delete_mass': {
+    methods: ["POST"]
+    pattern: '/api/budgets/delete-mass'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/budget').deleteMassBudgetValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/budget').deleteMassBudgetValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['deleteMass']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['deleteMass']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'budgets.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/budgets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/pagination').paginateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'budgets.store': {
+    methods: ["POST"]
+    pattern: '/api/budgets'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/budget').createBudgetValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/budget').createBudgetValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'budgets.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/budgets/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['show']>>>
+    }
+  }
+  'budgets.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/budgets/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/budget').updateBudgetValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/budget').updateBudgetValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'budgets.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/budgets/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/budgets_controller').default['destroy']>>>
+    }
+  }
 }

@@ -32,6 +32,33 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class BudgetSchema extends BaseModel {
+  static $columns = ['alertThreshold', 'amount', 'createdAt', 'expenseCategoryId', 'id', 'name', 'period', 'targetType', 'updatedAt', 'userId', 'walletId'] as const
+  $columns = BudgetSchema.$columns
+  @column()
+  declare alertThreshold: number
+  @column()
+  declare amount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare expenseCategoryId: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare period: string
+  @column()
+  declare targetType: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+  @column()
+  declare walletId: number | null
+}
+
 export class ContactSchema extends BaseModel {
   static $columns = ['color', 'comments', 'createdAt', 'email', 'id', 'image', 'name', 'phoneNumber', 'type', 'updatedAt', 'userId'] as const
   $columns = ContactSchema.$columns

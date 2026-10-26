@@ -456,6 +456,42 @@ const routes = {
     tokens: [{"old":"/api/wallets/:id","type":0,"val":"api","end":""},{"old":"/api/wallets/:id","type":0,"val":"wallets","end":""},{"old":"/api/wallets/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['wallets.destroy']['types'],
   },
+  'budgets.delete_mass': {
+    methods: ["POST"],
+    pattern: '/api/budgets/delete-mass',
+    tokens: [{"old":"/api/budgets/delete-mass","type":0,"val":"api","end":""},{"old":"/api/budgets/delete-mass","type":0,"val":"budgets","end":""},{"old":"/api/budgets/delete-mass","type":0,"val":"delete-mass","end":""}],
+    types: placeholder as Registry['budgets.delete_mass']['types'],
+  },
+  'budgets.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/budgets',
+    tokens: [{"old":"/api/budgets","type":0,"val":"api","end":""},{"old":"/api/budgets","type":0,"val":"budgets","end":""}],
+    types: placeholder as Registry['budgets.index']['types'],
+  },
+  'budgets.store': {
+    methods: ["POST"],
+    pattern: '/api/budgets',
+    tokens: [{"old":"/api/budgets","type":0,"val":"api","end":""},{"old":"/api/budgets","type":0,"val":"budgets","end":""}],
+    types: placeholder as Registry['budgets.store']['types'],
+  },
+  'budgets.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/budgets/:id',
+    tokens: [{"old":"/api/budgets/:id","type":0,"val":"api","end":""},{"old":"/api/budgets/:id","type":0,"val":"budgets","end":""},{"old":"/api/budgets/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['budgets.show']['types'],
+  },
+  'budgets.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/budgets/:id',
+    tokens: [{"old":"/api/budgets/:id","type":0,"val":"api","end":""},{"old":"/api/budgets/:id","type":0,"val":"budgets","end":""},{"old":"/api/budgets/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['budgets.update']['types'],
+  },
+  'budgets.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/budgets/:id',
+    tokens: [{"old":"/api/budgets/:id","type":0,"val":"api","end":""},{"old":"/api/budgets/:id","type":0,"val":"budgets","end":""},{"old":"/api/budgets/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['budgets.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

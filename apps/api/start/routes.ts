@@ -139,5 +139,9 @@ router
       .apiOnly()
       .use('*', [middleware.auth()])
     router.resource('/wallets', controllers.Wallets).apiOnly().use('*', [middleware.auth()])
+    router
+      .post('/budgets/delete-mass', [controllers.Budgets, 'deleteMass'])
+      .use([middleware.auth()])
+    router.resource('/budgets', controllers.Budgets).apiOnly().use('*', [middleware.auth()])
   })
   .prefix('/api')

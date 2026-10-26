@@ -79,6 +79,12 @@ export type ScannedRoutes = {
     'wallets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.delete_mass': { paramsTuple?: []; params?: {} }
+    'budgets.index': { paramsTuple?: []; params?: {} }
+    'budgets.store': { paramsTuple?: []; params?: {} }
+    'budgets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'auth.profile': { paramsTuple?: []; params?: {} }
@@ -100,6 +106,8 @@ export type ScannedRoutes = {
     'wallet_types.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.index': { paramsTuple?: []; params?: {} }
     'wallets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.index': { paramsTuple?: []; params?: {} }
+    'budgets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'auth.profile': { paramsTuple?: []; params?: {} }
@@ -121,6 +129,8 @@ export type ScannedRoutes = {
     'wallet_types.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.index': { paramsTuple?: []; params?: {} }
     'wallets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.index': { paramsTuple?: []; params?: {} }
+    'budgets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.sign_up': { paramsTuple?: []; params?: {} }
@@ -154,6 +164,8 @@ export type ScannedRoutes = {
     'incomes.store': { paramsTuple?: []; params?: {} }
     'wallet_types.store': { paramsTuple?: []; params?: {} }
     'wallets.store': { paramsTuple?: []; params?: {} }
+    'budgets.delete_mass': { paramsTuple?: []; params?: {} }
+    'budgets.store': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'auth.update_profile': { paramsTuple?: []; params?: {} }
@@ -173,6 +185,7 @@ export type ScannedRoutes = {
     'incomes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
     'contacts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -183,6 +196,7 @@ export type ScannedRoutes = {
     'incomes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'contacts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -193,6 +207,7 @@ export type ScannedRoutes = {
     'incomes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallet_types.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

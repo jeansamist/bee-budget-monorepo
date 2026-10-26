@@ -5,6 +5,7 @@
 
 export const controllers = {
   Auth: () => import('#controllers/auth_controller'),
+  Budgets: () => import('#controllers/budgets_controller'),
   Contacts: () => import('#controllers/contacts_controller'),
   ExpenseCategories: () => import('#controllers/expense_categories_controller'),
   Expenses: () => import('#controllers/expenses_controller'),

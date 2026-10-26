@@ -99,4 +99,12 @@ export interface ApiDefinition {
     update: typeof routes['wallets.update']
     destroy: typeof routes['wallets.destroy']
   }
+  budgets: {
+    deleteMass: typeof routes['budgets.delete_mass']
+    index: typeof routes['budgets.index']
+    store: typeof routes['budgets.store']
+    show: typeof routes['budgets.show']
+    update: typeof routes['budgets.update']
+    destroy: typeof routes['budgets.destroy']
+  }
 }
