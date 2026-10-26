@@ -6,6 +6,7 @@ import {
   resetPasswordValidator,
   signInValidator,
   signUpValidator,
+  changePasswordValidator,
   verifyEmailValidator,
 } from '#validators/auth'
 import { updateUserValidator } from '#validators/user'
@@ -91,6 +92,19 @@ export default class AuthController {
     const serialized = await serialize(UserTransformer.transform(auth.user))
     return await response.ok(ApiResponse.success(serialized.data, 'User profile'))
   }
+  public async changePassword({ request, response, auth }: HttpContext) {
+    if (!auth.user) return response.unauthorized(ApiResponse.failure(null, 'You are not logged in'))
+
+    const { currentPassword, newPassword } = await request.validateUsing(changePasswordValidator)
+    try {
+      await this.authService.changePassword(auth.user, currentPassword, newPassword)
+      return response.ok(ApiResponse.success(null, 'Password changed successfully'))
+    } catch (error_) {
+      const error = error_ instanceof Error ? error_ : new Error('Unknown error')
+      return response.badRequest(ApiResponse.failure(null, error.message))
+    }
+  }
+
   public async updateProfile({ request, response, serialize, auth }: HttpContext) {
     if (!auth.user) return response.unauthorized(ApiResponse.failure(null, 'You are not logged in'))
 

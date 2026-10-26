@@ -12,6 +12,7 @@ export interface ApiDefinition {
     deleteAccount: typeof routes['auth.delete_account']
     profile: typeof routes['auth.profile']
     updateProfile: typeof routes['auth.update_profile']
+    changePassword: typeof routes['auth.change_password']
   }
   contacts: {
     createMass: typeof routes['contacts.create_mass']

@@ -16,6 +16,7 @@ import { Authenticator } from '@adonisjs/auth'
 import { Authenticators } from '@adonisjs/auth/types'
 import { inject } from '@adonisjs/core'
 import { Logger } from '@adonisjs/core/logger'
+import hash from '@adonisjs/core/services/hash'
 import db from '@adonisjs/lucid/services/db'
 import mail from '@adonisjs/mail/services/main'
 import { DateTime } from 'luxon'
@@ -211,6 +212,14 @@ export class AuthService {
     await this.wipeResetPasswordToken(user)
     this.sendPasswordResetAlertNotification(user)
     return true
+  }
+
+  async changePassword(user: User, currentPassword: string, newPassword: string) {
+    if (!(await hash.verify(user.password, currentPassword))) {
+      throw new Error('Your current password is incorrect')
+    }
+    await this.userRepository.update(user, { password: newPassword })
+    this.sendPasswordResetAlertNotification(user)
   }
 
   async deleteAccount(user: User) {

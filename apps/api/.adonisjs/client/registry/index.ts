@@ -60,6 +60,12 @@ const routes = {
     tokens: [{"old":"/api/auth/update-profile","type":0,"val":"api","end":""},{"old":"/api/auth/update-profile","type":0,"val":"auth","end":""},{"old":"/api/auth/update-profile","type":0,"val":"update-profile","end":""}],
     types: placeholder as Registry['auth.update_profile']['types'],
   },
+  'auth.change_password': {
+    methods: ["PUT"],
+    pattern: '/api/auth/change-password',
+    tokens: [{"old":"/api/auth/change-password","type":0,"val":"api","end":""},{"old":"/api/auth/change-password","type":0,"val":"auth","end":""},{"old":"/api/auth/change-password","type":0,"val":"change-password","end":""}],
+    types: placeholder as Registry['auth.change_password']['types'],
+  },
   'contacts.create_mass': {
     methods: ["POST"],
     pattern: '/api/contacts/create-mass',

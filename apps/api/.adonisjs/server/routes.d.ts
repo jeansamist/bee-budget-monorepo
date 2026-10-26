@@ -13,6 +13,7 @@ export type ScannedRoutes = {
     'auth.delete_account': { paramsTuple?: []; params?: {} }
     'auth.profile': { paramsTuple?: []; params?: {} }
     'auth.update_profile': { paramsTuple?: []; params?: {} }
+    'auth.change_password': { paramsTuple?: []; params?: {} }
     'contacts.create_mass': { paramsTuple?: []; params?: {} }
     'contacts.update_mass': { paramsTuple?: []; params?: {} }
     'contacts.delete_mass': { paramsTuple?: []; params?: {} }
@@ -172,6 +173,7 @@ export type ScannedRoutes = {
   }
   PUT: {
     'auth.update_profile': { paramsTuple?: []; params?: {} }
+    'auth.change_password': { paramsTuple?: []; params?: {} }
     'contacts.update_mass': { paramsTuple?: []; params?: {} }
     'expense_categories.update_mass': { paramsTuple?: []; params?: {} }
     'expenses.update_mass': { paramsTuple?: []; params?: {} }
