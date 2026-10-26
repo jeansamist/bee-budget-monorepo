@@ -49,7 +49,10 @@ export const InternalTransfers: FunctionComponent = () => {
 
   useEffect(() => {
     ;(async () => {
-      const response = await getInternalTransfers({ page: currentPage, perPage })
+      const response = await getInternalTransfers({
+        page: currentPage,
+        perPage,
+      })
       if (response.success) {
         setTransfers(response.data ?? [])
         setCurrentPage(response.meta?.currentPage ?? 1)
@@ -64,8 +67,12 @@ export const InternalTransfers: FunctionComponent = () => {
 
   const handleDelete = useCallback(async () => {
     setDeleting(true)
-    setTransfers((prev) => prev.filter((transfer) => !selectedRows.includes(transfer)))
-    await deleteMassInternalTransfers(selectedRows.map((transfer) => transfer.id))
+    setTransfers((prev) =>
+      prev.filter((transfer) => !selectedRows.includes(transfer))
+    )
+    await deleteMassInternalTransfers(
+      selectedRows.map((transfer) => transfer.id)
+    )
     setDeleting(false)
     setSelectedRows([])
     setFetchVersion((version) => version + 1)
@@ -127,24 +134,28 @@ export const InternalTransfers: FunctionComponent = () => {
                     handlePageChange(currentPage - 1)
                   }}
                   className={
-                    currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
+                    currentPage <= 1
+                      ? "pointer-events-none opacity-50"
+                      : undefined
                   }
                 />
               </PaginationItem>
-              {Array.from({ length: lastPage }, (_, index) => index + 1).map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    href="#"
-                    isActive={page === currentPage}
-                    onClick={(event) => {
-                      event.preventDefault()
-                      handlePageChange(page)
-                    }}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
+              {Array.from({ length: lastPage }, (_, index) => index + 1).map(
+                (page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={page === currentPage}
+                      onClick={(event) => {
+                        event.preventDefault()
+                        handlePageChange(page)
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
               <PaginationItem>
                 <PaginationNext
                   href="#"
@@ -154,7 +165,9 @@ export const InternalTransfers: FunctionComponent = () => {
                     handlePageChange(currentPage + 1)
                   }}
                   className={
-                    currentPage >= lastPage ? "pointer-events-none opacity-50" : undefined
+                    currentPage >= lastPage
+                      ? "pointer-events-none opacity-50"
+                      : undefined
                   }
                 />
               </PaginationItem>

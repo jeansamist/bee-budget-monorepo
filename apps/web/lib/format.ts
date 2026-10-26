@@ -1,3 +1,6 @@
+// Words that keep their own casing in default names
+const SPECIAL_WORDS: Record<string, string> = { MTN: "MTN", MOMO: "MoMo" }
+
 /**
  * Default records are stored as constants (ORANGE_MONEY, BANK_ACCOOUNT…).
  * Shows them as "Orange Money"; names typed by the user are left as they are.
@@ -6,10 +9,12 @@ export function displayName(name: string | null | undefined) {
   if (!name) return ""
   if (!/^[A-Z0-9_]+$/.test(name)) return name
   return name
-    .toLowerCase()
     .split("_")
     .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(
+      (word) =>
+        SPECIAL_WORDS[word] ?? word.charAt(0) + word.slice(1).toLowerCase()
+    )
     .join(" ")
 }
 

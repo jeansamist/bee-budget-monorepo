@@ -1,6 +1,33 @@
 export default {
   "common.app-name": "BeeBudget",
 
+  "app.manage.actions.new": "New",
+  "app.manage.actions.edit": "Edit",
+  "app.manage.actions.delete": "Delete",
+  "app.manage.actions.save": "Save changes",
+  "app.manage.actions.create": "Create",
+  "app.manage.actions.menu": "Actions for {name}",
+  "app.manage.toast.created": "{name} created",
+  "app.manage.toast.updated": "{name} updated",
+  "app.manage.toast.deleted": "{name} deleted",
+  "app.manage.system": "System",
+  "app.manage.systemHelp": "Used for transfers between wallets. It can't be edited or deleted.",
+
+  "app.manage.wallet.new": "New wallet",
+  "app.manage.wallet.summary": "{count} wallets · {total} XAF in total",
+  "app.manage.wallet.createTitle": "New wallet",
+  "app.manage.wallet.createDescription":
+    "Add a Mobile Money account, cash or a bank account.",
+  "app.manage.wallet.editTitle": "Edit wallet",
+  "app.manage.wallet.editDescription":
+    "Rename it, change its type or correct its balance.",
+  "app.manage.wallet.balance.label": "Current balance",
+  "app.manage.wallet.balance.help":
+    "Changing it corrects the balance without recording a transaction.",
+  "app.manage.wallet.deleteTitle": "Delete {name}?",
+  "app.manage.wallet.deleteContent":
+    "Its incomes and expenses are kept but will no longer be linked to a wallet. Budgets on this wallet are deleted. This can't be undone.",
+
   "landing.meta.title": "BeeBudget: know where every franc goes",
   "landing.meta.description":
     "BeeBudget brings your Orange Money, MTN MoMo, cash and bank accounts into one clear budget.",

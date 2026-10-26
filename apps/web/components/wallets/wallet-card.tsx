@@ -1,7 +1,9 @@
 "use client"
 
+import { RowActions } from "@/components/manage/row-actions"
 import { useApp } from "@/contexts/app.context"
-import { useScopedI18n } from "@/lib/i18n/client"
+import { displayName } from "@/lib/format"
+import { useI18n, useScopedI18n } from "@/lib/i18n/client"
 import { Wallet } from "@/types"
 import { cn } from "@bee-budget/functions"
 import { ChartContainer, type ChartConfig } from "@bee-budget/ui/chart"
@@ -10,8 +12,11 @@ import { Area, AreaChart } from "recharts"
 
 export const WalletCard: FunctionComponent<{
   wallet: Wallet
-}> = ({ wallet }) => {
+  onEdit?: () => void
+  onDelete?: () => void
+}> = ({ wallet, onEdit, onDelete }) => {
   const t = useScopedI18n("app.wallets")
+  const tApp = useI18n()
   const { walletTypes } = useApp()
   const walletType = walletTypes.find((wt) => wt.id === wallet.walletTypeId)
   const isPositive = wallet.evolution >= 0
@@ -22,11 +27,7 @@ export const WalletCard: FunctionComponent<{
   )
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      className={cn("rounded-3xl bg-accent p-6 text-accent-foreground")}
-    >
+    <div className="rounded-3xl bg-accent p-6 text-accent-foreground">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -36,23 +37,38 @@ export const WalletCard: FunctionComponent<{
                 style={{ background: walletType.color }}
               />
             )}
-            <h3 className="truncate font-semibold">{wallet.name}</h3>
+            <h3 className="truncate font-semibold">
+              {displayName(wallet.name)}
+            </h3>
           </div>
           {walletType && (
             <p className="mt-0.5 text-xs text-muted-foreground">
-              {walletType.name}
+              {displayName(walletType.name)}
             </p>
           )}
         </div>
-        <span
-          className={cn(
-            "shrink-0 text-sm font-medium",
-            isPositive ? "text-green-500" : "text-red-500"
+        <div className="flex shrink-0 items-center gap-1">
+          <span
+            className={cn(
+              "text-sm font-medium",
+              isPositive ? "text-green-500" : "text-red-500"
+            )}
+          >
+            {isPositive ? "+" : "-"}
+            {Math.abs(wallet.evolution)}%
+          </span>
+          {onEdit && onDelete && (
+            <RowActions
+              label={displayName(wallet.name)}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              deleteTitle={tApp("app.manage.wallet.deleteTitle", {
+                name: displayName(wallet.name),
+              })}
+              deleteContent={tApp("app.manage.wallet.deleteContent")}
+            />
           )}
-        >
-          {isPositive ? "+" : "-"}
-          {Math.abs(wallet.evolution)}%
-        </span>
+        </div>
       </div>
 
       {wallet.lastMonthsData.length > 0 && (
