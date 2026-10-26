@@ -1,2 +1,6 @@
 node_modules
 .claude
+
+# Production env files (secrets, paste into Render / Vercel)
+.env.render
+.env.vercel

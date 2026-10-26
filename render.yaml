@@ -1,0 +1,77 @@
+# Render Blueprint for the API (apps/api).
+# Dashboard: New > Blueprint > pick this repo. Values marked `sync: false`
+# are asked for during the first deploy.
+services:
+  - type: web
+    name: bee-budget-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    # NODE_ENV=production would skip devDependencies, which the build needs.
+    buildCommand: >-
+      corepack enable &&
+      NODE_ENV=development pnpm install --frozen-lockfile --filter api... &&
+      pnpm --filter api build
+    # Free instances have no pre-deploy step, so migrations run on start.
+    startCommand: cd apps/api/build && node ace migration:run --force && node bin/server.js
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - apps/api/**
+        - pnpm-lock.yaml
+        - render.yaml
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: UTC
+      - key: HOST
+        value: 0.0.0.0
+      - key: LOG_LEVEL
+        value: info
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false # https://bee-budget-api.onrender.com
+      - key: SESSION_DRIVER
+        value: cookie
+      # Neon: use the direct host (no "-pooler"); Lucid migrations need
+      # session-level advisory locks, which PgBouncer does not support.
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_DATABASE
+        value: neondb
+      - key: DB_SSL
+        value: "true"
+      # Gmail SMTP with an app password. Render free instances block outbound
+      # SMTP on 25/465/587, so emails only go out on a paid instance or with
+      # a provider on another port (e.g. Resend on smtp.resend.com:2465).
+      - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_FROM_NAME
+        value: BeeBudget
+      - key: MAIL_FROM_ADDRESS
+        sync: false
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_SECURE
+        value: "true"
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false # Gmail app password
+      - key: FRONTEND_APP_URL
+        sync: false # https://<your-app>.vercel.app
+      - key: CORS_ORIGIN
+        sync: false # same as FRONTEND_APP_URL (comma-separated if several)

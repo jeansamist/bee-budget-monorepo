@@ -18,7 +18,8 @@ router.get('/', () => {
 
 /**
  * Used by the frontend loader to wake the server (and the database) after a
- * cold start. Also a good target for the Render health check.
+ * cold start. Keep Render's own health check on `/`: pinging the database
+ * every few seconds would stop Neon from ever suspending.
  */
 router.get('/health', async ({ response }) => {
   try {
