@@ -4,6 +4,7 @@ import { useScopedI18n } from "@/lib/i18n/client"
 import { cn } from "@bee-budget/functions"
 import { Banknote, Moon, Smartphone, Sun } from "lucide-react"
 import { motion } from "motion/react"
+import { useHydrated } from "@/lib/use-hydrated"
 import { useTheme } from "next-themes"
 import { useState } from "react"
 import { ease, formatXaf } from "../motion"
@@ -248,7 +249,9 @@ export function ContactsMock() {
 /** Working light/dark switch: it changes the page theme. */
 export function ThemeMock() {
   const t = useScopedI18n("landing.mock")
-  const { resolvedTheme, setTheme } = useTheme()
+  const { resolvedTheme: currentTheme, setTheme } = useTheme()
+  // The theme is only known in the browser
+  const resolvedTheme = useHydrated() ? currentTheme : undefined
 
   return (
     <div className="flex items-center justify-center gap-4">
