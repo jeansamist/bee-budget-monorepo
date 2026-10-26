@@ -70,6 +70,48 @@ export default {
   "app.manage.category.deleteIncomeContent":
     "All incomes in this category are deleted too, and wallet balances are not changed back. This can't be undone.",
 
+  "app.header.breadcrumb.budgets": "Budgets",
+  "app.header.titles.budgets": "Budgets",
+  "app.budgets.new": "New budget",
+  "app.budgets.intro":
+    "Set a spending limit per expense category or per wallet.",
+  "app.budgets.summary":
+    "{count} budget(s) · {spent} of {total} XAF spent · {atRisk} close to or over the limit",
+  "app.budgets.empty.title": "No budgets yet",
+  "app.budgets.empty.description":
+    "Cap what you spend on groceries, transport or a whole wallet, every week, month or year.",
+  "app.budgets.createTitle": "New budget",
+  "app.budgets.editTitle": "Edit budget",
+  "app.budgets.formDescription":
+    "Expenses and their fees count towards the limit. Transfers between your wallets don't.",
+  "app.budgets.remaining": "{amount} XAF left",
+  "app.budgets.over": "{amount} XAF over",
+  "app.budgets.deleteTitle": "Delete {name}?",
+  "app.budgets.deleteContent":
+    "Only the budget is deleted, your expenses stay as they are.",
+  "app.budgets.targets.expense_category": "Category",
+  "app.budgets.targets.wallet": "Wallet",
+  "app.budgets.periods.weekly": "Weekly",
+  "app.budgets.periods.monthly": "Monthly",
+  "app.budgets.periods.yearly": "Yearly",
+  "app.budgets.status.ok": "On track",
+  "app.budgets.status.warning": "Close to limit",
+  "app.budgets.status.exceeded": "Over budget",
+  "app.budgets.fields.name": "Name",
+  "app.budgets.fields.namePlaceholder": "e.g. Food this month",
+  "app.budgets.fields.appliesTo": "Applies to",
+  "app.budgets.fields.category": "Expense category",
+  "app.budgets.fields.categoryPlaceholder": "Choose a category",
+  "app.budgets.fields.wallet": "Wallet",
+  "app.budgets.fields.walletPlaceholder": "Choose a wallet",
+  "app.budgets.fields.walletHelp":
+    "Every expense paid from this wallet counts.",
+  "app.budgets.fields.amount": "Limit (XAF)",
+  "app.budgets.fields.period": "Period",
+  "app.budgets.fields.alertThreshold": "Warn me at (%)",
+  "app.budgets.fields.alertThresholdHelp":
+    "The budget is flagged when spending reaches this share of the limit.",
+
   "landing.meta.title": "BeeBudget: know where every franc goes",
   "landing.meta.description":
     "BeeBudget brings your Orange Money, MTN MoMo, cash and bank accounts into one clear budget.",
