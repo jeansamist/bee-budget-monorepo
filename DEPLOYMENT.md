@@ -49,7 +49,8 @@ DB_PASSWORD=<password> DB_DATABASE=neondb DB_SSL=true \
    `render.yaml` (free web service `bee-budget-api`).
 2. Fill in the `sync: false` variables, or paste the whole env with
    **Environment > Add from .env**. The build is
-   `pnpm install --filter api... && pnpm --filter api build`, and the start
+   `npx pnpm@12.8.1 install --filter api... && npx pnpm@12.8.1 --filter api build`
+   (keep that version in sync with `packageManager` in the root `package.json`), and the start
    command runs `migration:run --force` before `node bin/server.js`.
 3. Check `https://<service>.onrender.com/health` returns `{"status":"ok"}`.
 

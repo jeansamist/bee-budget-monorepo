@@ -8,10 +8,11 @@ services:
     plan: free
     region: frankfurt
     # NODE_ENV=production would skip devDependencies, which the build needs.
+    # pnpm runs through npx: Render's image is read-only, so `corepack enable`
+    # can't install the version pinned in package.json.
     buildCommand: >-
-      corepack enable &&
-      NODE_ENV=development pnpm install --frozen-lockfile --filter api... &&
-      pnpm --filter api build
+      NODE_ENV=development npx --yes pnpm@12.8.1 install --frozen-lockfile --filter api... &&
+      npx --yes pnpm@12.8.1 --filter api build
     # Free instances have no pre-deploy step, so migrations run on start.
     startCommand: cd apps/api/build && node ace migration:run --force && node bin/server.js
     healthCheckPath: /
