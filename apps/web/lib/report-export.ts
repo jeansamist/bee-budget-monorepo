@@ -4,15 +4,19 @@ import type { Report, ReportColumnKind } from "@/types"
 export type ExportableReport = {
   title: string
   subtitle: string
+  /** Report name without the brand, e.g. "Cash flow". */
+  name: string
+  /** Human period, e.g. "1 Oct 2026 - 31 Oct 2026". */
+  period: string
+  /** Document details (account holder, period, wallets, currency, date). */
+  details: { label: string; value: string }[]
+  labels: { summary: string; page: (page: number, total: number) => string }
   columns: { key: string; label: string; kind: ReportColumnKind }[]
   rows: Record<string, string | number | null>[]
   /** `value` is for display (PDF, screen), `raw` for spreadsheets. */
   totals: { label: string; value: string; raw: number }[]
   fileName: string
 }
-
-// Brand orange (primary) as RGB for PDF and Excel headers
-const BRAND = { hex: "C2410C", rgb: [194, 65, 12] as [number, number, number] }
 
 function download(blob: Blob, fileName: string) {
   const url = URL.createObjectURL(blob)
@@ -54,18 +58,23 @@ export async function exportExcel(report: ExportableReport) {
   workbook.creator = "BeeBudget"
   const sheet = workbook.addWorksheet(report.title.slice(0, 31))
 
-  sheet.addRow([report.title]).font = { bold: true, size: 14 }
-  sheet.addRow([report.subtitle]).font = { color: { argb: "FF6B7280" } }
+  sheet.addRow([`BeeBudget - ${report.name}`]).font = { bold: true, size: 14 }
+  for (const detail of report.details) {
+    const row = sheet.addRow([detail.label, detail.value])
+    row.getCell(1).font = { color: { argb: "FF6B7280" } }
+  }
   sheet.addRow([])
+  const headerRowNumber = sheet.rowCount + 1
 
   const header = sheet.addRow(report.columns.map((column) => column.label))
   header.eachCell((cell) => {
-    cell.font = { bold: true, color: { argb: "FFFFFFFF" } }
+    cell.font = { bold: true }
     cell.fill = {
       type: "pattern",
       pattern: "solid",
-      fgColor: { argb: `FF${BRAND.hex}` },
+      fgColor: { argb: "FFF3F4F6" },
     }
+    cell.border = { bottom: { style: "thin", color: { argb: "FFD1D5DB" } } }
   })
 
   for (const row of report.rows) {
@@ -82,7 +91,7 @@ export async function exportExcel(report: ExportableReport) {
     )
     sheetColumn.width = Math.min(Math.max(longest + 2, 10), 48)
   })
-  sheet.views = [{ state: "frozen", ySplit: 4 }]
+  sheet.views = [{ state: "frozen", ySplit: headerRowNumber }]
 
   sheet.addRow([])
   for (const total of report.totals) {
@@ -100,7 +109,11 @@ export async function exportExcel(report: ExportableReport) {
 
 // The built-in PDF fonts only cover Latin-1
 const pdfText = (value: string) =>
-  value.replace(/→/g, "->").replace(/[  ]/g, " ").replace(/[–—]/g, "-")
+  value
+    .replace(/→/g, "->")
+    .replace(/[\u2009\u202f]/g, " ")
+    .replace(/[–—]/g, "-")
+    .replace(/·/g, "-")
 
 function pdfCell(value: string | number | null, kind: ReportColumnKind) {
   if (value === null || value === "") return "-"
@@ -112,54 +125,143 @@ function pdfCell(value: string | number | null, kind: ReportColumnKind) {
 const isNumeric = (kind: ReportColumnKind) =>
   kind === "amount" || kind === "number" || kind === "percent"
 
+// Greys only: the document should print well and look like a statement
+const INK: [number, number, number] = [17, 24, 39]
+const MUTED: [number, number, number] = [107, 114, 128]
+const RULE: [number, number, number] = [209, 213, 219]
+const HEAD_FILL: [number, number, number] = [243, 244, 246]
+const MARGIN = 48
+
+/** Where the previous autoTable ended (set by jspdf-autotable at runtime). */
+const lastTableBottom = (doc: object) =>
+  (doc as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 0
+
+/** A4 portrait statement: header, details, summary, data table, paged footer. */
 export async function exportPdf(report: ExportableReport) {
   const [{ jsPDF }, { autoTable }] = await Promise.all([
     import("jspdf"),
     import("jspdf-autotable"),
   ])
-  const doc = new jsPDF({
-    orientation: report.columns.length > 6 ? "landscape" : "portrait",
-    unit: "pt",
-    format: "a4",
-  })
+  const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" })
   const pageWidth = doc.internal.pageSize.getWidth()
+  const pageHeight = doc.internal.pageSize.getHeight()
+  const right = pageWidth - MARGIN
 
-  doc.setFillColor(...BRAND.rgb)
-  doc.rect(0, 0, pageWidth, 6, "F")
+  // Header
+  doc.setTextColor(...INK)
   doc.setFont("helvetica", "bold")
-  doc.setFontSize(18)
-  doc.text(pdfText(report.title), 40, 48)
+  doc.setFontSize(14)
+  doc.text("BeeBudget", MARGIN, 60)
+  doc.setFontSize(12)
+  doc.text(pdfText(report.name), right, 58, { align: "right" })
   doc.setFont("helvetica", "normal")
-  doc.setFontSize(10)
-  doc.setTextColor(107, 114, 128)
-  doc.text(pdfText(report.subtitle), 40, 66)
+  doc.setFontSize(9)
+  doc.setTextColor(...MUTED)
+  doc.text(pdfText(report.period), right, 72, { align: "right" })
+  doc.setDrawColor(...RULE)
+  doc.setLineWidth(0.5)
+  doc.line(MARGIN, 86, right, 86)
 
-  // Totals as a single line of "label: value"
-  const summary = report.totals
-    .map((total) => `${total.label}: ${total.value}`)
-    .join("   ·   ")
-  doc.setTextColor(17, 24, 39)
-  doc.text(pdfText(summary), 40, 86, { maxWidth: pageWidth - 80 })
+  // Details (left) and summary (right), side by side
+  const columnGap = 32
+  const summaryWidth = 200
+  const detailsWidth = right - MARGIN - summaryWidth - columnGap
+  const blockTop = 104
+  const keyValueTable = {
+    theme: "plain" as const,
+    styles: {
+      fontSize: 8.5,
+      cellPadding: { top: 3, bottom: 3, left: 0, right: 0 },
+      textColor: INK,
+    },
+    columnStyles: { 0: { textColor: MUTED, cellWidth: 90 } },
+  }
 
   autoTable(doc, {
-    startY: 104,
+    ...keyValueTable,
+    startY: blockTop,
+    margin: { left: MARGIN },
+    tableWidth: detailsWidth,
+    body: report.details.map((detail) => [
+      pdfText(detail.label),
+      pdfText(detail.value),
+    ]),
+  })
+  const detailsBottom = lastTableBottom(doc)
+
+  autoTable(doc, {
+    ...keyValueTable,
+    startY: blockTop,
+    margin: { left: right - summaryWidth },
+    tableWidth: summaryWidth,
+    head: [[pdfText(report.labels.summary), ""]],
+    headStyles: {
+      fontStyle: "bold",
+      fontSize: 8.5,
+      textColor: INK,
+      cellPadding: { top: 0, bottom: 5, left: 0, right: 0 },
+    },
+    body: report.totals.map((total) => [
+      pdfText(total.label),
+      pdfText(total.value),
+    ]),
+    columnStyles: {
+      0: { textColor: MUTED },
+      1: { halign: "right", fontStyle: "bold" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head") {
+        doc.setDrawColor(...RULE)
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + data.cell.width,
+          data.cell.y + data.cell.height
+        )
+      }
+    },
+  })
+  const summaryBottom = lastTableBottom(doc)
+
+  // Data table
+  const wide = report.columns.length > 7
+  autoTable(doc, {
+    startY: Math.max(detailsBottom, summaryBottom) + 24,
+    margin: { left: MARGIN, right: MARGIN, top: 56, bottom: 56 },
+    theme: "plain",
+    // Never split a row across two pages
+    rowPageBreak: "avoid",
     head: [report.columns.map((column) => pdfText(column.label))],
     body: report.rows.map((row) =>
       report.columns.map((column) =>
         pdfText(pdfCell(row[column.key], column.kind))
       )
     ),
-    styles: { fontSize: 8, cellPadding: 5 },
-    headStyles: { fillColor: BRAND.rgb, textColor: 255 },
-    alternateRowStyles: { fillColor: [249, 250, 251] },
+    styles: {
+      font: "helvetica",
+      fontSize: wide ? 7.5 : 8.5,
+      textColor: INK,
+      cellPadding: { top: 4, bottom: 4, left: 4, right: 4 },
+      overflow: "linebreak",
+      lineColor: [229, 231, 235],
+      lineWidth: { bottom: 0.5 },
+    },
+    headStyles: {
+      fillColor: HEAD_FILL,
+      fontStyle: "bold",
+      lineColor: RULE,
+      lineWidth: { bottom: 0.75 },
+    },
     columnStyles: Object.fromEntries(
       report.columns.map((column, index) => [
         index,
-        { halign: isNumeric(column.kind) ? "right" : "left" },
+        {
+          halign: isNumeric(column.kind) ? "right" : "left",
+          // Numbers and dates keep one line; text columns take the rest
+          cellWidth: column.kind === "text" ? "auto" : "wrap",
+        },
       ])
     ),
-    margin: { left: 40, right: 40 },
-    // Align numeric headers with their values
     didParseCell: (data) => {
       if (
         data.section === "head" &&
@@ -168,16 +270,27 @@ export async function exportPdf(report: ExportableReport) {
         data.cell.styles.halign = "right"
       }
     },
-    didDrawPage: () => {
-      const pageHeight = doc.internal.pageSize.getHeight()
-      doc.setFontSize(8)
-      doc.setTextColor(156, 163, 175)
-      doc.text("BeeBudget", 40, pageHeight - 20)
-      doc.text(`${doc.getNumberOfPages()}`, pageWidth - 40, pageHeight - 20, {
-        align: "right",
-      })
-    },
   })
+
+  // Footer on every page, drawn last so the page count is known
+  const pageCount = doc.getNumberOfPages()
+  for (let page = 1; page <= pageCount; page++) {
+    doc.setPage(page)
+    doc.setDrawColor(...RULE)
+    doc.setLineWidth(0.5)
+    doc.line(MARGIN, pageHeight - 40, right, pageHeight - 40)
+    doc.setFont("helvetica", "normal")
+    doc.setFontSize(7.5)
+    doc.setTextColor(...MUTED)
+    doc.text(
+      pdfText(`BeeBudget - ${report.name} - ${report.period}`),
+      MARGIN,
+      pageHeight - 26
+    )
+    doc.text(report.labels.page(page, pageCount), right, pageHeight - 26, {
+      align: "right",
+    })
+  }
 
   doc.save(`${report.fileName}.pdf`)
 }

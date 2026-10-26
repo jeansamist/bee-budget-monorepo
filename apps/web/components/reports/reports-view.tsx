@@ -1,5 +1,7 @@
 "use client"
 
+import { useApp } from "@/contexts/app.context"
+import { useAuth } from "@/contexts/auth.context"
 import { formatAmount, displayName } from "@/lib/format"
 import { useI18n, useScopedI18n } from "@/lib/i18n/client"
 import {
@@ -37,6 +39,10 @@ import { presetRange, type Preset } from "./report-presets"
 import { ReportTable } from "./report-table"
 import { ReportTypeTabs } from "./report-type-tabs"
 
+/** "2026-10-01" -> "1 Oct 2026" */
+const humanDate = (iso: string) =>
+  format(new Date(`${iso}T00:00:00`), "d MMM yyyy")
+
 type Options = {
   type: ReportType
   preset: Preset
@@ -52,6 +58,8 @@ export function ReportsView({
 }) {
   const t = useI18n()
   const tColumn = useScopedI18n("app.reports.columns")
+  const { user } = useAuth()
+  const { wallets } = useApp()
   const [options, setOptions] = useState<Options>(() => ({
     type: initialReport?.type ?? "transactions",
     preset: "thisMonth",
@@ -154,10 +162,59 @@ export function ReportsView({
         value: key === "count" ? String(value) : `${formatAmount(value)} XAF`,
         raw: value,
       })),
+      name: t(`app.reports.types.${report.type}.title`),
+      period:
+        report.type === "budgets"
+          ? t("app.reports.document.budgetsPeriod")
+          : `${humanDate(report.from)} - ${humanDate(report.to)}`,
+      details: [
+        {
+          label: t("app.reports.document.accountHolder"),
+          value: user
+            ? `${user.firstName} ${user.lastName} (${user.email})`
+            : "-",
+        },
+        {
+          label: t("app.reports.document.period"),
+          value:
+            report.type === "budgets"
+              ? t("app.reports.document.budgetsPeriod")
+              : `${humanDate(report.from)} - ${humanDate(report.to)}`,
+        },
+        // Budgets are not filtered by wallet
+        ...(report.type === "budgets"
+          ? []
+          : [
+              {
+                label: t("app.reports.document.wallets"),
+                value:
+                  options.walletIds.length === 0
+                    ? t("app.reports.allWallets")
+                    : wallets
+                        .filter((wallet) =>
+                          options.walletIds.includes(wallet.id)
+                        )
+                        .map((wallet) => displayName(wallet.name))
+                        .join(", "),
+              },
+            ]),
+        {
+          label: t("app.reports.document.currency"),
+          value: t("app.reports.document.currencyValue"),
+        },
+        {
+          label: t("app.reports.document.generatedOn"),
+          value: format(new Date(report.generatedAt), "d MMM yyyy, HH:mm"),
+        },
+      ],
+      labels: {
+        summary: t("app.reports.document.summary"),
+        page: (page, total) => t("app.reports.document.page", { page, total }),
+      },
       fileName: reportFileName(report),
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [report, t])
+  }, [report, t, user, wallets, options.walletIds])
 
   async function onExport(kind: "pdf" | "csv" | "xlsx") {
     if (!exportable) return
