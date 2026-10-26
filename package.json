@@ -2,6 +2,7 @@
   "name": "bee-budget-monorepo",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.8.1",
   "scripts": {
     "dev": "node --import @poppinss/ts-exec scripts/dev-all.ts",
     "dev:app": "node --import @poppinss/ts-exec scripts/dev.ts",
