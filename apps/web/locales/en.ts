@@ -469,6 +469,7 @@ export default {
   "app.header.titles.wallets": "Wallets overview",
   "app.header.titles.analytics": "Analytics",
 
+  "app.analytics.empty": "Create a wallet to see its analytics",
   "app.wallets.empty": "No wallets yet",
   "app.wallets.balance": "Balance",
   "app.wallets.evolution": "vs last month",
