@@ -1,6 +1,127 @@
 export default {
   "common.app-name": "BeeBudget",
 
+  "landing.meta.title": "BeeBudget: know where every franc goes",
+  "landing.meta.description":
+    "BeeBudget brings your Orange Money, MTN MoMo, cash and bank accounts into one clear budget.",
+
+  "landing.nav.features": "Features",
+  "landing.nav.howItWorks": "How it works",
+  "landing.nav.faq": "FAQ",
+  "landing.nav.signIn": "Sign in",
+  "landing.nav.getStarted": "Get started",
+  "landing.nav.openApp": "Open BeeBudget",
+  "landing.nav.menu": "Menu",
+
+  "landing.hero.eyebrow": "Mobile Money, cash and bank, one budget",
+  "landing.hero.title": "Know where every {accent} goes.",
+  "landing.hero.titleAccent": "franc",
+  "landing.hero.intro":
+    "BeeBudget brings your Orange Money, MTN MoMo, cash and bank accounts into one clear budget. Log what comes in and what goes out, move money between wallets, and see where you stand at a glance.",
+  "landing.hero.primary": "Start budgeting",
+  "landing.hero.secondary": "See how it works",
+  "landing.hero.note":
+    "Your wallets and categories are ready the moment you sign up.",
+
+  "landing.strip.title": "Built around the way money moves in Cameroon",
+  "landing.strip.orangeMoney": "Orange Money",
+  "landing.strip.mtnMomo": "MTN MoMo",
+  "landing.strip.cash": "Cash",
+  "landing.strip.bank": "Bank account",
+  "landing.strip.card": "Card",
+
+  "landing.features.title": "Everything your money does, {accent}",
+  "landing.features.titleAccent": "in one place.",
+  "landing.features.wallets.title": "Every wallet, one balance.",
+  "landing.features.wallets.body":
+    "Orange Money, MTN MoMo, the cash in your pocket, your bank account. Each wallet keeps its own balance and trend, and BeeBudget adds them up for you.",
+  "landing.features.transactions.title": "Incomes and expenses, sorted.",
+  "landing.features.transactions.body":
+    "A salary, a gift, a freelance payment. Groceries, transport, bills. Categories come ready to use, and you can add your own.",
+  "landing.features.transfers.title": "Move money, fees included.",
+  "landing.features.transfers.body":
+    "Cashing out MoMo or topping up a wallet? Record the transfer once, fee and all, and both balances stay right.",
+  "landing.features.analytics.title": "The week, the month, the year.",
+  "landing.features.analytics.body":
+    "Spending by category, income against expenses, and how each wallet evolves over time.",
+  "landing.features.contacts.title": "Know who you pay, and who pays you.",
+  "landing.features.contacts.body":
+    "Link people and businesses to your transactions and see what you have exchanged with each of them.",
+  "landing.features.theme.title": "Light or dark, your call.",
+  "landing.features.theme.body":
+    "BeeBudget follows your system theme. Press D to switch at any time.",
+
+  "landing.steps.title": "Up and running {accent}",
+  "landing.steps.titleAccent": "in three steps.",
+  "landing.steps.one.title": "Create your account.",
+  "landing.steps.one.body":
+    "Sign up with your email. Your wallets and categories are set up for you.",
+  "landing.steps.two.title": "Log as you go.",
+  "landing.steps.two.body":
+    "Add incomes, expenses and transfers in a few taps, from your phone or your computer.",
+  "landing.steps.three.title": "Read the story.",
+  "landing.steps.three.body":
+    "Your dashboard and analytics show where your money comes from and where it goes.",
+
+  "landing.faq.title": "Questions, {accent}",
+  "landing.faq.titleAccent": "answered.",
+  "landing.faq.connect.question":
+    "Does BeeBudget connect to my Orange Money or MTN MoMo account?",
+  "landing.faq.connect.answer":
+    "No. BeeBudget never asks for your Mobile Money or bank credentials. You record your transactions yourself, so you decide what is tracked.",
+  "landing.faq.currency.question": "Which currency does BeeBudget use?",
+  "landing.faq.currency.answer": "Amounts are in CFA francs (XAF).",
+  "landing.faq.fees.question": "Can I track transfer and withdrawal fees?",
+  "landing.faq.fees.answer":
+    "Yes. Expenses and transfers between wallets both have a fee field, so your balances match what is really left.",
+  "landing.faq.phone.question": "Can I use it on my phone?",
+  "landing.faq.phone.answer":
+    "Yes. BeeBudget runs in your browser and adapts to any screen size.",
+  "landing.faq.setup.question": "Do I have to set everything up myself?",
+  "landing.faq.setup.answer":
+    "No. When you sign up, BeeBudget creates Orange Money, MTN MoMo and Cash wallets and common categories. Rename, add or remove them whenever you like.",
+
+  "landing.cta.title": "Take charge of {accent}",
+  "landing.cta.titleAccent": "every franc.",
+  "landing.cta.body":
+    "Create your account and see your whole budget in one place.",
+  "landing.cta.button": "Get started",
+
+  "landing.footer.tagline":
+    "Personal budgeting for Mobile Money, cash and bank.",
+  "landing.footer.madeBy": "Made by {name}",
+  "landing.footer.rights": "© {year} BeeBudget",
+
+  "landing.mock.dashboard": "Dashboard",
+  "landing.mock.wallets": "Wallets",
+  "landing.mock.transactions": "Transactions",
+  "landing.mock.analytics": "Analytics",
+  "landing.mock.totalBalance": "Total balance",
+  "landing.mock.incomes": "Incomes",
+  "landing.mock.expenses": "Expenses",
+  "landing.mock.thisMonth": "This month",
+  "landing.mock.recentActivity": "Recent activity",
+  "landing.mock.vsLastMonth": "vs last month",
+  "landing.mock.mobileMoney": "Mobile Money",
+  "landing.mock.cash": "Cash",
+  "landing.mock.salary": "Salary",
+  "landing.mock.freelance": "Freelance payment",
+  "landing.mock.groceries": "Groceries",
+  "landing.mock.electricity": "Electricity bill",
+  "landing.mock.transport": "Transport",
+  "landing.mock.salaryReceived": "Salary received",
+  "landing.mock.transfer": "Internal transfer",
+  "landing.mock.from": "From",
+  "landing.mock.to": "To",
+  "landing.mock.amount": "Amount",
+  "landing.mock.fee": "Fee",
+  "landing.mock.saveTransfer": "Save transfer",
+  "landing.mock.week": "Week",
+  "landing.mock.month": "Month",
+  "landing.mock.year": "Year",
+  "landing.mock.light": "Light",
+  "landing.mock.dark": "Dark",
+
   "backendLoader.waking": "Loading your budget…",
   "backendLoader.slow":
     "Waking up the server. This can take up to a minute after a period of inactivity.",
