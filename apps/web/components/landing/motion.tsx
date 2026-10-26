@@ -16,7 +16,6 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
   type ComponentProps,
   type PointerEvent,
 } from "react"
@@ -158,26 +157,23 @@ export function CountUp({
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true })
   const reduce = useReducedMotion()
-  const [display, setDisplay] = useState(0)
+  const count = useMotionValue(0)
+  const text = useTransform(count, (latest) => formatXaf(Math.round(latest)))
 
   useEffect(() => {
     if (!inView) return
     if (reduce) {
-      setDisplay(value)
+      count.set(value)
       return
     }
-    const controls = animate(0, value, {
-      duration,
-      ease,
-      onUpdate: (latest) => setDisplay(Math.round(latest)),
-    })
+    const controls = animate(count, value, { duration, ease })
     return () => controls.stop()
-  }, [inView, reduce, value, duration])
+  }, [inView, reduce, value, duration, count])
 
   return (
-    <span ref={ref} className={className}>
-      {formatXaf(display)}
-    </span>
+    <motion.span ref={ref} className={className}>
+      {text}
+    </motion.span>
   )
 }
 

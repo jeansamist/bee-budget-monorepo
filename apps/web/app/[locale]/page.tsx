@@ -1,22 +1,16 @@
-import { Button } from "@bee-budget/ui/button"
-import { getI18n } from "@/lib/i18n/server"
+import { Landing } from "@/components/landing/landing"
+import { getScopedI18n } from "@/lib/i18n/server"
+import type { Metadata } from "next"
+import { cookies } from "next/headers"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getScopedI18n("landing.meta")
+  return { title: t("title"), description: t("description") }
+}
 
 export default async function Page() {
-  const t = await getI18n()
+  // Only checks for a token: the landing page must not wait on the API.
+  const hasSession = (await cookies()).has("AUTH_TOKEN")
 
-  return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">{t("home.ready.title")}</h1>
-          <p>{t("home.ready.description")}</p>
-          <p>{t("home.ready.button-hint")}</p>
-          <Button className="mt-2">{t("home.ready.button")}</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          {t("home.dark-mode-hint")}
-        </div>
-      </div>
-    </div>
-  )
+  return <Landing hasSession={hasSession} />
 }
