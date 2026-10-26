@@ -199,3 +199,49 @@ export type TransactionAnalytics = {
   expenses: TransactionAnalyticsMetric
   fees: TransactionAnalyticsMetric
 }
+
+export type BudgetTargetType = 'expense_category' | 'wallet'
+export type BudgetPeriod = 'weekly' | 'monthly' | 'yearly'
+export type BudgetStatus = 'ok' | 'warning' | 'exceeded'
+
+export type Budget = {
+  id: number
+  name: string
+  targetType: BudgetTargetType
+  expenseCategoryId: number | null
+  walletId: number | null
+  amount: number
+  period: BudgetPeriod
+  alertThreshold: number
+  spent: number
+  remaining: number
+  progress: number
+  status: BudgetStatus
+  periodStart: string
+  periodEnd: string
+  createdAt: string | null
+  updatedAt: string | null
+}
+
+export const REPORT_TYPES = [
+  'transactions',
+  'cash_flow',
+  'expenses_by_category',
+  'incomes_by_category',
+  'wallets',
+  'contacts',
+  'budgets',
+] as const
+
+export type ReportType = (typeof REPORT_TYPES)[number]
+export type ReportColumnKind = 'text' | 'date' | 'amount' | 'number' | 'percent'
+
+export type Report = {
+  type: ReportType
+  from: string
+  to: string
+  generatedAt: string
+  columns: { key: string; kind: ReportColumnKind }[]
+  rows: Record<string, string | number | null>[]
+  totals: Record<string, number>
+}

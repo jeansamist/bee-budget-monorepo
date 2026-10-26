@@ -1,12 +1,21 @@
 "use client"
 
-import { Contact, ExpenseCategory, IncomeCategory, Wallet, WalletType } from "@/types"
+import {
+  Contact,
+  ExpenseCategory,
+  IncomeCategory,
+  Wallet,
+  WalletType,
+} from "@/types"
 import { createContext, useCallback, useContext, useState } from "react"
 
 const sortByName = <T extends { name: string }>(items: T[]) =>
   [...items].sort((left, right) => left.name.localeCompare(right.name))
 
-const upsertById = <T extends { id: number; name: string }>(items: T[], item: T) =>
+const upsertById = <T extends { id: number; name: string }>(
+  items: T[],
+  item: T
+) =>
   sortByName([
     ...items.filter((existingItem) => existingItem.id !== item.id),
     item,
@@ -23,6 +32,10 @@ type AppContextValue = {
   addExpenseCategory: (expenseCategory: ExpenseCategory) => void
   addWallet: (wallet: Wallet) => void
   addContact: (contact: Contact) => void
+  removeWalletType: (id: number) => void
+  removeIncomeCategory: (id: number) => void
+  removeExpenseCategory: (id: number) => void
+  removeWallet: (id: number) => void
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
@@ -45,8 +58,10 @@ export function AppProvider({
   contacts,
 }: AppProviderProps) {
   const [walletTypesState, setWalletTypesState] = useState(walletTypes)
-  const [incomeCategoriesState, setIncomeCategoriesState] = useState(incomeCategories)
-  const [expenseCategoriesState, setExpenseCategoriesState] = useState(expenseCategories)
+  const [incomeCategoriesState, setIncomeCategoriesState] =
+    useState(incomeCategories)
+  const [expenseCategoriesState, setExpenseCategoriesState] =
+    useState(expenseCategories)
   const [walletsState, setWalletsState] = useState(wallets)
   const [contactsState, setContactsState] = useState(contacts)
 
@@ -73,7 +88,33 @@ export function AppProvider({
   }, [])
 
   const addContact = useCallback((contact: Contact) => {
-    setContactsState((previousContacts) => upsertById(previousContacts, contact))
+    setContactsState((previousContacts) =>
+      upsertById(previousContacts, contact)
+    )
+  }, [])
+
+  const removeWalletType = useCallback((id: number) => {
+    setWalletTypesState((previous) => previous.filter((item) => item.id !== id))
+    // The API deletes the wallets of a deleted type as well
+    setWalletsState((previous) =>
+      previous.filter((wallet) => wallet.walletTypeId !== id)
+    )
+  }, [])
+
+  const removeIncomeCategory = useCallback((id: number) => {
+    setIncomeCategoriesState((previous) =>
+      previous.filter((item) => item.id !== id)
+    )
+  }, [])
+
+  const removeExpenseCategory = useCallback((id: number) => {
+    setExpenseCategoriesState((previous) =>
+      previous.filter((item) => item.id !== id)
+    )
+  }, [])
+
+  const removeWallet = useCallback((id: number) => {
+    setWalletsState((previous) => previous.filter((item) => item.id !== id))
   }, [])
 
   return (
@@ -89,6 +130,10 @@ export function AppProvider({
         addExpenseCategory,
         addWallet,
         addContact,
+        removeWalletType,
+        removeIncomeCategory,
+        removeExpenseCategory,
+        removeWallet,
       }}
     >
       {children}

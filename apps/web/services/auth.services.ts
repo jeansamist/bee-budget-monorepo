@@ -7,6 +7,10 @@ import {
   SignUpSchema,
   VerifyEmailSchema,
 } from "@/schemas/auth.schemas"
+import type {
+  ChangePasswordSchema,
+  ProfileSchema,
+} from "@/schemas/settings.schemas"
 import type { ApiResponse, AuthAccessTokenPayload, User } from "@/types"
 import { cookies } from "next/headers"
 
@@ -29,7 +33,9 @@ export const signUp = async (
     })
   }
 
-  return (error ? error.response : data) as ApiResponse<AuthAccessTokenPayload | null>
+  return (
+    error ? error.response : data
+  ) as ApiResponse<AuthAccessTokenPayload | null>
 }
 
 export const signIn = async (
@@ -94,4 +100,37 @@ export const getProfile = async (): Promise<User | null> => {
   const [data, error] = await tuyau.api.auth.profile({}).safe()
   if (error || !data?.success) return null
   return (data.data as User) ?? null
+}
+
+export const updateProfile = async (
+  payload: ProfileSchema
+): Promise<ApiResponse<User>> => {
+  const [data, error] = await tuyau.api.auth
+    .updateProfile({ body: payload })
+    .safe()
+  return (error ? error.response : data) as ApiResponse<User>
+}
+
+export const changePassword = async (
+  payload: Pick<ChangePasswordSchema, "currentPassword" | "newPassword">
+): Promise<ApiResponse<null>> => {
+  const [data, error] = await tuyau.api.auth
+    .changePassword({ body: payload })
+    .safe()
+  return (error ? error.response : data) as ApiResponse<null>
+}
+
+export const logout = async (): Promise<ApiResponse<null>> => {
+  const [data, error] = await tuyau.api.auth.logout({}).safe()
+  // Drop the session locally even if the token was already invalid
+  ;(await cookies()).delete("AUTH_TOKEN")
+  return (error ? error.response : data) as ApiResponse<null>
+}
+
+export const deleteAccount = async (): Promise<ApiResponse<null>> => {
+  const [data, error] = await tuyau.api.auth.deleteAccount({}).safe()
+  if (data?.success) {
+    ;(await cookies()).delete("AUTH_TOKEN")
+  }
+  return (error ? error.response : data) as ApiResponse<null>
 }
