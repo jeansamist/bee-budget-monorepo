@@ -28,6 +28,48 @@ export default {
   "app.manage.wallet.deleteContent":
     "Its incomes and expenses are kept but will no longer be linked to a wallet. Budgets on this wallet are deleted. This can't be undone.",
 
+  "app.header.breadcrumb.walletTypes": "Wallet types",
+  "app.header.titles.walletTypes": "Wallet types",
+  "app.manage.walletType.new": "New wallet type",
+  "app.manage.walletType.intro":
+    "Types group your wallets, like Mobile Money, Cash or Bank account.",
+  "app.manage.walletType.empty": "No wallet types yet.",
+  "app.manage.walletType.walletCount": "{count} wallet(s)",
+  "app.manage.walletType.createTitle": "New wallet type",
+  "app.manage.walletType.editTitle": "Edit wallet type",
+  "app.manage.walletType.formDescription":
+    "Give it a name and a color to recognise it at a glance.",
+  "app.manage.walletType.deleteTitle": "Delete {name}?",
+  "app.manage.walletType.deleteContent": "This can't be undone.",
+  "app.manage.walletType.deleteWithWallets":
+    "Its {count} wallet(s) will be deleted too. Their incomes and expenses are kept but no longer linked to a wallet. This can't be undone.",
+
+  "app.header.breadcrumb.categories": "Transaction categories",
+  "app.header.titles.categories": "Transaction categories",
+  "app.manage.category.expenses": "Expenses",
+  "app.manage.category.incomes": "Incomes",
+  "app.manage.category.newExpense": "New expense category",
+  "app.manage.category.newIncome": "New income category",
+  "app.manage.category.editTitle": "Edit category",
+  "app.manage.category.formDescription":
+    "Defaults are pre-filled when you add a transaction in this category.",
+  "app.manage.category.empty": "No categories yet.",
+  "app.manage.category.none": "None",
+  "app.manage.category.defaultsTo": "Defaults to {name}",
+  "app.manage.category.fields.name": "Name",
+  "app.manage.category.fields.namePlaceholder": "e.g. Rent, School fees",
+  "app.manage.category.fields.color": "Color",
+  "app.manage.category.fields.defaultWalletType": "Default wallet type",
+  "app.manage.category.fields.defaultWalletTypeHelp":
+    "Suggests a wallet of this type when you add a transaction.",
+  "app.manage.category.fields.defaultPayee": "Usually paid to",
+  "app.manage.category.fields.defaultPayer": "Usually received from",
+  "app.manage.category.deleteTitle": "Delete {name}?",
+  "app.manage.category.deleteExpenseContent":
+    "All expenses in this category and its budgets are deleted too, and wallet balances are not changed back. This can't be undone.",
+  "app.manage.category.deleteIncomeContent":
+    "All incomes in this category are deleted too, and wallet balances are not changed back. This can't be undone.",
+
   "landing.meta.title": "BeeBudget: know where every franc goes",
   "landing.meta.description":
     "BeeBudget brings your Orange Money, MTN MoMo, cash and bank accounts into one clear budget.",
