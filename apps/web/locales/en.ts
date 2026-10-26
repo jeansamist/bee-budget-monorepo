@@ -11,7 +11,8 @@ export default {
   "app.manage.toast.updated": "{name} updated",
   "app.manage.toast.deleted": "{name} deleted",
   "app.manage.system": "System",
-  "app.manage.systemHelp": "Used for transfers between wallets. It can't be edited or deleted.",
+  "app.manage.systemHelp":
+    "Used for transfers between wallets. It can't be edited or deleted.",
 
   "app.manage.wallet.new": "New wallet",
   "app.manage.wallet.summary": "{count} wallets · {total} XAF in total",
@@ -185,6 +186,46 @@ export default {
   "app.reports.columns.remaining": "Remaining",
   "app.reports.columns.progress": "Progress",
   "app.reports.columns.status": "Status",
+
+  "app.header.breadcrumb.settings": "Settings",
+  "app.header.titles.settings": "Settings",
+  "app.settings.profile.title": "Profile",
+  "app.settings.profile.description": "How you appear in BeeBudget.",
+  "app.settings.profile.firstName": "First name",
+  "app.settings.profile.lastName": "Last name",
+  "app.settings.profile.email": "Email",
+  "app.settings.profile.emailHelp":
+    "Your email is used to sign in and can't be changed yet.",
+  "app.settings.profile.avatar": "Avatar URL",
+  "app.settings.profile.avatarHelp":
+    "Link to a square image. Leave empty to keep the current one.",
+  "app.settings.profile.saved": "Profile updated",
+  "app.settings.password.title": "Password",
+  "app.settings.password.description":
+    "Use at least 8 characters. You'll get an email when it changes.",
+  "app.settings.password.current": "Current password",
+  "app.settings.password.new": "New password",
+  "app.settings.password.newHelp": "At least 8 characters.",
+  "app.settings.password.confirm": "Confirm new password",
+  "app.settings.password.submit": "Change password",
+  "app.settings.password.saved": "Password changed",
+  "app.settings.appearance.title": "Appearance",
+  "app.settings.appearance.description":
+    "Choose a theme. You can also press D anywhere to switch.",
+  "app.settings.appearance.light": "Light",
+  "app.settings.appearance.dark": "Dark",
+  "app.settings.appearance.system": "System",
+  "app.settings.session.title": "Session",
+  "app.settings.session.description": "Sign out of BeeBudget on this device.",
+  "app.settings.session.logout": "Sign out",
+  "app.settings.danger.title": "Delete account",
+  "app.settings.danger.description":
+    "Permanently deletes your account, wallets, transactions, budgets and contacts.",
+  "app.settings.danger.typeEmail": "Type {email} to confirm",
+  "app.settings.danger.delete": "Delete my account",
+  "app.settings.danger.confirmTitle": "Delete your account?",
+  "app.settings.danger.confirmContent":
+    "Everything in your BeeBudget is deleted right away. This can't be undone.",
 
   "landing.meta.title": "BeeBudget: know where every franc goes",
   "landing.meta.description":
@@ -629,13 +670,11 @@ export default {
   "app.forms.expenses.fields.name.label": "Name",
   "app.forms.expenses.fields.name.placeholder": "Enter the expense name",
   "app.forms.expenses.fields.description.label": "Description",
-  "app.forms.expenses.fields.description.placeholder":
-    "Describe this expense",
+  "app.forms.expenses.fields.description.placeholder": "Describe this expense",
   "app.forms.expenses.fields.amount.label": "Amount",
   "app.forms.expenses.fields.amount.placeholder": "Enter the expense amount",
   "app.forms.expenses.fields.fees.label": "Fees",
-  "app.forms.expenses.fields.fees.placeholder":
-    "Enter fees if there are any",
+  "app.forms.expenses.fields.fees.placeholder": "Enter fees if there are any",
   "app.forms.expenses.fields.category.label": "Category",
   "app.forms.expenses.fields.category.placeholder": "Select a category",
   "app.forms.expenses.fields.wallet.label": "Wallet",
@@ -643,8 +682,7 @@ export default {
   "app.forms.expenses.fields.date.label": "Date",
   "app.forms.expenses.fields.date.placeholder": "Pick an expense date",
   "app.forms.expenses.fields.contact.label": "To contact",
-  "app.forms.expenses.fields.contact.placeholder":
-    "Select a contact if needed",
+  "app.forms.expenses.fields.contact.placeholder": "Select a contact if needed",
 
   "app.forms.incomes.create.meta.title": "Create income",
   "app.forms.incomes.create.meta.description":
@@ -673,8 +711,7 @@ export default {
   "app.forms.incomes.fields.date.label": "Date",
   "app.forms.incomes.fields.date.placeholder": "Pick an income date",
   "app.forms.incomes.fields.contact.label": "From contact",
-  "app.forms.incomes.fields.contact.placeholder":
-    "Select a contact if needed",
+  "app.forms.incomes.fields.contact.placeholder": "Select a contact if needed",
 
   "app.forms.internalTransfers.create.meta.title": "Create transfer",
   "app.forms.internalTransfers.create.meta.description":
@@ -703,8 +740,7 @@ export default {
   "app.forms.internalTransfers.fields.targetWallet.placeholder":
     "Select the wallet to credit",
   "app.forms.internalTransfers.fields.date.label": "Date",
-  "app.forms.internalTransfers.fields.date.placeholder":
-    "Pick a transfer date",
+  "app.forms.internalTransfers.fields.date.placeholder": "Pick a transfer date",
   "app.forms.internalTransfers.fields.description.label": "Description",
   "app.forms.internalTransfers.fields.description.placeholder":
     "Add a note for this transfer",
@@ -743,8 +779,7 @@ export default {
   "app.inlineCreate.contact.fields.type.options.other": "Other",
   "app.inlineCreate.contact.fields.color.label": "Contact color",
   "app.inlineCreate.contact.fields.phone.label": "Phone number",
-  "app.inlineCreate.contact.fields.phone.placeholder":
-    "Enter the phone number",
+  "app.inlineCreate.contact.fields.phone.placeholder": "Enter the phone number",
   "app.inlineCreate.contact.fields.email.label": "Email",
   "app.inlineCreate.contact.fields.email.placeholder": "Enter the email",
   "app.inlineCreate.contact.fields.comments.label": "Comments",
