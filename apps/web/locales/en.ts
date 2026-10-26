@@ -241,17 +241,35 @@ export default {
   "app.header.breadcrumb.integrations": "Integrations",
   "app.header.titles.integrations": "Integrations",
   "app.integrations.intro":
-    "Integrations are on the way. Here is what we are considering to save you typing and keep you on budget. None of them is available yet.",
-  "app.integrations.proposed": "Proposed",
-  "app.integrations.groups.capture": "Capture transactions automatically",
-  "app.integrations.groups.insights": "Stay on top of your budget",
-  "app.integrations.groups.connect": "Connect your tools",
+    "None of these is live yet. This is the shortlist, in the order we would build it.",
+  "app.integrations.stages.next": "Next up",
+  "app.integrations.stages.nextNote": "Removes most of the typing",
+  "app.integrations.stages.exploring": "Exploring",
+  "app.integrations.stages.exploringNote": "Scoping what's worth it",
+  "app.integrations.stages.later": "Later",
+  "app.integrations.stages.laterNote": "If you ask for them",
+  "app.integrations.sms.step1":
+    "The Android app reads Orange Money and MTN MoMo confirmation messages, nothing else.",
+  "app.integrations.sms.step2":
+    "It finds the amount, the fee and the wallet, and suggests a category.",
+  "app.integrations.sms.step3": "You confirm before anything is saved.",
+  "app.integrations.sms.transaction": "Transfer to 6XXXXX412",
+  "app.integrations.sms.fee": "fee",
+  "app.integrations.whatsapp.step1":
+    "Message the BeeBudget number like you'd note it on paper.",
+  "app.integrations.whatsapp.step2":
+    "Ask what's left in a budget or what you spent this week.",
+  "app.integrations.whatsapp.reply":
+    "Saved: Transport, −2,000 XAF from Cash.",
+  "app.integrations.whatsapp.question": "transport left?",
+  "app.integrations.whatsapp.answer":
+    "18,000 of 25,000 XAF left in your Transport budget this month.",
   "app.integrations.items.momoSms.title": "Mobile Money SMS import",
   "app.integrations.items.momoSms.description":
-    "An Android companion reads Orange Money and MTN MoMo confirmation SMS and records the transaction, fees included, in the right wallet.",
+    "Every Mobile Money payment already sends you an SMS. BeeBudget turns it into a transaction, fee included, in the right wallet.",
   "app.integrations.items.whatsapp.title": "WhatsApp assistant",
   "app.integrations.items.whatsapp.description":
-    "Send \"taxi 2000\" or \"salary 450000\" to log a transaction, and ask how much is left in a budget.",
+    "Log an expense in the chat you already have open all day, and ask how your budgets are doing.",
   "app.integrations.items.telegram.title": "Telegram bot",
   "app.integrations.items.telegram.description":
     "The same quick logging as WhatsApp, for those who live on Telegram.",
