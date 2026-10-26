@@ -9,10 +9,24 @@
 
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
+import db from '@adonisjs/lucid/services/db'
 import { middleware } from './kernel.ts'
 
 router.get('/', () => {
   return { hello: 'world' }
+})
+
+/**
+ * Used by the frontend loader to wake the server (and the database) after a
+ * cold start. Also a good target for the Render health check.
+ */
+router.get('/health', async ({ response }) => {
+  try {
+    await db.rawQuery('SELECT 1')
+    return { status: 'ok' }
+  } catch {
+    return response.serviceUnavailable({ status: 'error', database: 'unreachable' })
+  }
 })
 
 router
