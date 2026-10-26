@@ -1,9 +1,10 @@
 import { createTuyau } from "@tuyau/core/client"
 import { registry } from "api/registry"
 import { cookies } from "next/headers"
+import { API_URL } from "./backend"
 
 export const tuyau = createTuyau({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
+  baseUrl: API_URL,
   headers: { Accept: "application/json" },
   registry,
   hooks: {

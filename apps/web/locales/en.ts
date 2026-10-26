@@ -1,6 +1,13 @@
 export default {
   "common.app-name": "BeeBudget",
 
+  "backendLoader.waking": "Loading your budget…",
+  "backendLoader.slow":
+    "Waking up the server. This can take up to a minute after a period of inactivity.",
+  "backendLoader.failed":
+    "We couldn't reach the server. Check your connection and try again.",
+  "backendLoader.retry": "Try again",
+
   "home.ready.title": "Project ready!",
   "home.ready.description": "You may now add components and start building.",
   "home.ready.button-hint": "We've already added the button component for you.",
