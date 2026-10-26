@@ -100,7 +100,11 @@ export function MouseParallaxArea({
 
   return (
     <PointerContext.Provider value={{ x, y }}>
-      <motion.div onPointerMove={onPointerMove} onPointerLeave={reset} {...props}>
+      <motion.div
+        onPointerMove={onPointerMove}
+        onPointerLeave={reset}
+        {...props}
+      >
         {children}
       </motion.div>
     </PointerContext.Provider>
