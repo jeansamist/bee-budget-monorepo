@@ -20,12 +20,12 @@ import { TransactionRow, WalletCardMock } from "./parts"
 /** Three wallet cards fanned out. */
 export function WalletsMock() {
   return (
-    <div className="relative mx-auto h-56 w-full max-w-sm">
+    <div className="relative mx-auto h-64 w-full max-w-sm">
       {MOCK_WALLETS.map((wallet, i) => (
         <motion.div
           key={wallet.key}
           className="absolute inset-x-0 shadow-lg shadow-foreground/5"
-          style={{ top: i * 44, zIndex: MOCK_WALLETS.length - i }}
+          style={{ top: i * 48, zIndex: i }}
           initial={{ opacity: 0, y: 30, rotate: 0 }}
           whileInView={{ opacity: 1, y: 0, rotate: (i - 1) * -2 }}
           whileHover={{ y: -6 }}
@@ -133,13 +133,13 @@ const periods: AnalyticsPeriod[] = ["week", "month", "year"]
 /** Income vs expense bars, with working period tabs. */
 export function AnalyticsMock() {
   const t = useScopedI18n("landing.mock")
-  const [period, setPeriod] = useState<AnalyticsPeriod>("month")
+  const [period, setPeriod] = useState<AnalyticsPeriod>("year")
   const data = MOCK_ANALYTICS[period]
   const max = Math.max(...data.flatMap((d) => [d.income, d.expense]))
 
   return (
     <div className="space-y-5 rounded-3xl bg-card p-5 shadow-lg shadow-foreground/5">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <span className="size-2 rounded-full bg-green-500" />

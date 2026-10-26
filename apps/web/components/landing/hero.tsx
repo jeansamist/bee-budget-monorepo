@@ -56,7 +56,7 @@ export function Hero() {
           >
             {t("title", {
               accent: (
-                <span className="font-semibold text-primary italic">
+                <span className="font-semibold text-primary italic dark:text-chart-2">
                   {t("titleAccent")}
                 </span>
               ),
@@ -108,7 +108,7 @@ export function Hero() {
         {/* Floating cards around the dashboard, on large screens */}
         <MouseLayer
           depth={-28}
-          className="absolute top-16 -left-6 hidden w-64 lg:block xl:-left-16"
+          className="absolute top-64 -left-6 hidden w-64 lg:block xl:-left-16"
         >
           <Float delay={0.3}>
             <motion.div

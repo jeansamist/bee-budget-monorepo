@@ -54,7 +54,11 @@ function SectionTitle({
 }
 
 function Accent({ children }: { children: React.ReactNode }) {
-  return <span className="font-semibold text-primary italic">{children}</span>
+  return (
+    <span className="font-semibold text-primary italic dark:text-chart-2">
+      {children}
+    </span>
+  )
 }
 
 const stripItems: {
