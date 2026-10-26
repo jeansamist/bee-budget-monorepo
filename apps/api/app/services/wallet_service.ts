@@ -48,7 +48,13 @@ export class WalletService {
 
   async createWallet(data: CreateWalletPayload) {
     await this.ensureWalletTypeBelongsToCurrentUser(data.walletTypeId)
-    return this.repository.create({ ...data, image: data.image ?? null, userId: this.userId })
+    const wallet = await this.repository.create({
+      ...data,
+      image: data.image ?? null,
+      userId: this.userId,
+    })
+    // Reload with incomes and expenses: the serialized balance history needs them
+    return this.repository.findById(wallet.id)
   }
 
   async updateWallet(id: number, data: UpdateWalletPayload) {
