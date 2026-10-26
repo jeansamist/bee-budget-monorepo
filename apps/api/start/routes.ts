@@ -87,6 +87,7 @@ router
     router
       .get('/wallets/:id/analytics', [controllers.WalletAnalytics, 'index'])
       .use([middleware.auth()])
+    router.get('/reports', [controllers.Reports, 'index']).use([middleware.auth()])
     router
       .group(() => {
         router.post('/create-mass', [controllers.IncomeCategories, 'createMass'])

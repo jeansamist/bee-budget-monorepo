@@ -27,6 +27,7 @@ export type ScannedRoutes = {
     'internal_transfers.delete_mass': { paramsTuple?: []; params?: {} }
     'transaction_analytics.index': { paramsTuple?: []; params?: {} }
     'wallet_analytics.index': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.index': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
@@ -90,6 +91,7 @@ export type ScannedRoutes = {
     'auth.profile': { paramsTuple?: []; params?: {} }
     'transaction_analytics.index': { paramsTuple?: []; params?: {} }
     'wallet_analytics.index': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.index': { paramsTuple?: []; params?: {} }
     'contacts.index': { paramsTuple?: []; params?: {} }
     'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.index': { paramsTuple?: []; params?: {} }
@@ -113,6 +115,7 @@ export type ScannedRoutes = {
     'auth.profile': { paramsTuple?: []; params?: {} }
     'transaction_analytics.index': { paramsTuple?: []; params?: {} }
     'wallet_analytics.index': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.index': { paramsTuple?: []; params?: {} }
     'contacts.index': { paramsTuple?: []; params?: {} }
     'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.index': { paramsTuple?: []; params?: {} }

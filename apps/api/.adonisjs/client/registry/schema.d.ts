@@ -283,6 +283,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/wallet_analytics_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'reports.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/reports'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/report').reportValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'

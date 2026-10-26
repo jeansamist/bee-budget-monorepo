@@ -144,6 +144,12 @@ const routes = {
     tokens: [{"old":"/api/wallets/:id/analytics","type":0,"val":"api","end":""},{"old":"/api/wallets/:id/analytics","type":0,"val":"wallets","end":""},{"old":"/api/wallets/:id/analytics","type":1,"val":"id","end":""},{"old":"/api/wallets/:id/analytics","type":0,"val":"analytics","end":""}],
     types: placeholder as Registry['wallet_analytics.index']['types'],
   },
+  'reports.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/reports',
+    tokens: [{"old":"/api/reports","type":0,"val":"api","end":""},{"old":"/api/reports","type":0,"val":"reports","end":""}],
+    types: placeholder as Registry['reports.index']['types'],
+  },
   'income_categories.create_mass': {
     methods: ["POST"],
     pattern: '/api/income-categories/create-mass',

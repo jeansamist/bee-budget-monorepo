@@ -12,6 +12,7 @@ export const controllers = {
   IncomeCategories: () => import('#controllers/income_categories_controller'),
   Incomes: () => import('#controllers/incomes_controller'),
   InternalTransfers: () => import('#controllers/internal_transfers_controller'),
+  Reports: () => import('#controllers/reports_controller'),
   TransactionAnalytics: () => import('#controllers/transaction_analytics_controller'),
   WalletAnalytics: () => import('#controllers/wallet_analytics_controller'),
   WalletTypes: () => import('#controllers/wallet_types_controller'),
