@@ -42,7 +42,7 @@ export const SignUpForm: FunctionComponent<SignUpFormProps> = () => {
     setErrorMessage(undefined)
     if (result.data?.accessToken) {
       // Email verification is disabled: already signed in
-      router.push(currentLocaleUrl("/"))
+      router.push(currentLocaleUrl("/app/dashboard"))
       return
     }
     router.push(

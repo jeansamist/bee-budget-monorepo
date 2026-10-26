@@ -46,8 +46,14 @@ function isDocumentRequest(request: NextRequest) {
     request.method === "GET" &&
     !request.headers.has("rsc") &&
     !request.headers.has("next-action") &&
-    !request.nextUrl.pathname.startsWith("/starting")
+    !request.nextUrl.pathname.startsWith("/starting") &&
+    !isLandingPath(request.nextUrl.pathname)
   )
+}
+
+// The landing page never calls the API, so it doesn't wait for it
+function isLandingPath(pathname: string) {
+  return /^\/([a-z]{2}\/?)?$/.test(pathname)
 }
 
 function handleRequest(request: NextRequest) {
