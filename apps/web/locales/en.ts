@@ -227,6 +227,42 @@ export default {
   "app.settings.danger.confirmContent":
     "Everything in your BeeBudget is deleted right away. This can't be undone.",
 
+  "app.header.breadcrumb.integrations": "Integrations",
+  "app.header.titles.integrations": "Integrations",
+  "app.integrations.intro":
+    "Integrations are on the way. Here is what we are considering to save you typing and keep you on budget. None of them is available yet.",
+  "app.integrations.proposed": "Proposed",
+  "app.integrations.groups.capture": "Capture transactions automatically",
+  "app.integrations.groups.insights": "Stay on top of your budget",
+  "app.integrations.groups.connect": "Connect your tools",
+  "app.integrations.items.momoSms.title": "Mobile Money SMS import",
+  "app.integrations.items.momoSms.description":
+    "An Android companion reads Orange Money and MTN MoMo confirmation SMS and records the transaction, fees included, in the right wallet.",
+  "app.integrations.items.whatsapp.title": "WhatsApp assistant",
+  "app.integrations.items.whatsapp.description":
+    "Send \"taxi 2000\" or \"salary 450000\" to log a transaction, and ask how much is left in a budget.",
+  "app.integrations.items.telegram.title": "Telegram bot",
+  "app.integrations.items.telegram.description":
+    "The same quick logging as WhatsApp, for those who live on Telegram.",
+  "app.integrations.items.receipts.title": "Receipt scanning",
+  "app.integrations.items.receipts.description":
+    "Take a photo of a receipt or bill and get the expense pre-filled: amount, date, merchant and category.",
+  "app.integrations.items.statementImport.title": "Bank statement import",
+  "app.integrations.items.statementImport.description":
+    "Upload a CSV or PDF statement, map the columns once, and import the lines without duplicates.",
+  "app.integrations.items.budgetAlerts.title": "Budget alerts",
+  "app.integrations.items.budgetAlerts.description":
+    "Get an email, SMS or push notification when a budget gets close to its limit or goes over.",
+  "app.integrations.items.aiInsights.title": "AI money insights",
+  "app.integrations.items.aiInsights.description":
+    "A monthly summary of where your money went, and answers to questions like \"what did I spend on transport since January?\".",
+  "app.integrations.items.sheets.title": "Google Sheets sync",
+  "app.integrations.items.sheets.description":
+    "Keep a live spreadsheet of your transactions for your own formulas and charts.",
+  "app.integrations.items.api.title": "API and webhooks",
+  "app.integrations.items.api.description":
+    "Personal access tokens and webhooks to connect BeeBudget to your own scripts and automations.",
+
   "landing.meta.title": "BeeBudget: know where every franc goes",
   "landing.meta.description":
     "BeeBudget brings your Orange Money, MTN MoMo, cash and bank accounts into one clear budget.",
@@ -440,6 +476,7 @@ export default {
   "app.sidebar.links.wallets": "Wallets",
   "app.sidebar.links.analytics": "Analytics",
   "app.sidebar.links.reports": "Reports",
+  "app.sidebar.links.budgets": "Budgets",
   "app.sidebar.links.walletTypes": "Wallet types",
   "app.sidebar.links.transactionCategories": "Transaction categories",
   "app.sidebar.links.settings": "Settings",

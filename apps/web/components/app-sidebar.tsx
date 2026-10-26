@@ -27,6 +27,7 @@ import {
   HelpCircle,
   Home,
   LucideIcon,
+  PiggyBank,
   Plug,
   Settings,
   Wallet,
@@ -102,10 +103,16 @@ export const AppSidebar: FunctionComponent = ({}) => {
             isBeta: true,
           },
           {
+            label: t("app.sidebar.links.budgets"),
+            href: currentLocaleUrl("/app/budgets"),
+            icon: PiggyBank,
+            isActive: isLinkActive(currentLocaleUrl("/app/budgets")),
+          },
+          {
             label: t("app.sidebar.links.reports"),
-            href: "/#reports",
+            href: currentLocaleUrl("/app/reports"),
             icon: FileText,
-            isInDev: true,
+            isActive: isLinkActive(currentLocaleUrl("/app/reports")),
           },
         ],
       },
@@ -114,13 +121,15 @@ export const AppSidebar: FunctionComponent = ({}) => {
         links: [
           {
             label: t("app.sidebar.links.walletTypes"),
-            href: "/#wallet-types",
+            href: currentLocaleUrl("/app/wallet-types"),
             icon: Wallet,
+            isActive: isLinkActive(currentLocaleUrl("/app/wallet-types")),
           },
           {
             label: t("app.sidebar.links.transactionCategories"),
-            href: "/#categories",
+            href: currentLocaleUrl("/app/categories"),
             icon: Box,
+            isActive: isLinkActive(currentLocaleUrl("/app/categories")),
           },
         ],
       },
@@ -129,13 +138,16 @@ export const AppSidebar: FunctionComponent = ({}) => {
         links: [
           {
             label: t("app.sidebar.links.settings"),
-            href: "/#settings",
+            href: currentLocaleUrl("/app/settings"),
             icon: Settings,
+            isActive: isLinkActive(currentLocaleUrl("/app/settings")),
           },
           {
             label: t("app.sidebar.links.integration"),
-            href: "/#integration",
+            href: currentLocaleUrl("/app/integrations"),
             icon: Plug,
+            isActive: isLinkActive(currentLocaleUrl("/app/integrations")),
+            isInDev: true,
           },
         ],
       },
