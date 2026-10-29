@@ -91,6 +91,16 @@ router
     router.get('/reports', [controllers.Reports, 'index']).use([middleware.auth()])
     router
       .group(() => {
+        router.get('/providers', [controllers.Ai, 'providers'])
+        router.post('/providers', [controllers.Ai, 'saveProvider'])
+        router.delete('/providers/:provider', [controllers.Ai, 'deleteProvider'])
+        router.get('/models', [controllers.Ai, 'models'])
+        router.post('/chat', [controllers.Ai, 'chat'])
+      })
+      .prefix('/ai')
+      .use([middleware.auth()])
+    router
+      .group(() => {
         router.post('/create-mass', [controllers.IncomeCategories, 'createMass'])
         router.put('/update-mass', [controllers.IncomeCategories, 'updateMass'])
         router.post('/delete-mass', [controllers.IncomeCategories, 'deleteMass'])

@@ -1,11 +1,13 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { AppProvider } from "@/contexts/app.context"
+import { getAiProviders } from "@/services/ai.services"
 import { getContacts } from "@/services/contacts.services"
 import { getExpenseCategories } from "@/services/expense-categories.services"
 import { getIncomeCategories } from "@/services/income-categories.services"
 import { getWalletTypes } from "@/services/wallet-types.services"
 import { getWallets } from "@/services/wallets.services"
 import {
+  AiProvider,
   Contact,
   ExpenseCategory,
   IncomeCategory,
@@ -19,14 +21,26 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const [walletTypes, incomeCategories, expenseCategories, wallets, contacts] =
-    await Promise.allSettled([
-      getWalletTypes({ fetchAll: true }),
-      getIncomeCategories({ fetchAll: true }),
-      getExpenseCategories({ fetchAll: true }),
-      getWallets({ fetchAll: true }),
-      getContacts({ fetchAll: true }),
-    ])
+  const [
+    walletTypes,
+    incomeCategories,
+    expenseCategories,
+    wallets,
+    contacts,
+    aiProviders,
+  ] = await Promise.allSettled([
+    getWalletTypes({ fetchAll: true }),
+    getIncomeCategories({ fetchAll: true }),
+    getExpenseCategories({ fetchAll: true }),
+    getWallets({ fetchAll: true }),
+    getContacts({ fetchAll: true }),
+    getAiProviders(),
+  ])
+  // Optional: without it the app only hides the AI assistant
+  const aiProvidersData =
+    aiProviders.status === "fulfilled" && aiProviders.value.success
+      ? ((aiProviders.value.data as AiProvider[]) ?? [])
+      : []
   if (
     walletTypes.status === "rejected" ||
     incomeCategories.status === "rejected" ||
@@ -54,6 +68,7 @@ export default async function Layout({
         expenseCategories={[]}
         wallets={[]}
         contacts={[]}
+        aiProviders={aiProvidersData}
       >
         {children}
       </AppProvider>
@@ -70,6 +85,7 @@ export default async function Layout({
       }
       wallets={(wallets.value?.data as Wallet[]) || []}
       contacts={(contacts.value?.data as Contact[]) || []}
+      aiProviders={aiProvidersData}
     >
       <SidebarProvider>
         <AppSidebar />

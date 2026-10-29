@@ -1,5 +1,6 @@
 "use client"
 
+import { AiProviders } from "@/components/integrations/ai-providers"
 import { useI18n } from "@/lib/i18n/client"
 import {
   ArrowDown,
@@ -8,7 +9,6 @@ import {
   Camera,
   FileUp,
   Sheet,
-  Sparkles,
   Webhook,
   type LucideIcon,
 } from "lucide-react"
@@ -18,7 +18,6 @@ type ListKey =
   | "receipts"
   | "statementImport"
   | "budgetAlerts"
-  | "aiInsights"
   | "telegram"
   | "sheets"
   | "api"
@@ -27,7 +26,6 @@ const EXPLORING: { key: ListKey; icon: LucideIcon }[] = [
   { key: "budgetAlerts", icon: BellRing },
   { key: "statementImport", icon: FileUp },
   { key: "receipts", icon: Camera },
-  { key: "aiInsights", icon: Sparkles },
 ]
 
 const LATER: { key: ListKey; icon: LucideIcon }[] = [
@@ -156,6 +154,14 @@ export function IntegrationsView() {
       <p className="max-w-2xl text-sm text-muted-foreground">
         {t("app.integrations.intro")}
       </p>
+
+      <section className="space-y-4">
+        <StageHeading
+          title={t("app.integrations.stages.available")}
+          note={t("app.integrations.stages.availableNote")}
+        />
+        <AiProviders />
+      </section>
 
       <section className="space-y-4">
         <StageHeading

@@ -245,3 +245,29 @@ export type Report = {
   rows: Record<string, string | number | null>[]
   totals: Record<string, number>
 }
+
+export const AI_PROVIDERS = [
+  "openai",
+  "anthropic",
+  "google",
+  "mistral",
+] as const
+
+export type AiProviderName = (typeof AI_PROVIDERS)[number]
+
+export type AiProvider = {
+  id: number
+  provider: AiProviderName
+  // Last characters of the key, the key itself never reaches the browser
+  keyHint: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type AiModel = { id: string; name: string }
+
+export type AiProviderModels = {
+  provider: AiProviderName
+  models: AiModel[]
+  error: string | null
+}

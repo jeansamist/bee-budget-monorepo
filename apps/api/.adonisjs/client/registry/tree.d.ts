@@ -63,6 +63,13 @@ export interface ApiDefinition {
   reports: {
     index: typeof routes['reports.index']
   }
+  ai: {
+    providers: typeof routes['ai.providers']
+    saveProvider: typeof routes['ai.save_provider']
+    deleteProvider: typeof routes['ai.delete_provider']
+    models: typeof routes['ai.models']
+    chat: typeof routes['ai.chat']
+  }
   incomeCategories: {
     createMass: typeof routes['income_categories.create_mass']
     updateMass: typeof routes['income_categories.update_mass']

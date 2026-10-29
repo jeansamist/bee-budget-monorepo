@@ -156,6 +156,36 @@ const routes = {
     tokens: [{"old":"/api/reports","type":0,"val":"api","end":""},{"old":"/api/reports","type":0,"val":"reports","end":""}],
     types: placeholder as Registry['reports.index']['types'],
   },
+  'ai.providers': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/ai/providers',
+    tokens: [{"old":"/api/ai/providers","type":0,"val":"api","end":""},{"old":"/api/ai/providers","type":0,"val":"ai","end":""},{"old":"/api/ai/providers","type":0,"val":"providers","end":""}],
+    types: placeholder as Registry['ai.providers']['types'],
+  },
+  'ai.save_provider': {
+    methods: ["POST"],
+    pattern: '/api/ai/providers',
+    tokens: [{"old":"/api/ai/providers","type":0,"val":"api","end":""},{"old":"/api/ai/providers","type":0,"val":"ai","end":""},{"old":"/api/ai/providers","type":0,"val":"providers","end":""}],
+    types: placeholder as Registry['ai.save_provider']['types'],
+  },
+  'ai.delete_provider': {
+    methods: ["DELETE"],
+    pattern: '/api/ai/providers/:provider',
+    tokens: [{"old":"/api/ai/providers/:provider","type":0,"val":"api","end":""},{"old":"/api/ai/providers/:provider","type":0,"val":"ai","end":""},{"old":"/api/ai/providers/:provider","type":0,"val":"providers","end":""},{"old":"/api/ai/providers/:provider","type":1,"val":"provider","end":""}],
+    types: placeholder as Registry['ai.delete_provider']['types'],
+  },
+  'ai.models': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/ai/models',
+    tokens: [{"old":"/api/ai/models","type":0,"val":"api","end":""},{"old":"/api/ai/models","type":0,"val":"ai","end":""},{"old":"/api/ai/models","type":0,"val":"models","end":""}],
+    types: placeholder as Registry['ai.models']['types'],
+  },
+  'ai.chat': {
+    methods: ["POST"],
+    pattern: '/api/ai/chat',
+    tokens: [{"old":"/api/ai/chat","type":0,"val":"api","end":""},{"old":"/api/ai/chat","type":0,"val":"ai","end":""},{"old":"/api/ai/chat","type":0,"val":"chat","end":""}],
+    types: placeholder as Registry['ai.chat']['types'],
+  },
   'income_categories.create_mass': {
     methods: ["POST"],
     pattern: '/api/income-categories/create-mass',

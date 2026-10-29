@@ -307,6 +307,66 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'ai.providers': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/ai/providers'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['providers']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['providers']>>>
+    }
+  }
+  'ai.save_provider': {
+    methods: ["POST"]
+    pattern: '/api/ai/providers'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/ai').saveAiProviderValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/ai').saveAiProviderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['saveProvider']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['saveProvider']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'ai.delete_provider': {
+    methods: ["DELETE"]
+    pattern: '/api/ai/providers/:provider'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { provider: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['deleteProvider']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['deleteProvider']>>>
+    }
+  }
+  'ai.models': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/ai/models'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['models']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['models']>>>
+    }
+  }
+  'ai.chat': {
+    methods: ["POST"]
+    pattern: '/api/ai/chat'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/ai').aiChatValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/ai').aiChatValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['chat']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['chat']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'income_categories.create_mass': {
     methods: ["POST"]
     pattern: '/api/income-categories/create-mass'

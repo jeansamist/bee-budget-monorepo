@@ -11,7 +11,11 @@ const I18nMiddleware = createI18nMiddleware({
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (pathname.includes("/_next/") || /\.\w+$/.test(pathname)) {
+  if (
+    pathname.includes("/_next/") ||
+    pathname.startsWith("/api/") ||
+    /\.\w+$/.test(pathname)
+  ) {
     return NextResponse.next()
   }
 

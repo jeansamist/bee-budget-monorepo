@@ -29,6 +29,11 @@ export type ScannedRoutes = {
     'transaction_analytics.index': { paramsTuple?: []; params?: {} }
     'wallet_analytics.index': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reports.index': { paramsTuple?: []; params?: {} }
+    'ai.providers': { paramsTuple?: []; params?: {} }
+    'ai.save_provider': { paramsTuple?: []; params?: {} }
+    'ai.delete_provider': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'ai.models': { paramsTuple?: []; params?: {} }
+    'ai.chat': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
@@ -93,6 +98,8 @@ export type ScannedRoutes = {
     'transaction_analytics.index': { paramsTuple?: []; params?: {} }
     'wallet_analytics.index': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reports.index': { paramsTuple?: []; params?: {} }
+    'ai.providers': { paramsTuple?: []; params?: {} }
+    'ai.models': { paramsTuple?: []; params?: {} }
     'contacts.index': { paramsTuple?: []; params?: {} }
     'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.index': { paramsTuple?: []; params?: {} }
@@ -117,6 +124,8 @@ export type ScannedRoutes = {
     'transaction_analytics.index': { paramsTuple?: []; params?: {} }
     'wallet_analytics.index': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'reports.index': { paramsTuple?: []; params?: {} }
+    'ai.providers': { paramsTuple?: []; params?: {} }
+    'ai.models': { paramsTuple?: []; params?: {} }
     'contacts.index': { paramsTuple?: []; params?: {} }
     'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.index': { paramsTuple?: []; params?: {} }
@@ -152,6 +161,8 @@ export type ScannedRoutes = {
     'expenses.delete_mass': { paramsTuple?: []; params?: {} }
     'internal_transfers.create_mass': { paramsTuple?: []; params?: {} }
     'internal_transfers.delete_mass': { paramsTuple?: []; params?: {} }
+    'ai.save_provider': { paramsTuple?: []; params?: {} }
+    'ai.chat': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.delete_mass': { paramsTuple?: []; params?: {} }
     'incomes.create_mass': { paramsTuple?: []; params?: {} }
@@ -192,6 +203,18 @@ export type ScannedRoutes = {
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'budgets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
+  DELETE: {
+    'ai.delete_provider': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'contacts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'expense_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'expenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'income_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'internal_transfers.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'incomes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'wallet_types.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'wallets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'budgets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
   PATCH: {
     'contacts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -202,17 +225,6 @@ export type ScannedRoutes = {
     'wallet_types.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'wallets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'budgets.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-  }
-  DELETE: {
-    'contacts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'expense_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'expenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'income_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'internal_transfers.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'incomes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'wallet_types.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'wallets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'budgets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

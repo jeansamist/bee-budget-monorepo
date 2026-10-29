@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  AiProvider,
   Contact,
   ExpenseCategory,
   IncomeCategory,
@@ -27,6 +28,7 @@ type AppContextValue = {
   expenseCategories: ExpenseCategory[]
   wallets: Wallet[]
   contacts: Contact[]
+  aiProviders: AiProvider[]
   addWalletType: (walletType: WalletType) => void
   addIncomeCategory: (incomeCategory: IncomeCategory) => void
   addExpenseCategory: (expenseCategory: ExpenseCategory) => void
@@ -36,6 +38,7 @@ type AppContextValue = {
   removeIncomeCategory: (id: number) => void
   removeExpenseCategory: (id: number) => void
   removeWallet: (id: number) => void
+  setAiProviders: (aiProviders: AiProvider[]) => void
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
@@ -47,6 +50,7 @@ export type AppProviderProps = {
   expenseCategories: ExpenseCategory[]
   wallets: Wallet[]
   contacts: Contact[]
+  aiProviders: AiProvider[]
 }
 
 export function AppProvider({
@@ -56,6 +60,7 @@ export function AppProvider({
   expenseCategories,
   wallets,
   contacts,
+  aiProviders,
 }: AppProviderProps) {
   const [walletTypesState, setWalletTypesState] = useState(walletTypes)
   const [incomeCategoriesState, setIncomeCategoriesState] =
@@ -64,6 +69,7 @@ export function AppProvider({
     useState(expenseCategories)
   const [walletsState, setWalletsState] = useState(wallets)
   const [contactsState, setContactsState] = useState(contacts)
+  const [aiProvidersState, setAiProviders] = useState(aiProviders)
 
   const addWalletType = useCallback((walletType: WalletType) => {
     setWalletTypesState((previousWalletTypes) =>
@@ -125,6 +131,7 @@ export function AppProvider({
         expenseCategories: expenseCategoriesState,
         wallets: walletsState,
         contacts: contactsState,
+        aiProviders: aiProvidersState,
         addWalletType,
         addIncomeCategory,
         addExpenseCategory,
@@ -134,6 +141,7 @@ export function AppProvider({
         removeIncomeCategory,
         removeExpenseCategory,
         removeWallet,
+        setAiProviders,
       }}
     >
       {children}

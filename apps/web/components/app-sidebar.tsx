@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
+import { useApp } from "@/contexts/app.context"
 import { useAuth } from "@/contexts/auth.context"
 import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
 import { Badge } from "@bee-budget/ui/badge"
@@ -30,6 +31,7 @@ import {
   PiggyBank,
   Plug,
   Settings,
+  Sparkles,
   Wallet,
 } from "lucide-react"
 import Link from "next/link"
@@ -55,6 +57,9 @@ export const AppSidebar: FunctionComponent = ({}) => {
   const t = useI18n()
   const { currentLocaleUrl } = useCurrentLocaleUrl()
   const { user } = useAuth()
+  const { aiProviders } = useApp()
+  // The assistant shows up once the user connected an AI provider
+  const hasAiAssistant = aiProviders.length > 0
   const pathname = usePathname()
 
   const isLinkActive = useCallback(
@@ -114,6 +119,17 @@ export const AppSidebar: FunctionComponent = ({}) => {
             icon: FileText,
             isActive: isLinkActive(currentLocaleUrl("/app/reports")),
           },
+          ...(hasAiAssistant
+            ? [
+                {
+                  label: t("app.sidebar.links.aiAssistant"),
+                  href: currentLocaleUrl("/app/ai"),
+                  icon: Sparkles,
+                  isActive: isLinkActive(currentLocaleUrl("/app/ai")),
+                  isBeta: true,
+                },
+              ]
+            : []),
         ],
       },
       {
@@ -147,12 +163,11 @@ export const AppSidebar: FunctionComponent = ({}) => {
             href: currentLocaleUrl("/app/integrations"),
             icon: Plug,
             isActive: isLinkActive(currentLocaleUrl("/app/integrations")),
-            isInDev: true,
           },
         ],
       },
     ],
-    [currentLocaleUrl, isLinkActive, t]
+    [currentLocaleUrl, hasAiAssistant, isLinkActive, t]
   )
 
   return (

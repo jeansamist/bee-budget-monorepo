@@ -115,6 +115,40 @@ export default {
 
   "app.header.breadcrumb.reports": "Reports",
   "app.header.titles.reports": "Reports",
+  "app.header.breadcrumb.ai": "AI assistant",
+  "app.header.titles.ai": "AI assistant",
+  "app.ai.model": "Model",
+  "app.ai.providerError": "unavailable, check the key",
+  "app.ai.placeholder": "Ask about your money…",
+  "app.ai.send": "Send",
+  "app.ai.stop": "Stop",
+  "app.ai.retry": "Retry",
+  "app.ai.newChat": "New chat",
+  "app.ai.disclaimer":
+    "The assistant reads your data live and can make mistakes. Check important figures.",
+  "app.ai.noModels":
+    "None of your providers returned a model. Check your keys on the Integrations page.",
+  "app.ai.empty.title": "What do you want to know?",
+  "app.ai.empty.description":
+    "Ask about your wallets, spending, incomes, contacts or budgets. The assistant looks them up for you.",
+  "app.ai.suggestions.month": "How did this month compare to last month?",
+  "app.ai.suggestions.budgets": "Which budgets are close to their limit?",
+  "app.ai.suggestions.categories":
+    "What are my top 5 expense categories this year?",
+  "app.ai.suggestions.save": "Where could I cut spending?",
+  "app.ai.tools.getWallets": "Read your wallets",
+  "app.ai.tools.getCategories": "Read your categories",
+  "app.ai.tools.getContacts": "Read your contacts",
+  "app.ai.tools.getBudgets": "Checked your budgets",
+  "app.ai.tools.searchTransactions": "Searched your transactions",
+  "app.ai.tools.getReport": "Built a report",
+  "app.ai.tools.getIncomeExpenseTrend":
+    "Looked at your income and spending trend",
+  "app.ai.tools.getWalletAnalytics": "Analyzed a wallet",
+  "app.ai.noProvider.title": "Connect an AI provider",
+  "app.ai.noProvider.description":
+    "Add an OpenAI, Anthropic, Google or Mistral API key to start chatting with your data.",
+  "app.ai.noProvider.action": "Go to integrations",
   "app.reports.chooseType": "Report",
   "app.reports.groups.activity": "Activity",
   "app.reports.groups.breakdown": "Breakdown",
@@ -251,7 +285,28 @@ export default {
   "app.header.breadcrumb.integrations": "Integrations",
   "app.header.titles.integrations": "Integrations",
   "app.integrations.intro":
-    "None of these is live yet. This is the shortlist, in the order we would build it.",
+    "Connect an AI provider to chat with your data. The rest is the shortlist, in the order we would build it.",
+  "app.integrations.stages.available": "Available",
+  "app.integrations.stages.availableNote": "Bring your own API key",
+  "app.integrations.ai.title": "AI assistant",
+  "app.integrations.ai.description":
+    "Paste an API key from OpenAI, Anthropic, Google or Mistral and ask questions about your wallets, spending and budgets in a chat. Add several keys to switch between providers and models.",
+  "app.integrations.ai.privacy":
+    "Your key is checked with the provider, then stored encrypted and never shown again. The assistant only reads your data, and only while you chat; the provider bills your own account.",
+  "app.integrations.ai.open": "Open the assistant",
+  "app.integrations.ai.connected": "Connected · key ending in {hint}",
+  "app.integrations.ai.notConnected": "Not connected",
+  "app.integrations.ai.addKey": "Add key",
+  "app.integrations.ai.replaceKey": "Replace key",
+  "app.integrations.ai.remove": "Remove",
+  "app.integrations.ai.save": "Save key",
+  "app.integrations.ai.keyLabel": "{provider} API key",
+  "app.integrations.ai.getKey": "Get a {provider} API key",
+  "app.integrations.ai.saved": "{provider} connected",
+  "app.integrations.ai.removed": "{provider} removed",
+  "app.integrations.ai.removeTitle": "Remove the {provider} key?",
+  "app.integrations.ai.removeDescription":
+    "The assistant won't be able to use its models until you add a key again.",
   "app.integrations.stages.next": "Next up",
   "app.integrations.stages.nextNote": "Removes most of the typing",
   "app.integrations.stages.exploring": "Exploring",
@@ -269,8 +324,7 @@ export default {
     "Message the BeeBudget number like you'd note it on paper.",
   "app.integrations.whatsapp.step2":
     "Ask what's left in a budget or what you spent this week.",
-  "app.integrations.whatsapp.reply":
-    "Saved: Transport, −2,000 XAF from Cash.",
+  "app.integrations.whatsapp.reply": "Saved: Transport, −2,000 XAF from Cash.",
   "app.integrations.whatsapp.question": "transport left?",
   "app.integrations.whatsapp.answer":
     "18,000 of 25,000 XAF left in your Transport budget this month.",
@@ -292,9 +346,6 @@ export default {
   "app.integrations.items.budgetAlerts.title": "Budget alerts",
   "app.integrations.items.budgetAlerts.description":
     "Get an email, SMS or push notification when a budget gets close to its limit or goes over.",
-  "app.integrations.items.aiInsights.title": "AI money insights",
-  "app.integrations.items.aiInsights.description":
-    "A monthly summary of where your money went, and answers to questions like \"what did I spend on transport since January?\".",
   "app.integrations.items.sheets.title": "Google Sheets sync",
   "app.integrations.items.sheets.description":
     "Keep a live spreadsheet of your transactions for your own formulas and charts.",
@@ -515,6 +566,7 @@ export default {
   "app.sidebar.links.wallets": "Wallets",
   "app.sidebar.links.analytics": "Analytics",
   "app.sidebar.links.reports": "Reports",
+  "app.sidebar.links.aiAssistant": "AI assistant",
   "app.sidebar.links.budgets": "Budgets",
   "app.sidebar.links.walletTypes": "Wallet types",
   "app.sidebar.links.transactionCategories": "Transaction categories",
