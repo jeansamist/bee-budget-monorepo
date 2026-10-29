@@ -42,6 +42,17 @@ import { z } from 'zod'
 const MAX_STEPS = 16
 
 /**
+ * "en" -> "English", falling back to English for an unknown locale.
+ */
+function languageName(locale: string) {
+  try {
+    return new Intl.DisplayNames(['en'], { type: 'language' }).of(locale) ?? 'English'
+  } catch {
+    return 'English'
+  }
+}
+
+/**
  * The plan steps left once a change matching one of them ran.
  */
 function consume(steps: PlanStep[], target: ReturnType<typeof writeTargetOf>) {
@@ -168,6 +179,8 @@ const MAX_ROWS = 200
 export type AiChatPayload = {
   // Conversation id, created by the chat UI for a new chat
   id: string
+  // Locale of the app (e.g. "en"): the assistant writes in its language
+  locale?: string
   provider: AiProviderName
   model: string
   trigger: 'submit-message' | 'regenerate-message'
@@ -467,20 +480,27 @@ export class AiAssistantService {
     }
   }
 
-  private buildInstructions() {
+  private buildInstructions(locale = 'en') {
     const now = DateTime.now()
+    const language = languageName(locale)
     return [
-      'You are the BeeBudget assistant, a personal finance analyst inside the BeeBudget app.',
+      'You are the BeeBudget assistant, a personal finance agent inside the BeeBudget app.',
       `You are talking with ${this.user.firstName} ${this.user.lastName}. Today is ${now.toISODate()} (${now.toFormat('cccc')}).`,
+      `Always write in ${language}, the language of the app: answers, questions, plan titles and step labels. Do this even when the user pastes a message (an SMS, a receipt) in another language; only keep names and references from it as they are.`,
       'Answer questions about their money using the tools: they read the user data live. Never invent figures; if a tool returns nothing, say so.',
       'Amounts are whole numbers in the user currency (wallets do not store a currency, so do not name one unless the user does).',
       'Internal transfers move money between wallets: they are neither income nor spending.',
       'Be concise and concrete: lead with the answer, then the few figures that support it. Use Markdown tables for comparisons and short lists for advice.',
-      'For tasks that change data, work like an agent: break the task down, look up what already exists with the read tools (reuse a matching contact, category or wallet instead of creating a duplicate), then call proposePlan with every step. Never call proposePlan before you looked things up.',
-      'You can also create, update and delete records (save* and deleteRecord tools). Look up the ids you need with the read tools first and never guess one. When something needed is missing or ambiguous (amount, wallet, category), ask before acting.',
-      'The user approves or declines the plan. Once approved, run its steps in order and use the ids returned by each step in the next ones. If the plan or a change is declined, do not retry it; ask what they want instead. When everything ran, sum up what was done in one or two sentences.',
-      'When the user pastes a message (e.g. a Mobile Money SMS or a receipt), extract the amount, fees, date, counterpart and what it was for, and turn it into the matching workflow.',
-      'Reply in the language the user writes in.',
+      '',
+      'Changing data (save* and deleteRecord tools) works like this:',
+      '1. Break the task down and look up what exists with the read tools (getWallets, getCategories, getContacts, getWalletTypes...). Reuse a matching record instead of creating a duplicate. Never guess an id.',
+      '2. Check that every record you will create has what it needs: an income needs an income category and a wallet, an expense needs an expense category and a wallet, a wallet needs a wallet type. When one is missing, add a step that creates it before the step that uses it, or pick the closest existing one.',
+      '3. Call proposePlan once with every step in order, including the existing records you use. Ask the user first only when something essential is truly unknown (e.g. the amount, or which of two wallets).',
+      '4. Once the plan is approved, run its steps in order, passing the ids returned by earlier steps to the next ones.',
+      '5. If a step fails, do not redo the steps that succeeded. Read the error: when you can fix it (e.g. a missing category), call proposePlan again with only the remaining steps plus the fix; otherwise explain the problem plainly.',
+      '6. If the plan or a change is declined, do not retry it; ask what the user wants instead.',
+      'When the user pastes a message (e.g. a Mobile Money SMS or a receipt), extract the amount, fees, date, counterpart, the wallet it concerns and whether money came in or went out, then follow these steps.',
+      'Always end your turn with a short message to the user: what was done, what failed, or the question you need answered.',
     ].join('\n')
   }
 
@@ -521,7 +541,7 @@ export class AiAssistantService {
 
     const result = streamText({
       model,
-      instructions: this.buildInstructions(),
+      instructions: this.buildInstructions(payload.locale),
       messages: await convertToModelMessages(uiMessages, { tools }),
       tools,
       toolApproval: this.approvalPolicy(uiMessages),

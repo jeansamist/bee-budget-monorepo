@@ -143,6 +143,34 @@ async function run<T>(action: () => Promise<T>) {
 
 const today = () => DateTime.now().toISODate()!
 
+// How the model can get each id a new record needs
+const MISSING_FIELD_HINTS: Record<string, string> = {
+  name: 'a short name',
+  amount: 'the amount',
+  walletId: 'an id from getWallets',
+  sourceWalletId: 'an id from getWallets',
+  targetWalletId: 'an id from getWallets',
+  walletTypeId: 'an id from getWalletTypes, or create one with saveWalletType first',
+  incomeCategoryId:
+    'an id from getCategories (incomeCategories), or create one with saveCategory (kind "income") first',
+  expenseCategoryId:
+    'an id from getCategories (expenseCategories), or create one with saveCategory (kind "expense") first',
+  targetType: '"expense_category" or "wallet"',
+}
+
+/**
+ * Says what is missing to create a record, and where to get it, before
+ * anything is saved.
+ */
+function requireForCreate(entity: Entity, data: Record<string, unknown>, fields: string[]) {
+  const missing = fields.filter((field) => data[field] === undefined || data[field] === null)
+  if (!missing.length) return
+  const details = missing
+    .map((field) => `${field} (${MISSING_FIELD_HINTS[field] ?? 'required'})`)
+    .join(', ')
+  throw new Error(`Nothing was saved. To create a ${entity}, also set: ${details}.`)
+}
+
 @inject()
 export class AiWriteToolsService {
   constructor(
@@ -165,8 +193,10 @@ export class AiWriteToolsService {
     id: number | undefined,
     create: () => Promise<T>,
     update: (id: number) => Promise<T>,
-    nameOf: (record: T) => string | null
+    nameOf: (record: T) => string | null,
+    creation: { data: Record<string, unknown>; required: string[] }
   ) {
+    if (!id) requireForCreate(entity, creation.data, creation.required)
     const record = await run(() => (id ? update(id) : create()))
     return writeOutput.parse({
       action: id ? 'updated' : 'created',
@@ -197,7 +227,7 @@ export class AiWriteToolsService {
     return {
       saveExpense: tool({
         description:
-          'Create an expense (money spent from a wallet), or update one when id is set. Amounts are positive; fees are extra costs like Mobile Money fees.',
+          'Create an expense (money spent from a wallet), or update one when id is set. Amounts are positive; fees are extra costs like Mobile Money fees. Required to create: name, amount, expenseCategoryId, walletId.',
         inputSchema: z.object({
           id: updateId,
           name: z.string().min(3).optional(),
@@ -227,12 +257,14 @@ export class AiWriteToolsService {
                 recordId,
                 await updateExpenseValidator.validate(data)
               ),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['name', 'amount', 'expenseCategoryId', 'walletId'] }
           ),
       }),
 
       saveIncome: tool({
-        description: 'Create an income (money received in a wallet), or update one when id is set.',
+        description:
+          'Create an income (money received in a wallet), or update one when id is set. Required to create: name, amount, incomeCategoryId, walletId.',
         inputSchema: z.object({
           id: updateId,
           name: z.string().min(3).optional(),
@@ -258,7 +290,8 @@ export class AiWriteToolsService {
               ),
             async (recordId) =>
               this.incomeService.updateIncome(recordId, await updateIncomeValidator.validate(data)),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['name', 'amount', 'incomeCategoryId', 'walletId'] }
           ),
       }),
 
@@ -288,7 +321,8 @@ export class AiWriteToolsService {
                 recordId,
                 await updateInternalTransferValidator.validate(data)
               ),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['amount', 'sourceWalletId', 'targetWalletId'] }
           ),
       }),
 
@@ -322,7 +356,8 @@ export class AiWriteToolsService {
               ),
             async (recordId) =>
               this.budgetService.updateBudget(recordId, await updateBudgetValidator.validate(data)),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['name', 'targetType', 'amount'] }
           ),
       }),
 
@@ -347,7 +382,8 @@ export class AiWriteToolsService {
               ),
             async (recordId) =>
               this.walletService.updateWallet(recordId, await updateWalletValidator.validate(data)),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['name', 'walletTypeId', 'amount'] }
           ),
       }),
 
@@ -374,7 +410,8 @@ export class AiWriteToolsService {
                 recordId,
                 await updateWalletTypeValidator.validate(data)
               ),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['name'] }
           ),
       }),
 
@@ -408,7 +445,8 @@ export class AiWriteToolsService {
                 recordId,
                 await updateContactValidator.validate(data)
               ),
-            (record) => record.name
+            (record) => record.name,
+            { data, required: ['name'] }
           ),
       }),
 
@@ -438,7 +476,8 @@ export class AiWriteToolsService {
                     recordId,
                     await updateIncomeCategoryValidator.validate(data)
                   ),
-                (record) => record.name
+                (record) => record.name,
+                { data, required: ['name'] }
               )
             : this.save(
                 'expense_category',
@@ -452,7 +491,8 @@ export class AiWriteToolsService {
                     recordId,
                     await updateExpenseCategoryValidator.validate(data)
                   ),
-                (record) => record.name
+                (record) => record.name,
+                { data, required: ['name'] }
               ),
       }),
 
@@ -461,6 +501,7 @@ export class AiWriteToolsService {
           'Show the user the workflow you are about to run and wait for their approval.',
           'Call it once, before any save* or deleteRecord tool, with every step in order:',
           'the existing records you will use (found with the read tools) and each record to create, update or delete.',
+          'Every new income or expense needs a category and a wallet: list the ones you use, or a step creating them first.',
           'Once approved, run the create, update and delete steps in that order without asking again.',
         ].join(' '),
         inputSchema: z.object({

@@ -213,15 +213,15 @@ export function PlanCard({
         declined && "opacity-70"
       )}
     >
-      <div className="flex items-start gap-3 p-4 pb-3">
+      <div className="flex flex-wrap items-start gap-3 p-3 pb-3 sm:p-4">
         <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <ListChecks className="size-4" />
         </span>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 basis-40">
           <p className="text-xs text-muted-foreground">
             {t("app.ai.plan.label")}
           </p>
-          <p className="font-medium">{input.title}</p>
+          <p className="font-medium break-words">{input.title}</p>
         </div>
         <span
           className={cn(
@@ -240,7 +240,7 @@ export function PlanCard({
       </div>
 
       {approved && writeSteps > 0 && (
-        <div className="mx-4 h-1 overflow-hidden rounded-full bg-muted">
+        <div className="mx-3 h-1 overflow-hidden rounded-full bg-muted sm:mx-4">
           <motion.div
             className="h-full rounded-full bg-primary"
             initial={{ width: 0 }}
@@ -278,14 +278,16 @@ export function PlanCard({
               <div className="min-w-0 flex-1">
                 <p
                   className={cn(
-                    "text-sm",
+                    "text-sm break-words",
                     status === "declined" && "line-through"
                   )}
                 >
                   {step.label}
                 </p>
                 {call?.state === "output-error" && (
-                  <p className="text-xs text-destructive">{call.errorText}</p>
+                  <p className="text-xs break-words text-destructive">
+                    {call.errorText}
+                  </p>
                 )}
               </div>
               <StatusIcon status={status} />
@@ -304,12 +306,13 @@ export function PlanCard({
             className="border-t"
           >
             <div className="flex flex-wrap items-center gap-2 p-3">
-              <p className="min-w-0 flex-1 text-xs text-muted-foreground">
+              <p className="min-w-0 flex-1 basis-full text-xs text-muted-foreground sm:basis-auto">
                 {t("app.ai.plan.approveHint")}
               </p>
               <Button
                 size="sm"
                 variant="outline"
+                className="max-sm:flex-1"
                 disabled={disabled}
                 onClick={() =>
                   onApproval({ id: part.approval.id, approved: false })
@@ -320,6 +323,7 @@ export function PlanCard({
               </Button>
               <Button
                 size="sm"
+                className="max-sm:flex-1"
                 disabled={disabled}
                 onClick={() =>
                   onApproval({ id: part.approval.id, approved: true })

@@ -25,15 +25,18 @@ export type AppHeaderProps = {
   title: string
 }
 
-export const AppHeader: FunctionComponent<AppHeaderProps> = ({ path, title }) => {
+export const AppHeader: FunctionComponent<AppHeaderProps> = ({
+  path,
+  title,
+}) => {
   const t = useI18n()
 
   return (
     <header className="flex shrink-0 items-center justify-between gap-2 border-b p-4">
-      <div className="flex items-center gap-4">
+      <div className="flex min-w-0 items-center gap-4">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" />
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-col">
           <Breadcrumb>
             <BreadcrumbList>
               {path.map((item, index) => (
@@ -52,7 +55,7 @@ export const AppHeader: FunctionComponent<AppHeaderProps> = ({ path, title }) =>
               ))}
             </BreadcrumbList>
           </Breadcrumb>
-          <h2 className="font-semibold md:text-lg">{title}</h2>
+          <h2 className="truncate font-semibold md:text-lg">{title}</h2>
         </div>
       </div>
       <div className="hidden items-center gap-2 md:flex">

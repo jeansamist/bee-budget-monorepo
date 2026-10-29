@@ -132,29 +132,37 @@ function ApprovalCard({
   const t = useI18n()
   const fields = useFieldValues(input)
   return (
-    <div className="space-y-3 rounded-2xl border p-4">
+    <div className="space-y-3 rounded-2xl border p-3 sm:p-4">
       <p className="font-medium">{title}</p>
       {input.summary && (
         <p className="text-muted-foreground">{input.summary}</p>
       )}
       {fields.length > 0 && (
-        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1">
+        <dl className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[auto_minmax(0,1fr)]">
           {fields.map((field) => (
             <div key={field.key} className="contents">
-              <dt className="text-muted-foreground">{field.label}</dt>
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                {field.label}
+              </dt>
               <dd className="break-words">{field.value}</dd>
             </div>
           ))}
         </dl>
       )}
-      <div className="flex gap-2">
-        <Button size="sm" disabled={disabled} onClick={() => onRespond(true)}>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          size="sm"
+          className="max-sm:flex-1"
+          disabled={disabled}
+          onClick={() => onRespond(true)}
+        >
           <Check />
           {t("app.ai.approval.approve")}
         </Button>
         <Button
           size="sm"
           variant="outline"
+          className="max-sm:flex-1"
           disabled={disabled}
           onClick={() => onRespond(false)}
         >
@@ -257,7 +265,9 @@ export function ToolStep({
       return (
         <p className="flex items-start gap-2 text-xs text-destructive">
           <TriangleAlert className="mt-0.5 size-3.5 shrink-0" />
-          {title} · {part.errorText}
+          <span className="min-w-0 break-words">
+            {title} · {part.errorText}
+          </span>
         </p>
       )
   }

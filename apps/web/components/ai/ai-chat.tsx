@@ -2,7 +2,11 @@
 
 import { useApp } from "@/contexts/app.context"
 import { AI_PROVIDER_DETAILS } from "@/lib/ai-providers"
-import { useCurrentLocaleUrl, useI18n } from "@/lib/i18n/client"
+import {
+  useCurrentLocale,
+  useCurrentLocaleUrl,
+  useI18n,
+} from "@/lib/i18n/client"
 import { ConversationList } from "@/components/ai/conversation-list"
 import {
   ActivityTrail,
@@ -185,7 +189,7 @@ function ModelPicker({
     >
       <SelectTrigger
         size="sm"
-        className="max-w-64"
+        className="max-w-[55vw] min-w-0 sm:max-w-64 [&_[data-slot=select-value]]:truncate"
         aria-label={t("app.ai.model")}
       >
         <SelectValue placeholder={t("app.ai.model")} />
@@ -225,7 +229,7 @@ function Message({
 }) {
   if (message.role === "user") {
     return (
-      <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-muted px-4 py-2.5 text-sm whitespace-pre-wrap">
+      <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-muted px-4 py-2.5 text-sm [overflow-wrap:anywhere] whitespace-pre-wrap">
         {message.parts.map((part) => (part.type === "text" ? part.text : null))}
       </div>
     )
@@ -257,7 +261,7 @@ function Message({
               <Streamdown
                 key={index}
                 isAnimating={streaming}
-                className="space-y-3 leading-relaxed"
+                className="min-w-0 space-y-3 leading-relaxed break-words"
               >
                 {segment.text}
               </Streamdown>
@@ -340,12 +344,14 @@ class SelectedModel {
  * The API keeps the history: only the new (or approved) message is sent,
  * with the model picked when the request leaves.
  */
-function createTransport(selectedModel: SelectedModel) {
+function createTransport(selectedModel: SelectedModel, locale: string) {
   return new DefaultChatTransport({
     api: "/api/ai/chat",
     prepareSendMessagesRequest: ({ id, messages, trigger }) => ({
       body: {
         ...selectedModel.get(),
+        // The assistant answers in the language of the app
+        locale,
         id,
         trigger,
         message: messages.at(-1),
@@ -382,7 +388,8 @@ export function AiChat({
   // Read when a request is sent, including the automatic one after an approval
   const [selectedModel] = useState(() => new SelectedModel())
   useEffect(() => selectedModel.set(choice), [selectedModel, choice])
-  const [transport] = useState(() => createTransport(selectedModel))
+  const locale = useCurrentLocale()
+  const [transport] = useState(() => createTransport(selectedModel, locale))
   const {
     messages,
     sendMessage,
@@ -457,10 +464,10 @@ export function AiChat({
         {history}
       </aside>
 
-      <div className="mx-auto flex w-full max-w-3xl min-w-0 flex-1 flex-col px-4">
-        <div className="flex-1 space-y-6 py-6">
+      <div className="mx-auto flex w-full max-w-3xl min-w-0 flex-1 flex-col px-3 sm:px-4">
+        <div className="flex-1 space-y-6 py-4 sm:py-6">
           {messages.length === 0 ? (
-            <div className="space-y-6 pt-[10vh]">
+            <div className="space-y-6 pt-[4vh] sm:pt-[10vh]">
               <div className="space-y-1">
                 <h2 className="text-xl font-semibold">
                   {t("app.ai.empty.title")}
@@ -478,7 +485,7 @@ export function AiChat({
                     onClick={() => send(t(key))}
                     className="rounded-2xl border p-3 text-left text-sm transition-colors hover:border-primary disabled:opacity-50"
                   >
-                    {t(key)}
+                    <span className="line-clamp-3">{t(key)}</span>
                   </button>
                 ))}
               </div>
@@ -532,7 +539,7 @@ export function AiChat({
 
         <form
           onSubmit={onSubmit}
-          className="sticky bottom-0 space-y-2 bg-background pb-4"
+          className="sticky bottom-0 space-y-2 bg-background pb-[max(1rem,env(safe-area-inset-bottom))]"
         >
           <div className="rounded-3xl border p-2 focus-within:border-primary">
             <Textarea
@@ -546,9 +553,9 @@ export function AiChat({
               }}
               placeholder={t("app.ai.placeholder")}
               rows={2}
-              className="max-h-48 min-h-0 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
+              className="max-h-48 min-h-0 resize-none border-0 bg-transparent text-base shadow-none focus-visible:ring-0 md:text-sm dark:bg-transparent"
             />
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-1 sm:gap-2">
               {providers ? (
                 <ModelPicker
                   providers={providers}
@@ -568,10 +575,12 @@ export function AiChat({
                     className="lg:hidden"
                   >
                     <History />
-                    {t("app.ai.history.title")}
+                    <span className="max-sm:sr-only">
+                      {t("app.ai.history.title")}
+                    </span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="p-4">
+                <SheetContent side="left" className="w-[85vw] max-w-xs p-4">
                   <SheetHeader className="p-0">
                     <SheetTitle>{t("app.ai.history.title")}</SheetTitle>
                   </SheetHeader>
@@ -583,7 +592,7 @@ export function AiChat({
                 <Button
                   type="button"
                   size="icon"
-                  className="rounded-full"
+                  className="shrink-0 rounded-full"
                   aria-label={t("app.ai.stop")}
                   onClick={() => stop()}
                 >
@@ -593,7 +602,7 @@ export function AiChat({
                 <Button
                   type="submit"
                   size="icon"
-                  className="rounded-full"
+                  className="shrink-0 rounded-full"
                   aria-label={t("app.ai.send")}
                   disabled={!choice || !input.trim()}
                 >
