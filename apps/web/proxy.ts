@@ -34,7 +34,9 @@ export function proxy(request: NextRequest) {
   const response = handleRequest(request)
 
   // Sliding expiry: keep the flag while the app (and so the API) is in use.
-  if (backendReady) {
+  // Not on server actions: Next.js takes a cookie set during an action as a
+  // data change and refreshes the page after each one.
+  if (backendReady && !request.headers.has("next-action")) {
     response.cookies.set(BACKEND_READY_COOKIE, "1", {
       path: "/",
       maxAge: BACKEND_READY_MAX_AGE,

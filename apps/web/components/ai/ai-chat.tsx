@@ -48,6 +48,7 @@ import {
 } from "@bee-budget/ui/sheet"
 import {
   DefaultChatTransport,
+  generateId,
   getToolName,
   isToolUIPart,
   lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -354,15 +355,15 @@ function createTransport(selectedModel: SelectedModel) {
 }
 
 export type AiChatProps = {
-  // Conversation id: a new one for a new chat, kept for its whole life
-  id: string
+  // Saved conversation to continue; a new chat gets its id here
+  id?: string
   initialMessages?: UIMessage[]
   initialModel?: ModelChoice
   conversations: AiConversation[]
 }
 
 export function AiChat({
-  id,
+  id: conversationId,
   initialMessages,
   initialModel,
   conversations: initialConversations,
@@ -370,6 +371,8 @@ export function AiChat({
   const t = useI18n()
   const router = useRouter()
   const { currentLocaleUrl } = useCurrentLocaleUrl()
+  // Created once on the client: a page refresh never starts another chat
+  const [id] = useState(() => conversationId ?? generateId())
   const { aiProviders } = useApp()
   const { providers, choice, setChoice } = useModels(initialModel)
   const [conversations, setConversations] = useState(initialConversations)
