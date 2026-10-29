@@ -235,7 +235,7 @@ function Message({
     )
   }
 
-  const { assigned, covered } = matchPlan(message.parts)
+  const { assigned, covered, rollbacks } = matchPlan(message.parts)
   const segments: Segment[] = []
   for (const part of message.parts) {
     if (part.type === "step-start") continue
@@ -280,6 +280,7 @@ function Message({
                 key={segment.part.toolCallId}
                 part={segment.part}
                 assigned={assigned}
+                rollbackError={rollbacks.get(segment.part.toolCallId)}
                 onApproval={onApproval}
                 disabled={busy}
               />

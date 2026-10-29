@@ -168,11 +168,46 @@ function requireForCreate(entity: Entity, data: Record<string, unknown>, fields:
   const details = missing
     .map((field) => `${field} (${MISSING_FIELD_HINTS[field] ?? 'required'})`)
     .join(', ')
-  throw new Error(`Nothing was saved. To create a ${entity}, also set: ${details}.`)
+  throw new Error(
+    `Nothing was saved. To create this ${entity.replace('_', ' ')}, also set: ${details}.`
+  )
+}
+
+/**
+ * Starts the error of a write tool when the workflow was rolled back, for the
+ * chat UI to show it (see approvalPolicy, PlanCard).
+ */
+export const ROLLBACK_MARKER = '[rolled back]'
+
+// Deleting these also deletes or unlinks other records: it can't be undone
+const IRREVERSIBLE_DELETES = new Set<Entity>([
+  'wallet',
+  'wallet_type',
+  'contact',
+  'expense_category',
+  'income_category',
+])
+
+type EntityRecord = { id: number } & Record<string, unknown>
+
+type JournalEntry = { label: string; undo: () => Promise<unknown> }
+
+/**
+ * Picks the fields a record had before an update, to put them back.
+ */
+function snapshot(record: EntityRecord, keys: string[]) {
+  return Object.fromEntries(keys.map((key) => [key, record[key]]))
 }
 
 @inject()
 export class AiWriteToolsService {
+  /**
+   * Changes made during this request, undone in reverse order when a later
+   * change fails: a workflow is applied completely or not at all.
+   */
+  private journal: JournalEntry[] = []
+  private rolledBack = false
+
   constructor(
     private readonly expenseService: ExpenseService,
     private readonly incomeService: IncomeService,
@@ -186,6 +221,165 @@ export class AiWriteToolsService {
   ) {}
 
   /**
+   * Raw service calls per record type, used to undo changes. They skip the
+   * request validators: the values come from the database.
+   */
+  private get operations(): Record<
+    Entity,
+    {
+      find: (id: number) => Promise<unknown>
+      update: (id: number, data: never) => Promise<unknown>
+      remove: (id: number) => Promise<unknown>
+      recreate?: (record: EntityRecord) => Promise<unknown>
+    }
+  > {
+    return {
+      expense: {
+        find: (id) => this.expenseService.getExpenseById(id),
+        update: (id, data) => this.expenseService.updateExpense(id, data),
+        remove: (id) => this.expenseService.deleteExpense(id),
+        recreate: (record) =>
+          this.expenseService.createExpense(
+            snapshot(record, [
+              'name',
+              'description',
+              'amount',
+              'fees',
+              'expenseCategoryId',
+              'walletId',
+              'date',
+              'toContactId',
+            ]) as never
+          ),
+      },
+      income: {
+        find: (id) => this.incomeService.getIncomeById(id),
+        update: (id, data) => this.incomeService.updateIncome(id, data),
+        remove: (id) => this.incomeService.deleteIncome(id),
+        recreate: (record) =>
+          this.incomeService.createIncome(
+            snapshot(record, [
+              'name',
+              'description',
+              'amount',
+              'incomeCategoryId',
+              'walletId',
+              'date',
+              'fromContactId',
+            ]) as never
+          ),
+      },
+      internal_transfer: {
+        find: (id) => this.internalTransferService.getInternalTransferById(id),
+        update: (id, data) => this.internalTransferService.updateInternalTransfer(id, data),
+        remove: (id) => this.internalTransferService.deleteInternalTransfer(id),
+        recreate: (record) =>
+          this.internalTransferService.createInternalTransfer(
+            snapshot(record, [
+              'amount',
+              'fee',
+              'sourceWalletId',
+              'targetWalletId',
+              'date',
+              'description',
+            ]) as never
+          ),
+      },
+      budget: {
+        find: (id) => this.budgetService.getBudgetById(id),
+        update: (id, data) => this.budgetService.updateBudget(id, data),
+        remove: (id) => this.budgetService.deleteBudget(id),
+        recreate: (record) =>
+          this.budgetService.createBudget(
+            snapshot(record, [
+              'name',
+              'targetType',
+              'expenseCategoryId',
+              'walletId',
+              'amount',
+              'period',
+              'alertThreshold',
+            ]) as never
+          ),
+      },
+      wallet: {
+        find: (id) => this.walletService.getWalletById(id),
+        update: (id, data) => this.walletService.updateWallet(id, data),
+        remove: (id) => this.walletService.deleteWallet(id),
+      },
+      wallet_type: {
+        find: (id) => this.walletTypeService.getWalletTypeById(id),
+        update: (id, data) => this.walletTypeService.updateWalletType(id, data),
+        remove: (id) => this.walletTypeService.deleteWalletType(id),
+      },
+      contact: {
+        find: (id) => this.contactService.getContactById(id),
+        update: (id, data) => this.contactService.updateContact(id, data),
+        remove: (id) => this.contactService.deleteContact(id),
+      },
+      expense_category: {
+        find: (id) => this.expenseCategoryService.getExpenseCategoryById(id),
+        update: (id, data) => this.expenseCategoryService.updateExpenseCategory(id, data),
+        remove: (id) => this.expenseCategoryService.deleteExpenseCategory(id),
+      },
+      income_category: {
+        find: (id) => this.incomeCategoryService.getIncomeCategoryById(id),
+        update: (id, data) => this.incomeCategoryService.updateIncomeCategory(id, data),
+        remove: (id) => this.incomeCategoryService.deleteIncomeCategory(id),
+      },
+    }
+  }
+
+  /**
+   * Runs one change of the workflow and records how to undo it. When it
+   * fails, every earlier change of this request is undone first.
+   */
+  private async apply<T>(
+    change: () => Promise<{ result: T; label: string; undo: () => Promise<unknown> }>
+  ) {
+    if (this.rolledBack) {
+      throw new Error(
+        `${ROLLBACK_MARKER} Skipped: the workflow was already rolled back after an error.`
+      )
+    }
+    try {
+      const { result, label, undo } = await run(change)
+      this.journal.push({ label, undo })
+      return result
+    } catch (error) {
+      throw await this.rollback(error as Error)
+    }
+  }
+
+  private async rollback(error: Error) {
+    const entries = this.journal.splice(0).reverse()
+    if (!entries.length) return error
+    this.rolledBack = true
+
+    const undone: string[] = []
+    const failed: string[] = []
+    for (const entry of entries) {
+      try {
+        await entry.undo()
+        undone.push(entry.label)
+      } catch (undoError) {
+        failed.push(`${entry.label} (${(undoError as Error).message})`)
+      }
+    }
+
+    return new Error(
+      [
+        `${ROLLBACK_MARKER} ${error.message}`,
+        undone.length ? `The workflow was rolled back, undone: ${undone.join('; ')}.` : '',
+        failed.length ? `Could not undo: ${failed.join('; ')}.` : '',
+        'Fix the problem and propose the whole plan again.',
+      ]
+        .filter(Boolean)
+        .join(' ')
+    )
+  }
+
+  /**
    * Creates the record when no id is given, updates it otherwise.
    */
   private async save<T extends { id: number }>(
@@ -196,8 +390,27 @@ export class AiWriteToolsService {
     nameOf: (record: T) => string | null,
     creation: { data: Record<string, unknown>; required: string[] }
   ) {
-    if (!id) requireForCreate(entity, creation.data, creation.required)
-    const record = await run(() => (id ? update(id) : create()))
+    const operations = this.operations[entity]
+    const entityName = entity.replace('_', ' ')
+    const record = await this.apply(async () => {
+      if (!id) {
+        requireForCreate(entity, creation.data, creation.required)
+        const created = await create()
+        return {
+          result: created,
+          label: `deleted the new ${entityName} "${nameOf(created)}" (#${created.id})`,
+          undo: () => operations.remove(created.id),
+        }
+      }
+      const before = (await operations.find(id)) as EntityRecord
+      const previous = snapshot(before, Object.keys(creation.data))
+      const updated = await update(id)
+      return {
+        result: updated,
+        label: `restored the previous values of ${entityName} "${nameOf(updated)}" (#${id})`,
+        undo: () => operations.update(id, previous as never),
+      }
+    })
     return writeOutput.parse({
       action: id ? 'updated' : 'created',
       entity,
@@ -207,19 +420,22 @@ export class AiWriteToolsService {
   }
 
   private async remove(entity: Entity, id: number) {
-    const deleters: Record<Entity, (id: number) => Promise<unknown>> = {
-      expense: (recordId) => this.expenseService.deleteExpense(recordId),
-      income: (recordId) => this.incomeService.deleteIncome(recordId),
-      internal_transfer: (recordId) =>
-        this.internalTransferService.deleteInternalTransfer(recordId),
-      budget: (recordId) => this.budgetService.deleteBudget(recordId),
-      wallet: (recordId) => this.walletService.deleteWallet(recordId),
-      wallet_type: (recordId) => this.walletTypeService.deleteWalletType(recordId),
-      contact: (recordId) => this.contactService.deleteContact(recordId),
-      expense_category: (recordId) => this.expenseCategoryService.deleteExpenseCategory(recordId),
-      income_category: (recordId) => this.incomeCategoryService.deleteIncomeCategory(recordId),
-    }
-    await run(() => deleters[entity](id))
+    const operations = this.operations[entity]
+    const entityName = entity.replace('_', ' ')
+    await this.apply(async () => {
+      const before = (await operations.find(id)) as EntityRecord
+      await operations.remove(id)
+      return {
+        result: null,
+        label: `re-created the deleted ${entityName} "${before.name ?? `#${id}`}"`,
+        undo: async () => {
+          if (IRREVERSIBLE_DELETES.has(entity) || !operations.recreate) {
+            throw new Error(`a deleted ${entityName} cannot be restored`)
+          }
+          await operations.recreate(before)
+        },
+      }
+    })
     return writeOutput.parse({ action: 'deleted', entity, id, name: null })
   }
 
@@ -518,7 +734,7 @@ export class AiWriteToolsService {
 
       deleteRecord: tool({
         description:
-          'Delete one record. Deleting a wallet type, wallet or category can also delete what depends on it, so warn the user first.',
+          'Delete one record. Deleting a wallet type, wallet, contact or category also deletes or unlinks what depends on it and cannot be undone if the workflow fails: warn the user and put such deletes last in the plan.',
         inputSchema: z.object({
           entity: z.enum(ENTITIES),
           id: idField,

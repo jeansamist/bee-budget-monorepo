@@ -266,7 +266,7 @@ export function ToolStep({
         <p className="flex items-start gap-2 text-xs text-destructive">
           <TriangleAlert className="mt-0.5 size-3.5 shrink-0" />
           <span className="min-w-0 break-words">
-            {title} · {part.errorText}
+            {title} · {part.errorText.replace("[rolled back]", "").trim()}
           </span>
         </p>
       )

@@ -16,6 +16,7 @@ import {
   Search,
   Trash2,
   TriangleAlert,
+  Undo2,
   X,
   type LucideIcon,
 } from "lucide-react"
@@ -35,7 +36,24 @@ type PlanStep = {
   label: string
 }
 
-type StepStatus = "pending" | "running" | "done" | "error" | "declined"
+type StepStatus =
+  | "pending"
+  | "running"
+  | "done"
+  | "error"
+  | "declined"
+  | "undone"
+
+// Starts the error of a change when the API rolled the workflow back
+export const ROLLBACK_MARKER = "[rolled back]"
+
+export const isRollbackError = (part: Part) =>
+  isToolUIPart(part) &&
+  part.state === "output-error" &&
+  part.errorText.startsWith(ROLLBACK_MARKER)
+
+export const stripRollbackMarker = (text: string) =>
+  text.replace(ROLLBACK_MARKER, "").trim()
 
 const ACTION_STYLES: Record<
   PlanStep["action"],
@@ -80,8 +98,19 @@ export const isWriteToolPart = (part: Part): part is ToolPart =>
 export function matchPlan(parts: Part[]) {
   const assigned = new Map<number, ToolPart>()
   const covered = new Set<string>()
+  // Plans whose run failed and was undone, with the error that caused it
+  const rollbacks = new Map<string, string>()
   parts.forEach((part, index) => {
     if (!isPlanPart(part) || !part.approval?.approved) return
+    const nextPlan = parts.findIndex(
+      (other, otherIndex) => otherIndex > index && isPlanPart(other)
+    )
+    const failure = parts
+      .slice(index + 1, nextPlan === -1 ? undefined : nextPlan)
+      .find(isRollbackError)
+    if (failure && isToolUIPart(failure) && failure.state === "output-error") {
+      rollbacks.set(part.toolCallId, stripRollbackMarker(failure.errorText))
+    }
     const steps = ((part.input as { steps?: PlanStep[] })?.steps ??
       []) as PlanStep[]
     const writes = parts
@@ -103,20 +132,21 @@ export function matchPlan(parts: Part[]) {
       assigned.set(stepIndex, match)
     })
   })
-  return { assigned, covered }
+  return { assigned, covered, rollbacks }
 }
 
 function stepStatus(
   step: PlanStep,
   approved: boolean,
-  call: ToolPart | undefined
+  call: ToolPart | undefined,
+  rolledBack: boolean
 ): StepStatus {
   if (!approved) return "pending"
   if (step.action === "use") return "done"
   if (!call) return "pending"
   switch (call.state) {
     case "output-available":
-      return "done"
+      return rolledBack ? "undone" : "done"
     case "output-error":
       return "error"
     case "output-denied":
@@ -154,6 +184,9 @@ function StatusIcon({ status }: { status: StepStatus }) {
         {status === "declined" && (
           <X className="size-4 text-muted-foreground" />
         )}
+        {status === "undone" && (
+          <Undo2 className="size-4 text-muted-foreground" />
+        )}
       </motion.span>
     </AnimatePresence>
   )
@@ -162,11 +195,14 @@ function StatusIcon({ status }: { status: StepStatus }) {
 export function PlanCard({
   part,
   assigned,
+  rollbackError,
   onApproval,
   disabled,
 }: {
   part: ToolPart
   assigned: Map<number, ToolPart>
+  // Set when a step failed and every change of the plan was undone
+  rollbackError?: string
   onApproval: (response: ApprovalResponse) => void
   disabled?: boolean
 }) {
@@ -178,28 +214,31 @@ export function PlanCard({
     part.state === "output-denied" ||
     (part.state === "approval-responded" && !part.approval.approved)
   const approved = !!part.approval?.approved
+  const rolledBack = rollbackError !== undefined
   const statuses = steps.map((step, index) =>
-    stepStatus(step, approved, assigned.get(index))
+    stepStatus(step, approved, assigned.get(index), rolledBack)
   )
   const writeSteps = steps.filter((step) => step.action !== "use").length
   const doneWrites = steps.filter(
     (step, index) => step.action !== "use" && statuses[index] === "done"
   ).length
   const finished = approved && doneWrites === writeSteps
-  const failed = statuses.includes("error")
+  const failed = statuses.includes("error") || rolledBack
   const progress = writeSteps ? doneWrites / writeSteps : 1
 
   const badge = declined
     ? t("app.ai.plan.status.declined")
     : awaiting
       ? t("app.ai.plan.status.awaiting")
-      : failed
-        ? t("app.ai.plan.status.failed")
-        : finished
-          ? t("app.ai.plan.status.done")
-          : approved
-            ? t("app.ai.plan.status.running")
-            : t("app.ai.plan.status.drafting")
+      : rolledBack
+        ? t("app.ai.plan.status.rolledBack")
+        : failed
+          ? t("app.ai.plan.status.failed")
+          : finished
+            ? t("app.ai.plan.status.done")
+            : approved
+              ? t("app.ai.plan.status.running")
+              : t("app.ai.plan.status.drafting")
 
   return (
     <motion.div
@@ -239,7 +278,26 @@ export function PlanCard({
         </span>
       </div>
 
-      {approved && writeSteps > 0 && (
+      <AnimatePresence initial={false}>
+        {rolledBack && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            transition={{ duration: 0.3, ease }}
+            className="mx-3 mb-2 flex gap-2 rounded-xl bg-destructive/10 p-3 text-xs sm:mx-4"
+          >
+            <Undo2 className="mt-0.5 size-3.5 shrink-0 text-destructive" />
+            <div className="min-w-0 space-y-1">
+              <p className="font-medium">{t("app.ai.plan.rolledBack")}</p>
+              <p className="break-words text-muted-foreground">
+                {rollbackError}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {approved && !rolledBack && writeSteps > 0 && (
         <div className="mx-3 h-1 overflow-hidden rounded-full bg-muted sm:mx-4">
           <motion.div
             className="h-full rounded-full bg-primary"
@@ -279,12 +337,13 @@ export function PlanCard({
                 <p
                   className={cn(
                     "text-sm break-words",
-                    status === "declined" && "line-through"
+                    (status === "declined" || status === "undone") &&
+                      "text-muted-foreground line-through"
                   )}
                 >
                   {step.label}
                 </p>
-                {call?.state === "output-error" && (
+                {call?.state === "output-error" && !rolledBack && (
                   <p className="text-xs break-words text-destructive">
                     {call.errorText}
                   </p>

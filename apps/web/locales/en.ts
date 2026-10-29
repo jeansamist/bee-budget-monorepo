@@ -153,6 +153,9 @@ export default {
   "app.ai.plan.status.done": "Done",
   "app.ai.plan.status.failed": "Stopped on an error",
   "app.ai.plan.status.declined": "Declined",
+  "app.ai.plan.status.rolledBack": "Rolled back",
+  "app.ai.plan.rolledBack":
+    "A step failed, so the changes this workflow had already made were undone.",
   "app.ai.approval.create": "Add {entity}",
   "app.ai.approval.update": "Update {entity}",
   "app.ai.approval.delete": "Delete {entity}",

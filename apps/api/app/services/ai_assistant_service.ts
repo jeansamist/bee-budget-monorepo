@@ -14,6 +14,7 @@ import { WalletService } from '#services/wallet_service'
 import {
   AiWriteToolsService,
   PLAN_TOOL_NAME,
+  ROLLBACK_MARKER,
   WRITE_TOOL_NAMES,
   writeTargetOf,
   type PlanStep,
@@ -497,7 +498,7 @@ export class AiAssistantService {
       '2. Check that every record you will create has what it needs: an income needs an income category and a wallet, an expense needs an expense category and a wallet, a wallet needs a wallet type. When one is missing, add a step that creates it before the step that uses it, or pick the closest existing one.',
       '3. Call proposePlan once with every step in order, including the existing records you use. Ask the user first only when something essential is truly unknown (e.g. the amount, or which of two wallets).',
       '4. Once the plan is approved, run its steps in order, passing the ids returned by earlier steps to the next ones.',
-      '5. If a step fails, do not redo the steps that succeeded. Read the error: when you can fix it (e.g. a missing category), call proposePlan again with only the remaining steps plus the fix; otherwise explain the problem plainly.',
+      '5. A workflow is all or nothing: if a step fails, every change it already made is undone automatically (the error says what was rolled back). Stop calling write tools, tell the user what failed in one sentence, and, when you can fix it (e.g. a missing category), call proposePlan again with the whole corrected plan.',
       '6. If the plan or a change is declined, do not retry it; ask what the user wants instead.',
       'When the user pastes a message (e.g. a Mobile Money SMS or a receipt), extract the amount, fees, date, counterpart, the wallet it concerns and whether money came in or went out, then follow these steps.',
       'Always end your turn with a short message to the user: what was done, what failed, or the question you need answered.',
@@ -545,6 +546,8 @@ export class AiAssistantService {
       messages: await convertToModelMessages(uiMessages, { tools }),
       tools,
       toolApproval: this.approvalPolicy(uiMessages),
+      // One change at a time, in order: a failure can undo exactly what ran before
+      toolCallConcurrency: 1,
       stopWhen: isStepCount(MAX_STEPS),
       abortSignal: this.abortSignal(),
     })
@@ -586,6 +589,9 @@ export class AiAssistantService {
         remaining = [...((part.input as { steps?: PlanStep[] })?.steps ?? [])]
       } else if (WRITE_TOOL_NAMES.has(name) && part.state === 'output-available') {
         remaining = consume(remaining, writeTargetOf(name, part.input))
+      } else if (part.state === 'output-error' && part.errorText.startsWith(ROLLBACK_MARKER)) {
+        // A rolled back plan approves nothing anymore: the fix needs a new plan
+        remaining = []
       }
     }
 
