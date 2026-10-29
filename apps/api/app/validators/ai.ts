@@ -10,9 +10,11 @@ export const saveAiProviderValidator = vine.create(
 
 export const aiChatValidator = vine.create(
   vine.object({
+    id: vine.string().regex(/^[\w-]{1,64}$/),
     provider: vine.enum(AI_PROVIDERS),
     model: vine.string().trim().minLength(1),
-    // UI messages from the chat, checked against the tools by the AI SDK
-    messages: vine.array(vine.any()).minLength(1),
+    trigger: vine.enum(['submit-message', 'regenerate-message'] as const),
+    // The new UI message, checked against the tools by the AI SDK
+    message: vine.any().optional(),
   })
 )

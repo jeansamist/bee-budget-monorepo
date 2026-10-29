@@ -68,6 +68,9 @@ export interface ApiDefinition {
     saveProvider: typeof routes['ai.save_provider']
     deleteProvider: typeof routes['ai.delete_provider']
     models: typeof routes['ai.models']
+    conversations: typeof routes['ai.conversations']
+    conversation: typeof routes['ai.conversation']
+    deleteConversation: typeof routes['ai.delete_conversation']
     chat: typeof routes['ai.chat']
   }
   incomeCategories: {

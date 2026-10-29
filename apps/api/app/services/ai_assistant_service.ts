@@ -4,28 +4,53 @@ import ExpenseCategory from '#models/expense_category'
 import Income from '#models/income'
 import IncomeCategory from '#models/income_category'
 import { type AiProviderName } from '#models/ai_provider'
+import { AiConversationService } from '#services/ai_conversation_service'
 import { AiProviderService } from '#services/ai_provider_service'
 import { BudgetService } from '#services/budget_service'
 import { REPORT_TYPES, ReportService } from '#services/report_service'
 import { TransactionAnalyticsService } from '#services/transaction_analytics_service'
 import { WalletAnalyticsService } from '#services/wallet_analytics_service'
 import { WalletService } from '#services/wallet_service'
+import {
+  AiWriteToolsService,
+  PLAN_TOOL_NAME,
+  WRITE_TOOL_NAMES,
+  writeTargetOf,
+  type PlanStep,
+} from '#services/ai_write_tools_service'
+import WalletType from '#models/wallet_type'
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import {
   convertToModelMessages,
+  createIdGenerator,
   createUIMessageStreamResponse,
+  getToolName,
+  isToolUIPart,
   isStepCount,
   streamText,
   toUIMessageStream,
   tool,
+  TypeValidationError,
   validateUIMessages,
+  type UIMessage,
 } from 'ai'
 import type { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { DateTime } from 'luxon'
 import { z } from 'zod'
 
-const MAX_STEPS = 8
+const MAX_STEPS = 16
+
+/**
+ * The plan steps left once a change matching one of them ran.
+ */
+function consume(steps: PlanStep[], target: ReturnType<typeof writeTargetOf>) {
+  if (!target) return steps
+  const index = steps.findIndex(
+    (step) => step.action === target.action && step.entity === target.entity
+  )
+  return index === -1 ? steps : steps.filter((_, stepIndex) => stepIndex !== index)
+}
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use the YYYY-MM-DD format')
 const period = z.enum(['daily', 'weekly', 'monthly', 'yearly'])
@@ -47,6 +72,10 @@ const walletsOutput = z.object({
       monthlyEvolutionPercent: z.number(),
     })
   ),
+})
+
+const walletTypesOutput = z.object({
+  walletTypes: z.array(z.object({ id: z.number(), name: z.string() })),
 })
 
 const categoryItem = z.object({ id: z.number(), name: z.string(), isSystem: z.boolean() })
@@ -137,9 +166,14 @@ const walletAnalyticsOutput = z.object({
 const MAX_ROWS = 200
 
 export type AiChatPayload = {
+  // Conversation id, created by the chat UI for a new chat
+  id: string
   provider: AiProviderName
   model: string
-  messages: unknown[]
+  trigger: 'submit-message' | 'regenerate-message'
+  // The last message of the chat (new, retried or approved): the rest of the
+  // history is loaded from the database
+  message?: unknown
 }
 
 @inject()
@@ -147,11 +181,13 @@ export class AiAssistantService {
   constructor(
     private readonly ctx: HttpContext,
     private readonly aiProviderService: AiProviderService,
+    private readonly aiConversationService: AiConversationService,
     private readonly walletService: WalletService,
     private readonly budgetService: BudgetService,
     private readonly reportService: ReportService,
     private readonly transactionAnalyticsService: TransactionAnalyticsService,
-    private readonly walletAnalyticsService: WalletAnalyticsService
+    private readonly walletAnalyticsService: WalletAnalyticsService,
+    private readonly aiWriteToolsService: AiWriteToolsService
   ) {}
 
   private get user() {
@@ -159,13 +195,30 @@ export class AiAssistantService {
   }
 
   /**
-   * Read-only tools over the user's own data. They go through the same
-   * services as the API, so ownership checks apply.
+   * Tools over the user's own data: reads run freely, changes wait for the
+   * user's approval. They go through the same services as the API, so
+   * ownership checks apply.
    */
   private buildTools() {
+    return { ...this.buildReadTools(), ...this.aiWriteToolsService.buildTools() }
+  }
+
+  private buildReadTools() {
     const userId = this.user.id
 
     return {
+      getWalletTypes: tool({
+        description: 'List the wallet types (e.g. Mobile Money, Bank), with their ids.',
+        inputSchema: z.object({}),
+        outputSchema: walletTypesOutput,
+        execute: async () => {
+          const walletTypes = await WalletType.query().where('user_id', userId).orderBy('name')
+          return walletTypesOutput.parse({
+            walletTypes: walletTypes.map(({ id, name }) => ({ id, name })),
+          })
+        },
+      }),
+
       getWallets: tool({
         description:
           'List the user wallets (cash, bank accounts, mobile money...) with their current balance and the evolution versus last month.',
@@ -423,21 +476,55 @@ export class AiAssistantService {
       'Amounts are whole numbers in the user currency (wallets do not store a currency, so do not name one unless the user does).',
       'Internal transfers move money between wallets: they are neither income nor spending.',
       'Be concise and concrete: lead with the answer, then the few figures that support it. Use Markdown tables for comparisons and short lists for advice.',
-      'You can only read data. If the user asks you to add, edit or delete something, tell them where to do it in the app.',
+      'For tasks that change data, work like an agent: break the task down, look up what already exists with the read tools (reuse a matching contact, category or wallet instead of creating a duplicate), then call proposePlan with every step. Never call proposePlan before you looked things up.',
+      'You can also create, update and delete records (save* and deleteRecord tools). Look up the ids you need with the read tools first and never guess one. When something needed is missing or ambiguous (amount, wallet, category), ask before acting.',
+      'The user approves or declines the plan. Once approved, run its steps in order and use the ids returned by each step in the next ones. If the plan or a change is declined, do not retry it; ask what they want instead. When everything ran, sum up what was done in one or two sentences.',
+      'When the user pastes a message (e.g. a Mobile Money SMS or a receipt), extract the amount, fees, date, counterpart and what it was for, and turn it into the matching workflow.',
       'Reply in the language the user writes in.',
     ].join('\n')
   }
 
-  async chat({ provider, model: modelId, messages }: AiChatPayload) {
+  /**
+   * Stored history with the new message appended (or, to regenerate, without
+   * the last answer). History that no longer matches the tools is dropped
+   * rather than blocking the conversation.
+   */
+  private async buildHistory(
+    { id, trigger, message }: AiChatPayload,
+    tools: ReturnType<AiAssistantService['buildTools']>
+  ) {
+    const conversation = await this.aiConversationService.findForChat(id)
+    let history = conversation?.uiMessages ?? []
+
+    if (trigger === 'regenerate-message') {
+      while (history.at(-1)?.role === 'assistant') history = history.slice(0, -1)
+    }
+    if (message) {
+      const incoming = message as UIMessage
+      // A message sent again (retry, or after an approval) replaces the stored one
+      history = [...history.filter((item) => item.id !== incoming.id), incoming]
+    }
+
+    try {
+      return await validateUIMessages({ messages: history, tools })
+    } catch (error) {
+      if (!(error instanceof TypeValidationError) || !message) throw error
+      return validateUIMessages({ messages: [message], tools })
+    }
+  }
+
+  async chat(payload: AiChatPayload) {
+    const { id, provider, model: modelId } = payload
     const model = await this.aiProviderService.getLanguageModel(provider, modelId)
     const tools = this.buildTools()
-    const uiMessages = await validateUIMessages({ messages, tools })
+    const uiMessages = await this.buildHistory(payload, tools)
 
     const result = streamText({
       model,
       instructions: this.buildInstructions(),
       messages: await convertToModelMessages(uiMessages, { tools }),
       tools,
+      toolApproval: this.approvalPolicy(uiMessages),
       stopWhen: isStepCount(MAX_STEPS),
       abortSignal: this.abortSignal(),
     })
@@ -446,10 +533,51 @@ export class AiAssistantService {
       stream: toUIMessageStream({
         stream: result.stream,
         originalMessages: uiMessages,
+        // Stable ids, since the messages are stored
+        generateMessageId: createIdGenerator({ prefix: 'msg', size: 16 }),
         // Provider errors (bad model, quota, revoked key) are safe to show to the key owner
         onError: (error) => (error instanceof Error ? error.message : 'Something went wrong'),
+        // Also runs when the user stops the answer, which keeps what was written so far
+        onEnd: async ({ messages }) => {
+          await this.aiConversationService.saveConversation(id, {
+            provider,
+            model: modelId,
+            messages,
+          })
+        },
       }),
     })
+  }
+
+  /**
+   * Changes the user approved through a plan run on their own; any other
+   * change, and every plan, waits for the user. A plan only covers its own
+   * steps: each matching change uses one of them up.
+   */
+  private approvalPolicy(messages: UIMessage[]) {
+    const lastUserIndex = messages.findLastIndex((message) => message.role === 'user')
+    const parts = messages.slice(lastUserIndex + 1).flatMap((message) => message.parts)
+
+    let remaining: PlanStep[] = []
+    for (const part of parts) {
+      if (!isToolUIPart(part)) continue
+      const name = getToolName(part)
+      if (name === PLAN_TOOL_NAME && part.approval?.approved) {
+        remaining = [...((part.input as { steps?: PlanStep[] })?.steps ?? [])]
+      } else if (WRITE_TOOL_NAMES.has(name) && part.state === 'output-available') {
+        remaining = consume(remaining, writeTargetOf(name, part.input))
+      }
+    }
+
+    return ({ toolCall }: { toolCall: { toolName: string; input: unknown } }) => {
+      if (toolCall.toolName === PLAN_TOOL_NAME) return 'user-approval' as const
+      if (!WRITE_TOOL_NAMES.has(toolCall.toolName)) return undefined
+      const target = writeTargetOf(toolCall.toolName, toolCall.input)
+      const next = consume(remaining, target)
+      if (next.length === remaining.length) return 'user-approval' as const
+      remaining = next
+      return 'approved' as const
+    }
   }
 
   /**

@@ -7,6 +7,27 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AiConversationSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'messages', 'model', 'provider', 'title', 'updatedAt', 'userId'] as const
+  $columns = AiConversationSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare messages: string
+  @column()
+  declare model: string
+  @column()
+  declare provider: string
+  @column()
+  declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class AiProviderSchema extends BaseModel {
   static $columns = ['apiKey', 'createdAt', 'id', 'keyHint', 'provider', 'updatedAt', 'userId'] as const
   $columns = AiProviderSchema.$columns

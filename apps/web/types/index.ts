@@ -271,3 +271,17 @@ export type AiProviderModels = {
   models: AiModel[]
   error: string | null
 }
+
+export type AiConversation = {
+  id: string
+  title: string
+  provider: AiProviderName
+  model: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type AiConversationWithMessages = AiConversation & {
+  // AI SDK UI messages, typed where they are used (ai package)
+  messages: unknown[]
+}

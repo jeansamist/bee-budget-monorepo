@@ -33,6 +33,9 @@ export type ScannedRoutes = {
     'ai.save_provider': { paramsTuple?: []; params?: {} }
     'ai.delete_provider': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'ai.models': { paramsTuple?: []; params?: {} }
+    'ai.conversations': { paramsTuple?: []; params?: {} }
+    'ai.conversation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'ai.delete_conversation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'ai.chat': { paramsTuple?: []; params?: {} }
     'income_categories.create_mass': { paramsTuple?: []; params?: {} }
     'income_categories.update_mass': { paramsTuple?: []; params?: {} }
@@ -100,6 +103,8 @@ export type ScannedRoutes = {
     'reports.index': { paramsTuple?: []; params?: {} }
     'ai.providers': { paramsTuple?: []; params?: {} }
     'ai.models': { paramsTuple?: []; params?: {} }
+    'ai.conversations': { paramsTuple?: []; params?: {} }
+    'ai.conversation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'contacts.index': { paramsTuple?: []; params?: {} }
     'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.index': { paramsTuple?: []; params?: {} }
@@ -126,6 +131,8 @@ export type ScannedRoutes = {
     'reports.index': { paramsTuple?: []; params?: {} }
     'ai.providers': { paramsTuple?: []; params?: {} }
     'ai.models': { paramsTuple?: []; params?: {} }
+    'ai.conversations': { paramsTuple?: []; params?: {} }
+    'ai.conversation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'contacts.index': { paramsTuple?: []; params?: {} }
     'contacts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.index': { paramsTuple?: []; params?: {} }
@@ -205,6 +212,7 @@ export type ScannedRoutes = {
   }
   DELETE: {
     'ai.delete_provider': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'ai.delete_conversation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'contacts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expense_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'expenses.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

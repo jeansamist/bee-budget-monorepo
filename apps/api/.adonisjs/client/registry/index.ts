@@ -180,6 +180,24 @@ const routes = {
     tokens: [{"old":"/api/ai/models","type":0,"val":"api","end":""},{"old":"/api/ai/models","type":0,"val":"ai","end":""},{"old":"/api/ai/models","type":0,"val":"models","end":""}],
     types: placeholder as Registry['ai.models']['types'],
   },
+  'ai.conversations': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/ai/conversations',
+    tokens: [{"old":"/api/ai/conversations","type":0,"val":"api","end":""},{"old":"/api/ai/conversations","type":0,"val":"ai","end":""},{"old":"/api/ai/conversations","type":0,"val":"conversations","end":""}],
+    types: placeholder as Registry['ai.conversations']['types'],
+  },
+  'ai.conversation': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/ai/conversations/:id',
+    tokens: [{"old":"/api/ai/conversations/:id","type":0,"val":"api","end":""},{"old":"/api/ai/conversations/:id","type":0,"val":"ai","end":""},{"old":"/api/ai/conversations/:id","type":0,"val":"conversations","end":""},{"old":"/api/ai/conversations/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['ai.conversation']['types'],
+  },
+  'ai.delete_conversation': {
+    methods: ["DELETE"],
+    pattern: '/api/ai/conversations/:id',
+    tokens: [{"old":"/api/ai/conversations/:id","type":0,"val":"api","end":""},{"old":"/api/ai/conversations/:id","type":0,"val":"ai","end":""},{"old":"/api/ai/conversations/:id","type":0,"val":"conversations","end":""},{"old":"/api/ai/conversations/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['ai.delete_conversation']['types'],
+  },
   'ai.chat': {
     methods: ["POST"],
     pattern: '/api/ai/chat',

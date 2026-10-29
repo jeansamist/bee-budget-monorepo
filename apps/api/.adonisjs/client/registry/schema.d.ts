@@ -355,6 +355,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['models']>>>
     }
   }
+  'ai.conversations': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/ai/conversations'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['conversations']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['conversations']>>>
+    }
+  }
+  'ai.conversation': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/ai/conversations/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['conversation']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['conversation']>>>
+    }
+  }
+  'ai.delete_conversation': {
+    methods: ["DELETE"]
+    pattern: '/api/ai/conversations/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['deleteConversation']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/ai_controller').default['deleteConversation']>>>
+    }
+  }
   'ai.chat': {
     methods: ["POST"]
     pattern: '/api/ai/chat'

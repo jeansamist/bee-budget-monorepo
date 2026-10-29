@@ -1,4 +1,6 @@
 import { AiAssistantService } from '#services/ai_assistant_service'
+import { AiConversationService } from '#services/ai_conversation_service'
+import AiConversationTransformer from '#transformers/ai_conversation_transformer'
 import { AiProviderService } from '#services/ai_provider_service'
 import AiProviderTransformer from '#transformers/ai_provider_transformer'
 import { ApiResponse } from '#utils/api_response'
@@ -12,7 +14,8 @@ import type { ReadableStream } from 'node:stream/web'
 export default class AiController {
   constructor(
     protected readonly aiProviderService: AiProviderService,
-    protected readonly aiAssistantService: AiAssistantService
+    protected readonly aiAssistantService: AiAssistantService,
+    protected readonly aiConversationService: AiConversationService
   ) {}
 
   async providers({ serialize, response }: HttpContext) {
@@ -36,6 +39,28 @@ export default class AiController {
   async models({ response }: HttpContext) {
     const models = await this.aiProviderService.getAvailableModels()
     return response.ok(ApiResponse.success(models, 'AI models retrieved successfully'))
+  }
+
+  async conversations({ serialize, response }: HttpContext) {
+    const conversations = await this.aiConversationService.getUserConversations()
+    const serialized = await serialize(AiConversationTransformer.transform(conversations))
+    return response.ok(ApiResponse.success(serialized.data, 'Conversations retrieved successfully'))
+  }
+
+  async conversation({ params, serialize, response }: HttpContext) {
+    const conversation = await this.aiConversationService.getConversationById(params.id)
+    const serialized = await serialize(AiConversationTransformer.transform(conversation))
+    return response.ok(
+      ApiResponse.success(
+        { ...serialized.data, messages: conversation.uiMessages },
+        'Conversation retrieved successfully'
+      )
+    )
+  }
+
+  async deleteConversation({ params, response }: HttpContext) {
+    await this.aiConversationService.deleteConversation(params.id)
+    return response.ok(ApiResponse.success(null, 'Conversation deleted successfully'))
   }
 
   /**

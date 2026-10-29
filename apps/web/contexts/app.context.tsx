@@ -71,6 +71,36 @@ export function AppProvider({
   const [contactsState, setContactsState] = useState(contacts)
   const [aiProvidersState, setAiProviders] = useState(aiProviders)
 
+  // A router.refresh() (e.g. after the AI assistant changed data) brings new
+  // server data: it replaces the local copies.
+  const [serverData, setServerData] = useState({
+    walletTypes,
+    incomeCategories,
+    expenseCategories,
+    wallets,
+    contacts,
+  })
+  if (
+    serverData.walletTypes !== walletTypes ||
+    serverData.incomeCategories !== incomeCategories ||
+    serverData.expenseCategories !== expenseCategories ||
+    serverData.wallets !== wallets ||
+    serverData.contacts !== contacts
+  ) {
+    setServerData({
+      walletTypes,
+      incomeCategories,
+      expenseCategories,
+      wallets,
+      contacts,
+    })
+    setWalletTypesState(walletTypes)
+    setIncomeCategoriesState(incomeCategories)
+    setExpenseCategoriesState(expenseCategories)
+    setWalletsState(wallets)
+    setContactsState(contacts)
+  }
+
   const addWalletType = useCallback((walletType: WalletType) => {
     setWalletTypesState((previousWalletTypes) =>
       upsertById(previousWalletTypes, walletType)

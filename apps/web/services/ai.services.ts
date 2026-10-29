@@ -2,6 +2,8 @@
 
 import { tuyau } from "@/lib/api"
 import type {
+  AiConversation,
+  AiConversationWithMessages,
   AiProvider,
   AiProviderModels,
   AiProviderName,
@@ -37,4 +39,31 @@ export const getAiModels = async (): Promise<
 > => {
   const [data, error] = await tuyau.api.ai.models({}).safe()
   return (error ? error.response : data) as ApiResponse<AiProviderModels[]>
+}
+
+export const getAiConversations = async (): Promise<
+  ApiResponse<AiConversation[]>
+> => {
+  const [data, error] = await tuyau.api.ai.conversations({}).safe()
+  return (error ? error.response : data) as ApiResponse<AiConversation[]>
+}
+
+export const getAiConversation = async (
+  id: string
+): Promise<ApiResponse<AiConversationWithMessages>> => {
+  const [data, error] = await tuyau.api.ai
+    .conversation({ params: { id } })
+    .safe()
+  return (
+    error ? error.response : data
+  ) as ApiResponse<AiConversationWithMessages>
+}
+
+export const deleteAiConversation = async (
+  id: string
+): Promise<ApiResponse<null>> => {
+  const [data, error] = await tuyau.api.ai
+    .deleteConversation({ params: { id } })
+    .safe()
+  return (error ? error.response : data) as ApiResponse<null>
 }

@@ -1,0 +1,493 @@
+import { BudgetService } from '#services/budget_service'
+import { ContactService } from '#services/contact_service'
+import { ExpenseCategoryService } from '#services/expense_category_service'
+import { ExpenseService } from '#services/expense_service'
+import { IncomeCategoryService } from '#services/income_category_service'
+import { IncomeService } from '#services/income_service'
+import { InternalTransferService } from '#services/internal_transfer_service'
+import { WalletService } from '#services/wallet_service'
+import { WalletTypeService } from '#services/wallet_type_service'
+import { createBudgetValidator, updateBudgetValidator } from '#validators/budget'
+import { createContactValidator, updateContactValidator } from '#validators/contact'
+import { createExpenseValidator, updateExpenseValidator } from '#validators/expense'
+import {
+  createExpenseCategoryValidator,
+  updateExpenseCategoryValidator,
+} from '#validators/expense_category'
+import { createIncomeValidator, updateIncomeValidator } from '#validators/income'
+import {
+  createIncomeCategoryValidator,
+  updateIncomeCategoryValidator,
+} from '#validators/income_category'
+import {
+  createInternalTransferValidator,
+  updateInternalTransferValidator,
+} from '#validators/internal_transfer'
+import { createWalletValidator, updateWalletValidator } from '#validators/wallet'
+import { createWalletTypeValidator, updateWalletTypeValidator } from '#validators/wallet_type'
+import { inject } from '@adonisjs/core'
+import { errors } from '@vinejs/vine'
+import { tool } from 'ai'
+import { DateTime } from 'luxon'
+import { z } from 'zod'
+
+const DEFAULT_COLOR = '#64748B'
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use the YYYY-MM-DD format')
+const color = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a hex color like #2563EB')
+const idField = z.number().int().positive()
+const updateId = idField
+  .optional()
+  .describe('Id of the record to update. Leave it out to create a new record.')
+
+const ENTITIES = [
+  'expense',
+  'income',
+  'internal_transfer',
+  'budget',
+  'wallet',
+  'wallet_type',
+  'contact',
+  'expense_category',
+  'income_category',
+] as const
+
+type Entity = (typeof ENTITIES)[number]
+
+type WriteAction = 'create' | 'update' | 'delete'
+
+const SAVE_TOOL_ENTITIES: Record<string, Entity> = {
+  saveExpense: 'expense',
+  saveIncome: 'income',
+  saveInternalTransfer: 'internal_transfer',
+  saveBudget: 'budget',
+  saveWallet: 'wallet',
+  saveWalletType: 'wallet_type',
+  saveContact: 'contact',
+}
+
+/**
+ * The record a write tool call touches, to match it against an approved plan.
+ */
+export function writeTargetOf(
+  toolName: string,
+  input: unknown
+): { entity: Entity; action: WriteAction } | null {
+  const values = (input ?? {}) as { id?: number; kind?: string; entity?: Entity }
+  if (toolName === 'deleteRecord') {
+    return values.entity ? { entity: values.entity, action: 'delete' } : null
+  }
+  const entity =
+    toolName === 'saveCategory'
+      ? values.kind === 'income'
+        ? 'income_category'
+        : 'expense_category'
+      : SAVE_TOOL_ENTITIES[toolName]
+  if (!entity) return null
+  return { entity, action: values.id ? 'update' : 'create' }
+}
+
+export const planStep = z.object({
+  action: z
+    .enum(['use', 'create', 'update', 'delete'])
+    .describe('use = an existing record the workflow relies on, nothing is changed'),
+  entity: z.enum(ENTITIES),
+  label: z.string().describe('What the step does, e.g. "Create the contact Paul Mbarga"'),
+})
+
+export type PlanStep = z.infer<typeof planStep>
+
+const writeOutput = z.object({
+  action: z.enum(['created', 'updated', 'deleted']),
+  entity: z.enum(ENTITIES),
+  id: z.number(),
+  name: z.string().nullable(),
+})
+
+/**
+ * Tools the model uses to change data. They all need the user's approval in
+ * the chat (see WRITE_TOOL_NAMES) and go through the same validators and
+ * services as the app's forms.
+ */
+export const PLAN_TOOL_NAME = 'proposePlan'
+
+export const WRITE_TOOL_NAMES = new Set([
+  'saveExpense',
+  'saveIncome',
+  'saveInternalTransfer',
+  'saveBudget',
+  'saveWallet',
+  'saveWalletType',
+  'saveContact',
+  'saveCategory',
+  'deleteRecord',
+])
+
+/**
+ * Validation and service errors become plain sentences the model can act on
+ * (fix the input, or explain the problem to the user).
+ */
+async function run<T>(action: () => Promise<T>) {
+  try {
+    return await action()
+  } catch (error) {
+    if (error instanceof errors.E_VALIDATION_ERROR) {
+      const messages = (error.messages as { field: string; message: string }[])
+        .map(({ field, message }) => `${field}: ${message}`)
+        .join('; ')
+      throw new Error(`Invalid data. ${messages}`)
+    }
+    throw error
+  }
+}
+
+const today = () => DateTime.now().toISODate()!
+
+@inject()
+export class AiWriteToolsService {
+  constructor(
+    private readonly expenseService: ExpenseService,
+    private readonly incomeService: IncomeService,
+    private readonly internalTransferService: InternalTransferService,
+    private readonly budgetService: BudgetService,
+    private readonly walletService: WalletService,
+    private readonly walletTypeService: WalletTypeService,
+    private readonly contactService: ContactService,
+    private readonly expenseCategoryService: ExpenseCategoryService,
+    private readonly incomeCategoryService: IncomeCategoryService
+  ) {}
+
+  /**
+   * Creates the record when no id is given, updates it otherwise.
+   */
+  private async save<T extends { id: number }>(
+    entity: Entity,
+    id: number | undefined,
+    create: () => Promise<T>,
+    update: (id: number) => Promise<T>,
+    nameOf: (record: T) => string | null
+  ) {
+    const record = await run(() => (id ? update(id) : create()))
+    return writeOutput.parse({
+      action: id ? 'updated' : 'created',
+      entity,
+      id: record.id,
+      name: nameOf(record),
+    })
+  }
+
+  private async remove(entity: Entity, id: number) {
+    const deleters: Record<Entity, (id: number) => Promise<unknown>> = {
+      expense: (recordId) => this.expenseService.deleteExpense(recordId),
+      income: (recordId) => this.incomeService.deleteIncome(recordId),
+      internal_transfer: (recordId) =>
+        this.internalTransferService.deleteInternalTransfer(recordId),
+      budget: (recordId) => this.budgetService.deleteBudget(recordId),
+      wallet: (recordId) => this.walletService.deleteWallet(recordId),
+      wallet_type: (recordId) => this.walletTypeService.deleteWalletType(recordId),
+      contact: (recordId) => this.contactService.deleteContact(recordId),
+      expense_category: (recordId) => this.expenseCategoryService.deleteExpenseCategory(recordId),
+      income_category: (recordId) => this.incomeCategoryService.deleteIncomeCategory(recordId),
+    }
+    await run(() => deleters[entity](id))
+    return writeOutput.parse({ action: 'deleted', entity, id, name: null })
+  }
+
+  buildTools() {
+    return {
+      saveExpense: tool({
+        description:
+          'Create an expense (money spent from a wallet), or update one when id is set. Amounts are positive; fees are extra costs like Mobile Money fees.',
+        inputSchema: z.object({
+          id: updateId,
+          name: z.string().min(3).optional(),
+          description: z.string().min(2).optional().describe('Defaults to the name'),
+          amount: z.number().positive().optional(),
+          fees: z.number().min(0).nullable().optional(),
+          expenseCategoryId: idField.optional(),
+          walletId: idField.optional(),
+          date: isoDate.optional().describe('Defaults to today, cannot be in the future'),
+          toContactId: idField.nullable().optional().describe('Who was paid'),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'expense',
+            id,
+            async () =>
+              this.expenseService.createExpense(
+                await createExpenseValidator.validate({
+                  date: today(),
+                  description: data.name,
+                  ...data,
+                })
+              ),
+            async (recordId) =>
+              this.expenseService.updateExpense(
+                recordId,
+                await updateExpenseValidator.validate(data)
+              ),
+            (record) => record.name
+          ),
+      }),
+
+      saveIncome: tool({
+        description: 'Create an income (money received in a wallet), or update one when id is set.',
+        inputSchema: z.object({
+          id: updateId,
+          name: z.string().min(3).optional(),
+          description: z.string().min(2).optional().describe('Defaults to the name'),
+          amount: z.number().positive().optional(),
+          incomeCategoryId: idField.optional(),
+          walletId: idField.optional(),
+          date: isoDate.optional().describe('Defaults to today, cannot be in the future'),
+          fromContactId: idField.nullable().optional().describe('Who paid'),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'income',
+            id,
+            async () =>
+              this.incomeService.createIncome(
+                await createIncomeValidator.validate({
+                  date: today(),
+                  description: data.name,
+                  ...data,
+                })
+              ),
+            async (recordId) =>
+              this.incomeService.updateIncome(recordId, await updateIncomeValidator.validate(data)),
+            (record) => record.name
+          ),
+      }),
+
+      saveInternalTransfer: tool({
+        description:
+          'Move money between two of the user wallets (not an income or an expense), or update a transfer when id is set. The fee is taken from the source wallet.',
+        inputSchema: z.object({
+          id: updateId,
+          amount: z.number().positive().optional(),
+          fee: z.number().min(0).nullable().optional(),
+          sourceWalletId: idField.optional(),
+          targetWalletId: idField.optional(),
+          date: isoDate.optional().describe('Defaults to today'),
+          description: z.string().min(2).nullable().optional(),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'internal_transfer',
+            id,
+            async () =>
+              this.internalTransferService.createInternalTransfer(
+                await createInternalTransferValidator.validate({ date: today(), ...data })
+              ),
+            async (recordId) =>
+              this.internalTransferService.updateInternalTransfer(
+                recordId,
+                await updateInternalTransferValidator.validate(data)
+              ),
+            (record) => record.name
+          ),
+      }),
+
+      saveBudget: tool({
+        description:
+          'Create a spending budget on one expense category or one wallet, or update one when id is set.',
+        inputSchema: z.object({
+          id: updateId,
+          name: z.string().min(2).optional(),
+          targetType: z.enum(['expense_category', 'wallet']).optional(),
+          expenseCategoryId: idField.nullable().optional(),
+          walletId: idField.nullable().optional(),
+          amount: z.number().int().positive().optional(),
+          period: z.enum(['weekly', 'monthly', 'yearly']).optional(),
+          alertThreshold: z
+            .number()
+            .int()
+            .min(1)
+            .max(100)
+            .optional()
+            .describe('Percentage at which the budget is flagged, 80 by default'),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'budget',
+            id,
+            async () =>
+              this.budgetService.createBudget(
+                await createBudgetValidator.validate({ period: 'monthly', ...data })
+              ),
+            async (recordId) =>
+              this.budgetService.updateBudget(recordId, await updateBudgetValidator.validate(data)),
+            (record) => record.name
+          ),
+      }),
+
+      saveWallet: tool({
+        description:
+          'Create a wallet (cash, bank account, Mobile Money...), or update one when id is set. amount is its current balance.',
+        inputSchema: z.object({
+          id: updateId,
+          name: z.string().min(3).optional(),
+          description: z.string().min(2).optional().describe('Defaults to the name'),
+          walletTypeId: idField.optional(),
+          amount: z.number().optional(),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'wallet',
+            id,
+            async () =>
+              this.walletService.createWallet(
+                await createWalletValidator.validate({ description: data.name, ...data })
+              ),
+            async (recordId) =>
+              this.walletService.updateWallet(recordId, await updateWalletValidator.validate(data)),
+            (record) => record.name
+          ),
+      }),
+
+      saveWalletType: tool({
+        description:
+          'Create a wallet type (e.g. Mobile Money, Bank), or update one when id is set.',
+        inputSchema: z.object({
+          id: updateId,
+          name: z.string().min(2).optional(),
+          color: color.optional(),
+          icon: z.string().nullable().optional().describe('A Lucide icon name, e.g. wallet'),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'wallet_type',
+            id,
+            async () =>
+              this.walletTypeService.createWalletType(
+                await createWalletTypeValidator.validate({ color: DEFAULT_COLOR, ...data })
+              ),
+            async (recordId) =>
+              this.walletTypeService.updateWalletType(
+                recordId,
+                await updateWalletTypeValidator.validate(data)
+              ),
+            (record) => record.name
+          ),
+      }),
+
+      saveContact: tool({
+        description:
+          'Create a contact (a person or company the user pays or gets paid by), or update one when id is set.',
+        inputSchema: z.object({
+          id: updateId,
+          name: z.string().min(2).optional(),
+          type: z.enum(['person', 'entreprise', 'other']).optional(),
+          color: color.optional(),
+          phoneNumber: z.string().nullable().optional(),
+          email: z.string().email().nullable().optional(),
+          comments: z.string().nullable().optional(),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ id, ...data }) =>
+          this.save(
+            'contact',
+            id,
+            async () =>
+              this.contactService.createContact(
+                await createContactValidator.validate({
+                  color: DEFAULT_COLOR,
+                  type: 'person',
+                  ...data,
+                })
+              ),
+            async (recordId) =>
+              this.contactService.updateContact(
+                recordId,
+                await updateContactValidator.validate(data)
+              ),
+            (record) => record.name
+          ),
+      }),
+
+      saveCategory: tool({
+        description: 'Create an income or expense category, or update one when id is set.',
+        inputSchema: z.object({
+          kind: z.enum(['income', 'expense']),
+          id: updateId,
+          name: z.string().min(2).optional(),
+          color: color.optional(),
+          icon: z.string().nullable().optional().describe('A Lucide icon name, e.g. bus'),
+          defaultWalletTypeId: idField.nullable().optional(),
+          defaultContactId: idField.nullable().optional(),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ kind, id, ...data }) =>
+          kind === 'income'
+            ? this.save(
+                'income_category',
+                id,
+                async () =>
+                  this.incomeCategoryService.createIncomeCategory(
+                    await createIncomeCategoryValidator.validate({ color: DEFAULT_COLOR, ...data })
+                  ),
+                async (recordId) =>
+                  this.incomeCategoryService.updateIncomeCategory(
+                    recordId,
+                    await updateIncomeCategoryValidator.validate(data)
+                  ),
+                (record) => record.name
+              )
+            : this.save(
+                'expense_category',
+                id,
+                async () =>
+                  this.expenseCategoryService.createExpenseCategory(
+                    await createExpenseCategoryValidator.validate({ color: DEFAULT_COLOR, ...data })
+                  ),
+                async (recordId) =>
+                  this.expenseCategoryService.updateExpenseCategory(
+                    recordId,
+                    await updateExpenseCategoryValidator.validate(data)
+                  ),
+                (record) => record.name
+              ),
+      }),
+
+      proposePlan: tool({
+        description: [
+          'Show the user the workflow you are about to run and wait for their approval.',
+          'Call it once, before any save* or deleteRecord tool, with every step in order:',
+          'the existing records you will use (found with the read tools) and each record to create, update or delete.',
+          'Once approved, run the create, update and delete steps in that order without asking again.',
+        ].join(' '),
+        inputSchema: z.object({
+          title: z.string().describe('The task, e.g. "Record the taxi paid to Paul"'),
+          steps: z.array(planStep).min(1).max(20),
+        }),
+        outputSchema: z.object({ approved: z.literal(true), instructions: z.string() }),
+        execute: async () => ({
+          approved: true as const,
+          instructions:
+            'The user approved the plan. Run its create, update and delete steps now, in order.',
+        }),
+      }),
+
+      deleteRecord: tool({
+        description:
+          'Delete one record. Deleting a wallet type, wallet or category can also delete what depends on it, so warn the user first.',
+        inputSchema: z.object({
+          entity: z.enum(ENTITIES),
+          id: idField,
+          summary: z
+            .string()
+            .describe('What is deleted, shown to the user, e.g. "Taxi, 2,000, 12 Oct"'),
+        }),
+        outputSchema: writeOutput,
+        execute: ({ entity, id }) => this.remove(entity, id),
+      }),
+    }
+  }
+}
