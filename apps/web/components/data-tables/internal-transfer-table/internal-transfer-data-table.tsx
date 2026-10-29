@@ -1,7 +1,7 @@
 import { InternalTransfer } from "@/types"
 import { FunctionComponent } from "react"
 import { DataTable } from "../data-table"
-import { columns } from "./columns"
+import { columns, InternalTransferMobileCard } from "./columns"
 
 export const InternalTransferDataTable: FunctionComponent<{
   transfers: InternalTransfer[]
@@ -16,6 +16,9 @@ export const InternalTransferDataTable: FunctionComponent<{
       handleRowSelection={handleRowSelection}
       resetSelectionTrigger={resetSelectionTrigger}
       onDeleted={onDeleted}
+      renderMobileCard={(row, table) => (
+        <InternalTransferMobileCard row={row} table={table} />
+      )}
     />
   )
 }

@@ -15,11 +15,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bee-budget/ui/dropdown-menu"
-import { Column, ColumnDef, Table } from "@tanstack/react-table"
-import { ChevronsUpDown, Eye, MoreHorizontal, Pencil } from "lucide-react"
+import { Column, ColumnDef, Row, Table } from "@tanstack/react-table"
+import {
+  ArrowRight,
+  ChevronsUpDown,
+  Eye,
+  MoreHorizontal,
+  Pencil,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import { Confirm } from "../../confirm"
+import { DataTableActionsTrigger, DataTableMobileCard } from "../mobile-card"
 import { InternalTransferDetailDialog } from "./internal-transfer-detail-dialog"
 
 const SortableHeader = ({
@@ -97,7 +104,11 @@ const NameHeader = ({ column }: { column: Column<InternalTransfer> }) => {
   )
 }
 
-const SourceWalletHeader = ({ column }: { column: Column<InternalTransfer> }) => {
+const SourceWalletHeader = ({
+  column,
+}: {
+  column: Column<InternalTransfer>
+}) => {
   const t = useI18n()
   return (
     <SortableHeader
@@ -107,7 +118,11 @@ const SourceWalletHeader = ({ column }: { column: Column<InternalTransfer> }) =>
   )
 }
 
-const TargetWalletHeader = ({ column }: { column: Column<InternalTransfer> }) => {
+const TargetWalletHeader = ({
+  column,
+}: {
+  column: Column<InternalTransfer>
+}) => {
   const t = useI18n()
   return (
     <SortableHeader
@@ -159,16 +174,19 @@ const TotalDebitHeader = ({ column }: { column: Column<InternalTransfer> }) => {
 
 const ActionsHeader = () => {
   const t = useI18n()
-  return <div className="text-right">{t("app.dataTables.internalTransferTable.columns.actions")}</div>
+  return (
+    <div className="text-right">
+      {t("app.dataTables.internalTransferTable.columns.actions")}
+    </div>
+  )
 }
 
-const WalletCell = ({
-  walletId,
-}: {
-  walletId: number
-}) => {
+const WalletCell = ({ walletId }: { walletId: number }) => {
   const { wallets, walletTypes } = useApp()
-  const wallet = useMemo<Wallet | undefined>(() => findById(wallets, walletId), [walletId, wallets])
+  const wallet = useMemo<Wallet | undefined>(
+    () => findById(wallets, walletId),
+    [walletId, wallets]
+  )
   const walletType = useMemo<WalletType | undefined>(
     () => (wallet ? findById(walletTypes, wallet.walletTypeId) : undefined),
     [walletTypes, wallet]
@@ -188,16 +206,18 @@ const WalletCell = ({
   )
 }
 
-const ActionsCell = ({
-  row,
+export const InternalTransferActionsMenu = ({
+  transfer,
   table,
+  onView,
+  trigger,
 }: {
-  row: { original: InternalTransfer }
+  transfer: InternalTransfer
   table: Table<InternalTransfer>
+  onView?: () => void
+  trigger?: React.ReactNode
 }) => {
   const t = useI18n()
-  const transfer = row.original
-  const [detailOpen, setDetailOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const router = useRouter()
   const { currentLocaleUrl } = useCurrentLocaleUrl()
@@ -214,33 +234,35 @@ const ActionsCell = ({
   }
 
   return (
-    <div className="flex items-center justify-end gap-2">
-      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
-        <Eye className="h-4 w-4" />
-      </Button>
-
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="h-8 w-8 p-0">
-            <span className="sr-only">
-              {t("app.dataTables.internalTransferTable.actions.openMenu")}
-            </span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          {trigger ?? (
+            <Button variant="outline" size="icon" className="h-8 w-8 p-0">
+              <span className="sr-only">
+                {t("app.dataTables.internalTransferTable.actions.openMenu")}
+              </span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>
             {t("app.dataTables.internalTransferTable.actions.label")}
           </DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(transfer.id.toString())}
+            onClick={() =>
+              navigator.clipboard.writeText(transfer.id.toString())
+            }
           >
             {t("app.dataTables.internalTransferTable.actions.copyId")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setDetailOpen(true)}>
-            {t("app.dataTables.internalTransferTable.actions.view")}
-          </DropdownMenuItem>
+          {onView && (
+            <DropdownMenuItem onClick={onView}>
+              {t("app.dataTables.internalTransferTable.actions.view")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={handleEdit}>
             <Pencil className="h-4 w-4" />
             {t("app.dataTables.internalTransferTable.actions.edit")}
@@ -254,19 +276,46 @@ const ActionsCell = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <InternalTransferDetailDialog
-        transfer={transfer}
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-      />
-
       <Confirm
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         title={t("app.dataTables.internalTransferTable.actions.delete")}
         content={t("app.dashboard.lastInternalTransfers.deleteConfirm.content")}
-        confirmText={t("app.dashboard.lastInternalTransfers.deleteConfirm.confirm")}
+        confirmText={t(
+          "app.dashboard.lastInternalTransfers.deleteConfirm.confirm"
+        )}
         onConfirm={handleDelete}
+      />
+    </>
+  )
+}
+
+const ActionsCell = ({
+  row,
+  table,
+}: {
+  row: { original: InternalTransfer }
+  table: Table<InternalTransfer>
+}) => {
+  const transfer = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
+        <Eye className="h-4 w-4" />
+      </Button>
+
+      <InternalTransferActionsMenu
+        transfer={transfer}
+        table={table}
+        onView={() => setDetailOpen(true)}
+      />
+
+      <InternalTransferDetailDialog
+        transfer={transfer}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
       />
     </div>
   )
@@ -344,3 +393,71 @@ export const columns: ColumnDef<InternalTransfer>[] = [
     enableSorting: false,
   },
 ]
+
+const WalletName = ({ walletId }: { walletId: number }) => {
+  const { wallets } = useApp()
+  const wallet = useMemo<Wallet | undefined>(
+    () => findById(wallets, walletId),
+    [walletId, wallets]
+  )
+  return <>{wallet?.name ?? "---"}</>
+}
+
+export const InternalTransferMobileCard = ({
+  row,
+  table,
+}: {
+  row: Row<InternalTransfer>
+  table: Table<InternalTransfer>
+}) => {
+  const t = useI18n()
+  const transfer = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+
+  return (
+    <>
+      <DataTableMobileCard
+        row={row}
+        table={table}
+        selectLabel={t("app.dataTables.internalTransferTable.select")}
+        onOpen={() => setDetailOpen(true)}
+      >
+        <div className="min-w-0 space-y-1.5">
+          <p className="truncate leading-none font-medium">{transfer.name}</p>
+          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span className="truncate">
+              <WalletName walletId={transfer.sourceWalletId} />
+            </span>
+            <ArrowRight className="h-3 w-3 shrink-0" />
+            <span className="truncate">
+              <WalletName walletId={transfer.targetWalletId} />
+            </span>
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <span className="font-semibold tabular-nums">
+            {transfer.amount.toLocaleString()}
+          </span>
+          <span className="ml-1 text-xs text-muted-foreground">XAF</span>
+        </div>
+      </DataTableMobileCard>
+
+      <InternalTransferDetailDialog
+        transfer={transfer}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        actions={
+          <InternalTransferActionsMenu
+            transfer={transfer}
+            table={table}
+            trigger={
+              <DataTableActionsTrigger
+                label={t("app.dataTables.internalTransferTable.actions.label")}
+              />
+            }
+          />
+        }
+      />
+    </>
+  )
+}

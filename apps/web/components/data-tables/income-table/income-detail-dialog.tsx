@@ -31,12 +31,14 @@ type IncomeDetailDialogProps = {
   income: Income
   open: boolean
   onOpenChange: (open: boolean) => void
+  actions?: React.ReactNode
 }
 
 export function IncomeDetailDialog({
   income,
   open,
   onOpenChange,
+  actions,
 }: IncomeDetailDialogProps) {
   const t = useScopedI18n("app.dataTables.incomeTable.detail")
   const { incomeCategories, contacts, wallets, walletTypes } = useApp()
@@ -47,7 +49,10 @@ export function IncomeDetailDialog({
   )
 
   const contact = useMemo<Contact | undefined>(
-    () => (income.fromContactId ? findById(contacts, income.fromContactId) : undefined),
+    () =>
+      income.fromContactId
+        ? findById(contacts, income.fromContactId)
+        : undefined,
     [contacts, income.fromContactId]
   )
 
@@ -79,7 +84,9 @@ export function IncomeDetailDialog({
 
           <DetailRow label={t("description")}>
             {income.description || (
-              <span className="text-muted-foreground">{t("noDescription")}</span>
+              <span className="text-muted-foreground">
+                {t("noDescription")}
+              </span>
             )}
           </DetailRow>
 
@@ -168,7 +175,7 @@ export function IncomeDetailDialog({
           </DetailRow>
         </div>
 
-        <DialogFooter showCloseButton />
+        <DialogFooter showCloseButton>{actions}</DialogFooter>
       </DialogContent>
     </Dialog>
   )

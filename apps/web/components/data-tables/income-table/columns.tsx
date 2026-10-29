@@ -17,11 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bee-budget/ui/dropdown-menu"
-import { Column, ColumnDef, Table } from "@tanstack/react-table"
+import { Column, ColumnDef, Row, Table } from "@tanstack/react-table"
 import { ChevronsUpDown, Eye, MoreHorizontal, Pencil } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import { Confirm } from "../../confirm"
+import { DataTableActionsTrigger, DataTableMobileCard } from "../mobile-card"
 import { IncomeDetailDialog } from "./income-detail-dialog"
 
 const SortableHeader = ({
@@ -180,16 +181,18 @@ const NameCell = ({ row }: { row: { original: Income } }) => {
   )
 }
 
-const ActionsCell = ({
-  row,
+export const IncomeActionsMenu = ({
+  income,
   table,
+  onView,
+  trigger,
 }: {
-  row: { original: Income }
+  income: Income
   table: Table<Income>
+  onView?: () => void
+  trigger?: React.ReactNode
 }) => {
   const t = useI18n()
-  const income = row.original
-  const [detailOpen, setDetailOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const isInternalTransfer = Boolean(income.internalTransferId)
   const router = useRouter()
@@ -214,19 +217,17 @@ const ActionsCell = ({
   }
 
   return (
-    <div className="flex items-center justify-end gap-2">
-      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
-        <Eye className="h-4 w-4" />
-      </Button>
-
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="h-8 w-8 p-0">
-            <span className="sr-only">
-              {t("app.dataTables.incomeTable.actions.openMenu")}
-            </span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          {trigger ?? (
+            <Button variant="outline" size="icon" className="h-8 w-8 p-0">
+              <span className="sr-only">
+                {t("app.dataTables.incomeTable.actions.openMenu")}
+              </span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>
@@ -238,9 +239,11 @@ const ActionsCell = ({
             {t("app.dataTables.incomeTable.actions.copyId")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setDetailOpen(true)}>
-            {t("app.dataTables.incomeTable.actions.view")}
-          </DropdownMenuItem>
+          {onView && (
+            <DropdownMenuItem onClick={onView}>
+              {t("app.dataTables.incomeTable.actions.view")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={handleEdit}>
             <Pencil className="h-4 w-4" />
             {isInternalTransfer
@@ -259,12 +262,6 @@ const ActionsCell = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <IncomeDetailDialog
-        income={income}
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-      />
-
       <Confirm
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
@@ -272,6 +269,37 @@ const ActionsCell = ({
         content={t("app.dashboard.lastIncomes.deleteConfirm.content")}
         confirmText={t("app.dashboard.lastIncomes.deleteConfirm.confirm")}
         onConfirm={handleDelete}
+      />
+    </>
+  )
+}
+
+const ActionsCell = ({
+  row,
+  table,
+}: {
+  row: { original: Income }
+  table: Table<Income>
+}) => {
+  const income = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
+        <Eye className="h-4 w-4" />
+      </Button>
+
+      <IncomeActionsMenu
+        income={income}
+        table={table}
+        onView={() => setDetailOpen(true)}
+      />
+
+      <IncomeDetailDialog
+        income={income}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
       />
     </div>
   )
@@ -448,3 +476,73 @@ export const columns: ColumnDef<Income>[] = [
     cell: ActionsCell,
   },
 ]
+
+export const IncomeMobileCard = ({
+  row,
+  table,
+}: {
+  row: Row<Income>
+  table: Table<Income>
+}) => {
+  const t = useI18n()
+  const income = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+  const { incomeCategories } = useApp()
+  const category = useMemo<IncomeCategory | undefined>(() => {
+    return findById(incomeCategories, income.incomeCategoryId)
+  }, [incomeCategories, income.incomeCategoryId])
+
+  return (
+    <>
+      <DataTableMobileCard
+        row={row}
+        table={table}
+        selectLabel={t("app.dataTables.incomeTable.select")}
+        onOpen={() => setDetailOpen(true)}
+      >
+        <div className="min-w-0 space-y-1.5">
+          <p className="truncate leading-none font-medium">{income.name}</p>
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            {category && (
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: category.color }}
+              />
+            )}
+            <span className="truncate">
+              {category?.name ?? "---"}
+              {income.date &&
+                ` · ${new Date(income.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}`}
+            </span>
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <span className="font-semibold tabular-nums">
+            {income.amount.toLocaleString()}
+          </span>
+          <span className="ml-1 text-xs text-muted-foreground">XAF</span>
+        </div>
+      </DataTableMobileCard>
+
+      <IncomeDetailDialog
+        income={income}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        actions={
+          <IncomeActionsMenu
+            income={income}
+            table={table}
+            trigger={
+              <DataTableActionsTrigger
+                label={t("app.dataTables.incomeTable.actions.label")}
+              />
+            }
+          />
+        }
+      />
+    </>
+  )
+}

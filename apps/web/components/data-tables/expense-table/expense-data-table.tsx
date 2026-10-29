@@ -1,7 +1,7 @@
 import { Expense } from "@/types"
 import { FunctionComponent } from "react"
 import { DataTable } from "../data-table"
-import { columns } from "./columns"
+import { columns, ExpenseMobileCard } from "./columns"
 
 export const ExpenseDataTable: FunctionComponent<{
   expenses: Expense[]
@@ -16,6 +16,9 @@ export const ExpenseDataTable: FunctionComponent<{
       handleRowSelection={handleRowSelection}
       resetSelectionTrigger={resetSelectionTrigger}
       onDeleted={onDeleted}
+      renderMobileCard={(row, table) => (
+        <ExpenseMobileCard row={row} table={table} />
+      )}
       canSelectRow={(expense) => !expense.internalTransferId}
     />
   )

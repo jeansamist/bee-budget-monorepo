@@ -17,11 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bee-budget/ui/dropdown-menu"
-import { Column, ColumnDef, Table } from "@tanstack/react-table"
+import { Column, ColumnDef, Row, Table } from "@tanstack/react-table"
 import { ChevronsUpDown, Eye, MoreHorizontal, Pencil } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import { Confirm } from "../../confirm"
+import { DataTableActionsTrigger, DataTableMobileCard } from "../mobile-card"
 import { ExpenseDetailDialog } from "./expense-detail-dialog"
 
 const SortableHeader = ({
@@ -112,7 +113,10 @@ const CategoryHeader = ({ column }: { column: Column<Expense> }) => {
 const ToHeader = ({ column }: { column: Column<Expense> }) => {
   const t = useI18n()
   return (
-    <SortableHeader column={column} title={t("app.dataTables.expenseTable.columns.to")} />
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.expenseTable.columns.to")}
+    />
   )
 }
 
@@ -129,7 +133,10 @@ const WalletHeader = ({ column }: { column: Column<Expense> }) => {
 const DateHeader = ({ column }: { column: Column<Expense> }) => {
   const t = useI18n()
   return (
-    <SortableHeader column={column} title={t("app.dataTables.expenseTable.columns.date")} />
+    <SortableHeader
+      column={column}
+      title={t("app.dataTables.expenseTable.columns.date")}
+    />
   )
 }
 
@@ -145,7 +152,11 @@ const AmountHeader = ({ column }: { column: Column<Expense> }) => {
 
 const ActionsHeader = () => {
   const t = useI18n()
-  return <div className="text-right">{t("app.dataTables.expenseTable.columns.actions")}</div>
+  return (
+    <div className="text-right">
+      {t("app.dataTables.expenseTable.columns.actions")}
+    </div>
+  )
 }
 
 const NameCell = ({ row }: { row: { original: Expense } }) => {
@@ -169,16 +180,18 @@ const NameCell = ({ row }: { row: { original: Expense } }) => {
   )
 }
 
-const ActionsCell = ({
-  row,
+export const ExpenseActionsMenu = ({
+  expense,
   table,
+  onView,
+  trigger,
 }: {
-  row: { original: Expense }
+  expense: Expense
   table: Table<Expense>
+  onView?: () => void
+  trigger?: React.ReactNode
 }) => {
   const t = useI18n()
-  const expense = row.original
-  const [detailOpen, setDetailOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const isInternalTransfer = Boolean(expense.internalTransferId)
   const router = useRouter()
@@ -203,31 +216,33 @@ const ActionsCell = ({
   }
 
   return (
-    <div className="flex items-center justify-end gap-2">
-      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
-        <Eye className="h-4 w-4" />
-      </Button>
-
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="h-8 w-8 p-0">
-            <span className="sr-only">
-              {t("app.dataTables.expenseTable.actions.openMenu")}
-            </span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          {trigger ?? (
+            <Button variant="outline" size="icon" className="h-8 w-8 p-0">
+              <span className="sr-only">
+                {t("app.dataTables.expenseTable.actions.openMenu")}
+              </span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>{t("app.dataTables.expenseTable.actions.label")}</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {t("app.dataTables.expenseTable.actions.label")}
+          </DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => navigator.clipboard.writeText(expense.id.toString())}
           >
             {t("app.dataTables.expenseTable.actions.copyId")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setDetailOpen(true)}>
-            {t("app.dataTables.expenseTable.actions.view")}
-          </DropdownMenuItem>
+          {onView && (
+            <DropdownMenuItem onClick={onView}>
+              {t("app.dataTables.expenseTable.actions.view")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={handleEdit}>
             <Pencil className="h-4 w-4" />
             {isInternalTransfer
@@ -246,12 +261,6 @@ const ActionsCell = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <ExpenseDetailDialog
-        expense={expense}
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-      />
-
       <Confirm
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
@@ -259,6 +268,37 @@ const ActionsCell = ({
         content={t("app.dashboard.lastExpenses.deleteConfirm.content")}
         confirmText={t("app.dashboard.lastExpenses.deleteConfirm.confirm")}
         onConfirm={handleDelete}
+      />
+    </>
+  )
+}
+
+const ActionsCell = ({
+  row,
+  table,
+}: {
+  row: { original: Expense }
+  table: Table<Expense>
+}) => {
+  const expense = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <Button variant="outline" size="icon" onClick={() => setDetailOpen(true)}>
+        <Eye className="h-4 w-4" />
+      </Button>
+
+      <ExpenseActionsMenu
+        expense={expense}
+        table={table}
+        onView={() => setDetailOpen(true)}
+      />
+
+      <ExpenseDetailDialog
+        expense={expense}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
       />
     </div>
   )
@@ -434,3 +474,74 @@ export const columns: ColumnDef<Expense>[] = [
     cell: ActionsCell,
   },
 ]
+
+export const ExpenseMobileCard = ({
+  row,
+  table,
+}: {
+  row: Row<Expense>
+  table: Table<Expense>
+}) => {
+  const t = useI18n()
+  const expense = row.original
+  const [detailOpen, setDetailOpen] = useState(false)
+  const { expenseCategories } = useApp()
+  const category = useMemo<ExpenseCategory | undefined>(() => {
+    return findById(expenseCategories, expense.expenseCategoryId)
+  }, [expenseCategories, expense.expenseCategoryId])
+  const total = expense.amount + (expense.fees ?? 0)
+
+  return (
+    <>
+      <DataTableMobileCard
+        row={row}
+        table={table}
+        selectLabel={t("app.dataTables.expenseTable.select")}
+        onOpen={() => setDetailOpen(true)}
+      >
+        <div className="min-w-0 space-y-1.5">
+          <p className="truncate leading-none font-medium">{expense.name}</p>
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            {category && (
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: category.color }}
+              />
+            )}
+            <span className="truncate">
+              {category?.name ?? "---"}
+              {expense.date &&
+                ` · ${new Date(expense.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}`}
+            </span>
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <span className="font-semibold tabular-nums">
+            {total.toLocaleString()}
+          </span>
+          <span className="ml-1 text-xs text-muted-foreground">XAF</span>
+        </div>
+      </DataTableMobileCard>
+
+      <ExpenseDetailDialog
+        expense={expense}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        actions={
+          <ExpenseActionsMenu
+            expense={expense}
+            table={table}
+            trigger={
+              <DataTableActionsTrigger
+                label={t("app.dataTables.expenseTable.actions.label")}
+              />
+            }
+          />
+        }
+      />
+    </>
+  )
+}

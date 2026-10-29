@@ -31,12 +31,14 @@ type ExpenseDetailDialogProps = {
   expense: Expense
   open: boolean
   onOpenChange: (open: boolean) => void
+  actions?: React.ReactNode
 }
 
 export function ExpenseDetailDialog({
   expense,
   open,
   onOpenChange,
+  actions,
 }: ExpenseDetailDialogProps) {
   const t = useScopedI18n("app.dataTables.expenseTable.detail")
   const { expenseCategories, contacts, wallets, walletTypes } = useApp()
@@ -48,7 +50,8 @@ export function ExpenseDetailDialog({
   )
 
   const contact = useMemo<Contact | undefined>(
-    () => (expense.toContactId ? findById(contacts, expense.toContactId) : undefined),
+    () =>
+      expense.toContactId ? findById(contacts, expense.toContactId) : undefined,
     [contacts, expense.toContactId]
   )
 
@@ -80,20 +83,26 @@ export function ExpenseDetailDialog({
 
           <DetailRow label={t("description")}>
             {expense.description || (
-              <span className="text-muted-foreground">{t("noDescription")}</span>
+              <span className="text-muted-foreground">
+                {t("noDescription")}
+              </span>
             )}
           </DetailRow>
 
           <DetailRow label={t("amount")}>
             <span>
-              <span className="font-semibold">{expense.amount.toLocaleString()}</span>
+              <span className="font-semibold">
+                {expense.amount.toLocaleString()}
+              </span>
               <span className="ml-1 text-muted-foreground">XAF</span>
             </span>
           </DetailRow>
 
           <DetailRow label={t("fees")}>
             <span>
-              <span className="font-semibold">{(expense.fees ?? 0).toLocaleString()}</span>
+              <span className="font-semibold">
+                {(expense.fees ?? 0).toLocaleString()}
+              </span>
               <span className="ml-1 text-muted-foreground">XAF</span>
             </span>
           </DetailRow>
@@ -181,7 +190,7 @@ export function ExpenseDetailDialog({
           </DetailRow>
         </div>
 
-        <DialogFooter showCloseButton />
+        <DialogFooter showCloseButton>{actions}</DialogFooter>
       </DialogContent>
     </Dialog>
   )

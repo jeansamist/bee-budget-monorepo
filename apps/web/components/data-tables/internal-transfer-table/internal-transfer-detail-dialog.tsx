@@ -30,12 +30,14 @@ type InternalTransferDetailDialogProps = {
   transfer: InternalTransfer
   open: boolean
   onOpenChange: (open: boolean) => void
+  actions?: React.ReactNode
 }
 
 export function InternalTransferDetailDialog({
   transfer,
   open,
   onOpenChange,
+  actions,
 }: InternalTransferDetailDialogProps) {
   const t = useScopedI18n("app.dataTables.internalTransferTable.detail")
   const { wallets, walletTypes } = useApp()
@@ -52,13 +54,17 @@ export function InternalTransferDetailDialog({
 
   const sourceWalletType = useMemo<WalletType | undefined>(
     () =>
-      sourceWallet ? findById(walletTypes, sourceWallet.walletTypeId) : undefined,
+      sourceWallet
+        ? findById(walletTypes, sourceWallet.walletTypeId)
+        : undefined,
     [walletTypes, sourceWallet]
   )
 
   const targetWalletType = useMemo<WalletType | undefined>(
     () =>
-      targetWallet ? findById(walletTypes, targetWallet.walletTypeId) : undefined,
+      targetWallet
+        ? findById(walletTypes, targetWallet.walletTypeId)
+        : undefined,
     [walletTypes, targetWallet]
   )
 
@@ -80,13 +86,17 @@ export function InternalTransferDetailDialog({
 
           <DetailRow label={t("description")}>
             {transfer.description || (
-              <span className="text-muted-foreground">{t("noDescription")}</span>
+              <span className="text-muted-foreground">
+                {t("noDescription")}
+              </span>
             )}
           </DetailRow>
 
           <DetailRow label={t("amount")}>
             <span>
-              <span className="font-semibold">{transfer.amount.toLocaleString()}</span>
+              <span className="font-semibold">
+                {transfer.amount.toLocaleString()}
+              </span>
               <span className="ml-1 text-muted-foreground">XAF</span>
             </span>
           </DetailRow>
@@ -102,7 +112,9 @@ export function InternalTransferDetailDialog({
 
           <DetailRow label={t("totalDebit")}>
             <span>
-              <span className="font-semibold">{totalDebit.toLocaleString()}</span>
+              <span className="font-semibold">
+                {totalDebit.toLocaleString()}
+              </span>
               <span className="ml-1 text-muted-foreground">XAF</span>
             </span>
           </DetailRow>
@@ -160,7 +172,7 @@ export function InternalTransferDetailDialog({
           </DetailRow>
         </div>
 
-        <DialogFooter showCloseButton />
+        <DialogFooter showCloseButton>{actions}</DialogFooter>
       </DialogContent>
     </Dialog>
   )

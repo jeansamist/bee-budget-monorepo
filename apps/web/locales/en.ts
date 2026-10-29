@@ -134,6 +134,7 @@ export default {
   "app.reports.formats.csv": "CSV file",
   "app.reports.clearWallets": "Show all wallets",
   "app.reports.rowCount": "{count} row(s)",
+  "app.reports.rowDetails": "Row details",
   "app.reports.budgetsPeriodNote":
     "Budgets are reported for their current week, month or year.",
   "app.reports.dateRange": "Period",
