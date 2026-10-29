@@ -245,7 +245,11 @@ function Message({
       segments.push({ kind: "plan", part })
     } else if (isWriteToolPart(part)) {
       if (!covered.has(part.toolCallId)) segments.push({ kind: "tool", part })
-    } else if (part.type === "reasoning" || isToolUIPart(part)) {
+    } else if (
+      // Hidden reasoning (Claude) comes without text: nothing to show
+      (part.type === "reasoning" && part.text?.trim()) ||
+      isToolUIPart(part)
+    ) {
       const last = segments.at(-1)
       if (last?.kind === "activity") last.parts.push(part)
       else segments.push({ kind: "activity", parts: [part] })
@@ -420,6 +424,18 @@ export function AiChat({
   })
 
   const busy = status === "submitted" || status === "streaming"
+  const lastMessage = messages.at(-1)
+  // The model ended its turn after looking things up, without a word
+  const unanswered =
+    status === "ready" &&
+    lastMessage?.role === "assistant" &&
+    !lastMessage.parts.some(
+      (part) =>
+        (part.type === "text" && part.text.trim()) ||
+        // A plan (even finished) or a change: retrying could do it twice
+        isPlanPart(part) ||
+        isWriteToolPart(part)
+    )
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" })
@@ -509,6 +525,21 @@ export function AiChat({
                 />
               </motion.div>
             ))
+          )}
+
+          {unanswered && !error && (
+            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+              <p>{t("app.ai.unanswered")}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!choice}
+                onClick={() => regenerate()}
+              >
+                <RotateCcw />
+                {t("app.ai.retry")}
+              </Button>
+            </div>
           )}
 
           {status === "submitted" && (

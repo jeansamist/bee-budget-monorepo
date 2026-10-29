@@ -38,9 +38,31 @@ import {
 } from 'ai'
 import type { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { DateTime } from 'luxon'
+import logger from '@adonisjs/core/services/logger'
+import { httpError } from '#utils/http_error'
 import { z } from 'zod'
 
 const MAX_STEPS = 16
+
+/**
+ * Fixes what providers send but message validation rejects: Claude can hide
+ * its reasoning and only sign it, which leaves the reasoning text empty (or
+ * null once through the browser). The empty text is kept with its signature,
+ * since Claude needs it to continue the turn.
+ */
+function normalizeMessages(messages: UIMessage[], options: { dropOptionalParts?: boolean } = {}) {
+  return messages.map((message) => ({
+    ...message,
+    parts: message.parts
+      .filter(
+        (part) =>
+          !options.dropOptionalParts || (part.type !== 'reasoning' && part.type !== 'custom')
+      )
+      .map((part) =>
+        part.type === 'reasoning' && typeof part.text !== 'string' ? { ...part, text: '' } : part
+      ),
+  })) as UIMessage[]
+}
 
 /**
  * "en" -> "English", falling back to English for an unknown locale.
@@ -527,10 +549,22 @@ export class AiAssistantService {
     }
 
     try {
-      return await validateUIMessages({ messages: history, tools })
+      return await validateUIMessages({ messages: normalizeMessages(history), tools })
     } catch (error) {
-      if (!(error instanceof TypeValidationError) || !message) throw error
-      return validateUIMessages({ messages: [message], tools })
+      if (!(error instanceof TypeValidationError)) throw error
+      logger.warn({ err: error, conversationId: id }, 'AI chat history failed validation')
+      // Keep the conversation going without what can't be read
+      try {
+        return await validateUIMessages({
+          messages: normalizeMessages(history, { dropOptionalParts: true }),
+          tools,
+        })
+      } catch {
+        throw httpError(
+          422,
+          'This conversation contains messages the assistant can no longer read. Start a new chat.'
+        )
+      }
     }
   }
 

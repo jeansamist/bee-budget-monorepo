@@ -123,6 +123,7 @@ export default {
   "app.ai.send": "Send",
   "app.ai.stop": "Stop",
   "app.ai.retry": "Retry",
+  "app.ai.unanswered": "The assistant stopped without answering.",
   "app.ai.newChat": "New chat",
   "app.ai.disclaimer":
     "The assistant can make mistakes. Nothing is changed in your account until you approve it.",
